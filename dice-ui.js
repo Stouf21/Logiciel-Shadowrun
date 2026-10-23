@@ -1,0 +1,25 @@
+import {rollAnarchy,rerollAnarchy,describeOutcome} from './anarchy-dice.js';
+let lastRoll=null;
+const history=[];
+const random=()=>crypto.getRandomValues(new Uint32Array(1))[0]/4294967296;
+export function renderDice(container){
+ container.innerHTML=`<div class="dice-panel"><span class="tag">ANARCHY V2 · RÈGLES STANDARD</span><h3>Chaque risque compte.</h3><p class="muted">Réserve totale = compétence + attribut (+2 si spécialisation applicable). Les dés de risque remplacent des dés ordinaires : ils ne s’ajoutent pas à la réserve.</p><form id="roll"><div class="dice-fields"><label>Réserve totale<input id="count" type="number" min="1" max="100" value="6" required></label><label>Dont dés de risque<input id="risk" type="number" min="0" max="100" value="2" required></label><label>Réduction du risque (RR)<input id="rr" type="number" min="0" max="3" value="0" required></label><label>Conditions du test<select id="condition"><option value="normal">Normales · succès sur 5–6</option><option value="advantage">Avantage · succès sur 4–6</option><option value="disadvantage">Désavantage · succès sur 6</option></select></label><label>Seuil du test (facultatif)<input id="target" type="number" min="0" max="1000" placeholder="Sans seuil / test opposé"></label></div><p class="muted">Les succès des dés de risque valent 2. Après RR, leurs « 1 » donnent : 1 = complication mineure, 2 = critique, 3+ = désastre. Les « 1 » ordinaires ne provoquent aucune complication.</p><div class="actions"><button class="primary" type="submit">Lancer les dés</button><button type="button" id="reroll" disabled>Relancer · 1 Anarchy</button></div></form><p id="dice-error" role="alert"></p><div id="result" role="status" aria-live="polite"></div><details class="dice-help"><summary>Aide & références</summary><p>Références : livre principal, p. 64–65, 70–71 et 77 ; fichier P1, pages PDF 66–67, 72–73 et 79.</p><p>Une relance conserve la réserve, les conditions et la complication du jet initial ; seuls les succès changent. Le point d’Anarchy est à décompter sur votre fiche. Les jets ne sont pas liés automatiquement à un personnage.</p><p>Le seuil facultatif concerne un test simple. Pour un test opposé, comparez les deux jets et arbitrez les égalités selon la situation. Les effets narratifs des complications, annulations de succès (par exemple liées à l’essence) et règles optionnelles de risque ne sont pas automatisés.</p></details></div><section class="dice-history"><h3>Derniers jets de cette session</h3><p class="muted">20 résultats maximum, sans sauvegarde après rechargement.</p><ol id="dice-history-list"></ol></section>`;
+ const $=s=>container.querySelector(s);
+ const defaults=lastRoll?.options;
+ if(defaults)for(const field of ['count','risk','rr','condition','target'])$('#'+field).value=defaults[field]??'';
+ function showResult(){
+  if(!lastRoll)return;
+  const r=lastRoll,threshold={normal:5,advantage:4,disadvantage:6}[r.options.condition];
+  const dice=(values,risk)=>values.map(d=>`<span class="die ${d>=threshold?'hit':''} ${risk?'risk-die':''}" aria-label="Dé ${risk?'de risque':'ordinaire'} : ${d}${d>=threshold?`, ${risk?2:1} succès`:''}">${d}</span>`).join('');
+  $('#result').innerHTML=`<h3>${r.hits} succès · ${r.complication}</h3><p>${describeOutcome(r)}</p><div class="dice-result-groups"><div><h4>Dés ordinaires · ${r.normalHits} succès</h4>${dice(r.normalDice,false)||'<span class="muted">Aucun</span>'}</div><div><h4>Dés de risque · ${r.riskHits} succès (doublés)</h4>${dice(r.riskDice,true)||'<span class="muted">Aucun</span>'}</div></div><p class="muted">${r.rerolls?'Complication conservée du jet initial : ':''}${r.riskOnes} résultat(s) de 1 sur les dés de risque, RR ${r.options.rr} → ${r.effectiveOnes} retenu(s).${r.rerolls?` ${r.rerolls} point(s) d’Anarchy à décompter pour les relances de ce jet.`:''}</p>`;
+  $('#reroll').disabled=false;
+ }
+ function showHistory(){const list=$('#dice-history-list');list.replaceChildren();for(const r of history){const item=document.createElement('li');item.textContent=`${r.time} · ${r.count}d6 dont ${r.risk} de risque · RR ${r.rr} · ${r.hits} succès · ${r.complication}${r.rerolls?' · Relance Anarchy':''}`;list.append(item);}}
+ function record(){history.unshift({...lastRoll,...lastRoll.options,time:new Date().toLocaleTimeString('fr-FR')});history.splice(20);showResult();showHistory();}
+ $('#roll').onsubmit=e=>{e.preventDefault();try{const options={count:Number($('#count').value),risk:Number($('#risk').value),rr:Number($('#rr').value),condition:$('#condition').value,target:$('#target').value===''?null:Number($('#target').value)};lastRoll=rollAnarchy(options,random);$('#dice-error').textContent='';record();}catch(err){$('#dice-error').textContent=err.message;}};
+ $('#reroll').onclick=()=>{if(!lastRoll)return;lastRoll=rerollAnarchy(lastRoll,random);$('#dice-error').textContent='';record();};
+ // Éviter qu'une modification du formulaire laisse croire qu'elle s'applique
+ // à une relance : il faut alors lancer un nouveau test.
+ $('#roll').oninput=()=>{$('#reroll').disabled=true;};
+ showResult();showHistory();
+}
