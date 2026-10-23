@@ -38,3 +38,11 @@ Les fichiers de l’interface sont statiques et compatibles avec GitHub Pages ; 
 Dans le dépôt GitHub : **Settings → Pages → Build and deployment → Source : Deploy from a branch → Branch : main → / (root) → Save**. Attendre la fin de la publication indiquée par GitHub.
 
 Adresse attendue après activation : https://stouf21.github.io/Logiciel-Shadowrun/ . Cette adresse ne fonctionne que si GitHub Pages est activé et le déploiement a réussi. Les sauvegardes locales sont propres au navigateur et à cette origine ; pour déplacer une campagne depuis une autre adresse, l’exporter puis l’importer sur le site.
+
+## Thème Anarchy V2 (V0.4)
+
+Identité visuelle inspirée des documents V2 : jaune ocre, noir, fonds papier clairs, titres rouille et accents violets. Navigation avec pictogrammes, fiches, dialogues, dés et grille tactique adaptés, affichage responsive et focus clavier visibles. Les données de campagne et leur format restent compatibles.
+
+Les polices Permanent Marker et Barlow Condensed sont hébergées localement, sans requête à un service de polices. Leurs licences Apache 2.0 et SIL OFL sont conservées dans `assets/fonts/`. Les éléments graphiques de l’interface sont originaux ; aucune illustration ni couverture du livre n’est publiée.
+
+Vérification du thème : parcours fonctionnel Chromium conservé, polices locales chargées, absence de débordement sur les vues principales en 390, 768, 1024 et 1440 pixels, saisie et affichage des fiches sur mobile.

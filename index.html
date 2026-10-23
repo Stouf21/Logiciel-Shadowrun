@@ -1,1 +1,48 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Shadowrun · Table de jeu</title><link rel="stylesheet" href="./style.css"></head><body><aside><div class="brand">S∕A <span>ÉCRAN DU MENEUR</span></div><h1>Dans les ombres.</h1><p>Votre table, vos histoires.</p><nav aria-label="Navigation principale"></nav><div class="aside-bottom">ANARCHY · ATELIER V0.3<br>Données enregistrées dans ce navigateur</div></aside><main><header><div><small>SHADOWRUN / ESPACE DE CAMPAGNE</small><h2 id="title">Personnages</h2></div><button id="export">Exporter</button><label class="button">Importer<input id="import" type="file" accept="application/json" hidden></label></header><div class="notice">Fiches et lanceur Anarchy V2 · Références vérifiées indiquées dans la bibliothèque · Arbitrages narratifs au meneur.</div><label class="search">⌕ <input id="search" type="search" placeholder="Rechercher dans les fiches et le catalogue…" aria-label="Recherche globale"></label><p id="message" role="status"></p><section id="content"></section></main><dialog id="editor"><form id="form"><h2 id="form-title">Nouvelle entrée</h2><label>Nom<input name="name" required maxlength="120"></label><label>Catégorie<select name="category"></select></label><label>Description / rôle<textarea name="description" rows="3"></textarea></label><label>Fiche libre : attributs, compétences, équipement, références<textarea name="notes" rows="8"></textarea></label><div class="actions"><button type="button" id="cancel">Annuler</button><button type="submit" class="primary">Enregistrer</button></div></form></dialog><script type="module" src="./app.js"></script></body></html>
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#eeb600">
+  <title>Shadowrun Anarchy 2.0 · Écran du meneur</title>
+  <link rel="icon" href="./assets/anarchy-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./style.css?v=0.4.0">
+</head>
+<body>
+  <a class="skip-link" href="#content">Aller au contenu</a>
+  <aside>
+    <div class="brand" aria-label="Shadowrun Anarchy 2.0">
+      <span class="brand-world">SHADOWRUN</span>
+      <strong>ANARCHY</strong>
+      <span class="brand-edition">2.0 <span>ÉCRAN DU MENEUR</span></span>
+    </div>
+    <div class="sidebar-intro"><span class="eyebrow">LA CONSOLE DU MJ</span><h1>À vous les ombres.</h1><p>Préparez le run.<br>Faites vivre le Sixième Monde.</p></div>
+    <nav aria-label="Navigation principale"></nav>
+    <div class="aside-bottom"><span class="local-indicator" aria-hidden="true"></span> CAMPAGNE LOCALE<br><span>Votre table. Vos histoires.</span></div>
+  </aside>
+  <main>
+    <div class="edition-strip" aria-hidden="true"><span>LE SIXIÈME MONDE VOUS ATTEND.</span><span>ANARCHY / 2.0</span></div>
+    <header>
+      <div><small>SHADOWRUN / ESPACE DE CAMPAGNE</small><h2 id="title">Personnages</h2></div>
+      <div class="file-actions"><button id="export">Exporter</button><label class="button import-button" tabindex="0" role="button">Importer<input id="import" type="file" accept="application/json" hidden></label></div>
+    </header>
+    <div class="notice"><span class="notice-label">REPÈRE MJ</span><span>Fiches et lanceur Anarchy V2 · Références vérifiées dans la bibliothèque · Arbitrages narratifs au meneur.</span></div>
+    <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="search" type="search" placeholder="Un runner, un sort, une règle…" aria-label="Recherche globale"><span class="search-caption" aria-hidden="true">RECHERCHE RAPIDE</span></label>
+    <p id="message" role="status"></p>
+    <section id="content" aria-labelledby="title"></section>
+    <footer class="page-footer"><span>SHADOWRUN ANARCHY 2.0</span><span>Écran de jeu indépendant · Sauvegarde dans ce navigateur</span></footer>
+  </main>
+  <dialog id="editor">
+    <form id="form">
+      <span class="eyebrow">DOSSIER DE CAMPAGNE</span>
+      <h2 id="form-title">Nouvelle entrée</h2>
+      <label>Nom<input name="name" required maxlength="120"></label>
+      <label>Catégorie<select name="category"></select></label>
+      <label>Description / rôle<textarea name="description" rows="3"></textarea></label>
+      <label>Fiche libre : attributs, compétences, équipement, références<textarea name="notes" rows="8"></textarea></label>
+      <div class="actions"><button type="button" id="cancel">Annuler</button><button type="submit" class="primary">Enregistrer</button></div>
+    </form>
+  </dialog>
+  <script type="module" src="./app.js?v=0.4.0"></script>
+</body>
+</html>
