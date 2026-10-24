@@ -1,48 +1,59 @@
-# Shadowrun · Table de jeu
+# Shadowrun Anarchy · Écran du meneur
 
-Prototype indépendant en français pour préparer et mener une campagne. Node.js 22 ou supérieur, sans dépendance externe.
+Application indépendante en français pour préparer et mener une campagne d’Anarchy V2. Version 0.5.0, sans dépendance applicative externe.
 
 ## Démarrer
 
-Depuis le dépôt : `npm start`. Le serveur utilise le port 3000 (variable `PORT` pour le changer). Tests : `npm test`.
+Node.js 22 ou supérieur. Depuis le dépôt : `npm start` (port 3000, variable `PORT` configurable). Tests : `npm test`.
 
-## Première version
+## Personnages et fiches
 
-- Création, modification et suppression de PJ, PNJ principaux et secondaires, avec champs structurés et notes libres.
-- Catalogue d'objets, accessoires, armes, armures, sorts, programmes et véhicules.
-- Règles et aide-mémoire saisis par le meneur, recherche globale dans toutes les fiches.
-- Lanceur Anarchy V2 : réserve de 1 à 100 d6, dés de risque à succès doublés, RR 0–3, avantage / désavantage, complications, seuil facultatif et relance à 1 Anarchy conservant la complication initiale. Historique de session (20 jets).
-- Grille tactique avec placement et déplacement des pions associés aux personnages.
-- Sauvegarde locale dans le navigateur, import/export JSON. Exportez régulièrement : les données ne sont ni synchronisées ni sauvegardées sur le serveur.
+- PJ, PNJ principaux et secondaires. Un clic sur le nom, la carte du personnage ou « Consulter la fiche » ouvre la fiche complète.
+- Présentation recto-verso adaptée des rubriques de `Anarchy_v2_Feuille_de_perso_2p_VF_Combo.pdf` (pages PDF 1–2) : attributs, Anarchy, compétences, connaissances, armes / sorts et type, mots-clés, comportements, répliques, essence, nuyens, blessures, cyberdeck, trois véhicules / drones, atouts et équipement.
+- « Modifier la fiche » permet de compléter les valeurs ; « Imprimer / PDF » utilise l’impression du navigateur. Une fiche standard tient sur deux pages A4 ; un contenu très long peut nécessiter des pages supplémentaires.
+- La présentation est adaptée à l’écran ; le PDF original et ses illustrations ne sont pas publiés.
 
-## Référence des règles
+## Compétences et atouts
 
-Les règles standard du lanceur ont été vérifiées dans le livre Anarchy V2, pages imprimées 64–65 (tests et conditions), 70–71 (risque et RR) et 77 (relance). Le point d’Anarchy est à décompter manuellement. Les désastres sont indiqués comme échecs par défaut, sous réserve de l’arbitrage du meneur. Aucun catalogue officiel complet n’est fourni.
+- Les 14 compétences de base sont référencées (livre V2, p. 54), avec familles et indications de spécialisations. L’attribut dépend de l’action et reste sélectionnable.
+- 205 atouts nommés et modèles de construction, tirés des exemples et tableaux des chapitres du livre : équipements, armes, armures, drogues, cyberware, bioware, contacts, esprits mentors, focus, pouvoirs d’adepte, cyberdecks, véhicules et drones. Les atouts pour PNJ corrompus sont signalés. Chaque entrée indique sa source.
+- Le jeu autorise la construction d’atouts : ce répertoire n’est pas une limite fermée à tous les atouts possibles. « Compétences & atouts » permet d’ajouter ses propres références, également depuis la création d’un personnage.
+- Dans l’éditeur, filtrer la liste, sélectionner une référence puis « Ajouter à la fiche ». Indice, attribut, spécialisation appliquée et RR sont renseignés par compétence. RD = indice + attribut + 2 si la spécialisation est appliquée. Une spécialisation appliquée requiert un indice d’au moins 1.
+- Les atouts sélectionnés conservent leur nom, famille, niveau et coût en essence ; leurs effets et améliorations sont à préciser avec le meneur en consultant la page source. Les effets des créations personnelles sont repris sur la fiche.
+- Les anciennes notes libres sont conservées, visibles et éditables ; aucune interprétation automatique ne risque de les remplacer.
 
-## Limites
+## Dés et couleurs
 
-Pas encore de calcul de réserve depuis une compétence structurée, d’annulation de succès liée à l’essence, de résolution des tests opposés, de conséquences narratives automatiques, de règle optionnelle de risque, de carte illustrée, de gestion d’initiative, de campagnes multiples ni de partage multijoueur. Aucun compte ou contrôle d'accès : le serveur sert uniquement les fichiers statiques et ne reçoit pas les campagnes.
+Lanceur standard V2 : réserve de 1 à 100 d6, dés de risque remplaçant des dés ordinaires, succès doublés, RR 0–3, avantage / désavantage, seuil facultatif et complications. Une relance remplace les succès et conserve la complication initiale. Historique de session limité à 20 jets. Références : livre p. 64–65, 70–71 et 77.
 
-## Sources de travail et validation V0.3
+Deux sélecteurs de couleur distinguent les dés ordinaires et les dés de risque. Les couleurs doivent être différentes et sont mémorisées dans ce navigateur. Le texte choisit un contraste clair ou sombre selon le fond ; les dés restent séparés par libellé et les succès portent une étoile.
 
-Les rubriques de fiche sont basées sur `Anarchy_v2_Feuille_de_perso_2p_VF_Combo.pdf`, pages PDF 1–2. Les champs numériques restent vides par défaut ; les compétences, RR et blessures sont saisis manuellement. Aucun contrôle de création de personnage, calcul de coût, de maximum par métatype n’est automatisé sur les fiches.
+Les points d’Anarchy sont décomptés manuellement. Le meneur arbitre les complications et les exceptions aux désastres. Les tests opposés, les annulations de succès liées à l’essence et la règle optionnelle de risque ne sont pas automatisés.
 
-La bibliothèque distingue les sources consultées des travaux restants. L’écran du meneur a été consulté notamment pour les exemples de tests (page PDF 15) et le risque (page PDF 4). La France des Ombres sert de guide de contexte SR6 : seul un guide de lecture tiré du sommaire a été intégré, sans conversion de statistiques. Le supplément Cadeau est accessible mais son intégration détaillée reste à faire. Le livre principal est maintenant accessible en six parties (P1, P2, P3-1, P3-2, P4 et P5). La lecture ciblée de P1 a permis l’intégration des règles du lanceur ; le reste du livre reste à étudier et intégrer progressivement. Les fichiers PDF et leurs extractions restent hors du dépôt et ne sont pas servis par l’application.
+## Campagne et sauvegarde
 
-Vérification : 12 tests Node (dés, profils, compatibilité, dés de risque, RR, complications, conditions, relance et rejet des paramètres invalides). Parcours Chromium vérifié : création de PJ avec attributs et compétences, conservation après rechargement, modification, recherche d’une compétence, création d’objet, affichage des huit références, dés de risque, conservation de la complication lors d’une relance, rejet d’une réserve de risque excessive, recherche documentaire et placement d’un pion. Ce contrôle utilise des données de test dans un navigateur temporaire, sans toucher aux campagnes utilisateur.
+Catalogue d’objets, sorts et autres ressources saisis par le meneur, aides documentaires et recherche globale. Carte schématique avec placement / déplacement des personnages.
+
+Les campagnes et listes personnelles résident exclusivement dans le localStorage du navigateur ; le serveur ne reçoit aucune campagne. Export / import JSON inclut les personnages, sélections, listes personnalisées et pions. L’import remplace la campagne et ses listes après confirmation. Exporter régulièrement : aucune synchronisation ni sauvegarde distante n’est fournie. Les anciennes sauvegardes restent compatibles. Une sauvegarde illisible est protégée contre l’écrasement et peut être exportée pour récupération.
+
+Pas encore de contrôle des coûts de création, de maxima par métatype ni d’application automatique des effets d’atouts, de déduction d’essence ou de calcul des seuils de blessures. Pas de compte, partage multijoueur, campagnes multiples, initiative ni carte illustrée.
+
+## Sources et thème
+
+Les six parties du livre principal sont consultables dans les pièces jointes de la conversation de travail. Les PDF et extractions restent hors du dépôt. La France des Ombres est une référence de contexte SR6 : guide de lecture du sommaire intégré, sans conversion de statistiques. L’intégration détaillée du supplément Cadeau reste à poursuivre.
+
+Thème inspiré des documents V2 : jaune ocre, noir, fonds papier, titres rouille et accents violets. Polices Permanent Marker et Barlow Condensed hébergées localement ; licences Apache 2.0 et SIL OFL conservées dans `assets/fonts/`. Graphismes d’interface originaux.
+
+## Vérifications
+
+19 tests Node : dés et risque, relances, profils, sélections, compatibilité des sauvegardes, export/import des données, listes personnalisées, réserve de dés et contrastes des couleurs.
+
+Parcours Chromium : création par sélection, ajout d’une référence personnelle depuis le formulaire sans perdre la saisie, sélection de compétences personnelles, fiche recto-verso et impression PDF A4 de deux pages, modification et rechargement, export/import JSON, couleurs distinctes persistantes, relances, affichage mobile et préservation des anciennes notes. Données de test isolées des campagnes utilisateur.
 
 ## Publication sur GitHub Pages
 
-Les fichiers de l’interface sont statiques et compatibles avec GitHub Pages ; Node.js n’est pas nécessaire sur cet hébergement. Les chemins des ressources sont relatifs pour fonctionner sous `/Logiciel-Shadowrun/`.
+L’interface est statique : Node.js n’est pas nécessaire sur cet hébergement. Chemins relatifs compatibles avec `/Logiciel-Shadowrun/`.
 
-Dans le dépôt GitHub : **Settings → Pages → Build and deployment → Source : Deploy from a branch → Branch : main → / (root) → Save**. Attendre la fin de la publication indiquée par GitHub.
+Dans GitHub : **Settings → Pages → Build and deployment → Source : Deploy from a branch → Branch : main → / (root) → Save**. Attendre la publication indiquée par GitHub.
 
-Adresse attendue après activation : https://stouf21.github.io/Logiciel-Shadowrun/ . Cette adresse ne fonctionne que si GitHub Pages est activé et le déploiement a réussi. Les sauvegardes locales sont propres au navigateur et à cette origine ; pour déplacer une campagne depuis une autre adresse, l’exporter puis l’importer sur le site.
-
-## Thème Anarchy V2 (V0.4)
-
-Identité visuelle inspirée des documents V2 : jaune ocre, noir, fonds papier clairs, titres rouille et accents violets. Navigation avec pictogrammes, fiches, dialogues, dés et grille tactique adaptés, affichage responsive et focus clavier visibles. Les données de campagne et leur format restent compatibles.
-
-Les polices Permanent Marker et Barlow Condensed sont hébergées localement, sans requête à un service de polices. Leurs licences Apache 2.0 et SIL OFL sont conservées dans `assets/fonts/`. Les éléments graphiques de l’interface sont originaux ; aucune illustration ni couverture du livre n’est publiée.
-
-Vérification du thème : parcours fonctionnel Chromium conservé, polices locales chargées, absence de débordement sur les vues principales en 390, 768, 1024 et 1440 pixels, saisie et affichage des fiches sur mobile.
+Adresse : https://stouf21.github.io/Logiciel-Shadowrun/ . Les sauvegardes sont propres à l’origine du site et au navigateur. Pour déplacer une campagne depuis une autre adresse, l’exporter puis l’importer sur le site.

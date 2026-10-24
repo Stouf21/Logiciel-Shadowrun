@@ -1,29 +1,87 @@
-import {numberFields,textFields,validateProfile,profileSearchText} from './sheet.js';
-import {references} from './references.js';
-import {renderDice} from './dice-ui.js';
-const $=s=>document.querySelector(s), key='shadowrun-table-v1';
-const groups={characters:['PJ','PNJ principal','PNJ secondaire'],catalog:['Objet','Accessoire','Arme','Armure','Sort','Programme','Véhicule','Autre'],rules:['Règle','Aide-mémoire']};
+import {validateProfile,profileSearchText} from './sheet.js?v=0.5.0';
+import {references} from './references.js?v=0.5.0';
+import {renderDice} from './dice-ui.js?v=0.5.0';
+import {escape} from './ui.js?v=0.5.0';
+import {groups,validateCampaign} from './campaign.js?v=0.5.0';
+import {getCatalogs} from './catalog.js?v=0.5.0';
+import {renderCatalogLibrary,showCustomEditor} from './catalog-ui.js?v=0.5.0';
+import {mountCharacterEditor} from './character-editor.js?v=0.5.0';
+import {characterSheet} from './character-sheet.js?v=0.5.0';
+const $=s=>document.querySelector(s),key='shadowrun-table-v1';
 const icons={characters:'<circle cx="9" cy="8" r="3"/><path d="M3 20v-3a6 6 0 0 1 12 0v3M16 5a3 3 0 0 1 0 6M18 14a5 5 0 0 1 3 4v2"/>',catalog:'<path d="m12 3 9 5-9 5-9-5 9-5ZM3 8v9l9 5 9-5V8M12 13v9"/>',rules:'<path d="M12 5c-3-2-6-2-10-1v15c4-1 7-1 10 1 3-2 6-2 10-1V4c-4-1-7-1-10 1Zm0 0v15"/>',dice:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h.01M17 7h.01M12 12h.01M7 17h.01M17 17h.01" stroke-width="3" stroke-linecap="round"/>',map:'<path d="m3 5 6-2 6 3 6-2v15l-6 2-6-3-6 2V5ZM9 3v15M15 6v15"/>',references:'<path d="M4 4h5v17H4zM10 4h4v17h-4zM15 5l4-1 4 16-4 1z"/>'};
-const tabs={characters:'Personnages',catalog:'Catalogue',rules:'Règles & références',dice:'Lanceur de dés',map:'Carte tactique',references:'Bibliothèque & sources'};
-let state={entries:[],tokens:[]},tab='characters',editing=null,selected=null;
-try{const saved=localStorage.getItem(key);if(saved)state=validate(JSON.parse(saved));}catch{message('Sauvegarde illisible. Exportez vos données avant toute modification.');}
-function validate(data){if(!data||!Array.isArray(data.entries)||!Array.isArray(data.tokens))throw Error('Format de sauvegarde invalide.');const ids=new Set();for(const e of data.entries){if(!e||typeof e.id!=='string'||ids.has(e.id)||!Object.values(groups).flat().includes(e.category)||!['name','description','notes'].every(k=>typeof e[k]==='string')||!e.name.trim())throw Error('Fiche invalide.');validateProfile(e.profile);ids.add(e.id);}for(const t of data.tokens)if(!t||!ids.has(t.id)||!Number.isFinite(t.x)||!Number.isFinite(t.y)||t.x<0||t.x>100||t.y<0||t.y>100)throw Error('Position invalide.');return data;}
+icons.library=icons.rules;
+const tabs={characters:'Personnages',library:'Compétences & atouts',catalog:'Catalogue',rules:'Règles & références',dice:'Lanceur de dés',map:'Carte tactique',references:'Bibliothèque & sources'};
+let state={entries:[],tokens:[],customSkills:[],customAssets:[]},tab='characters',editing=null,selected=null,viewing=null,readProfile=null,unreadableBackup=null;
+try{const saved=localStorage.getItem(key);if(saved){unreadableBackup=saved;state=validateCampaign(JSON.parse(saved));unreadableBackup=null;}}catch{message('Sauvegarde illisible. Exportez-la pour la récupérer ou importez une sauvegarde valide avant toute modification.');}
 function message(s){$('#message').textContent=s;}
-function save(){try{localStorage.setItem(key,JSON.stringify(state));message('Sauvegardé dans ce navigateur.');}catch{message('Échec de sauvegarde locale : exportez vos données pour les conserver.');}}
-const escape=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function renderProfile(profile){if(!profile)return '';return `<div class="profile-summary">${numberFields.filter(([k])=>profile[k]!==undefined&&profile[k]!=='').map(([k,label])=>`<span><b>${escape(label)}</b> ${escape(String(profile[k]))}</span>`).join('')}</div>${textFields.filter(([k])=>profile[k]).map(([k,label])=>`<h4>${escape(label)}</h4><p>${escape(profile[k])}</p>`).join('')}`;}
+function persist(next){
+ if(unreadableBackup!==null)throw Error('La sauvegarde illisible est protégée : exportez-la puis importez une sauvegarde valide.');
+ state=next;
+ try{localStorage.setItem(key,JSON.stringify(state));message('Sauvegardé dans ce navigateur.');}catch{message('Échec de sauvegarde locale : exportez vos données pour les conserver.');}
+}
 function referenceCards(items){return items.map(r=>`<article class="card"><span class="tag">${escape(r.status)}</span><h3>${escape(r.title)}</h3><p>${escape(r.text)}</p><small>${escape(r.source)}</small></article>`).join('');}
-function render(){ $('nav').innerHTML=Object.entries(tabs).map(([id,label])=>`<button data-tab="${id}" class="${id===tab?'active':''}" ${id===tab?'aria-current="page"':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">${icons[id]}</svg><span>${label}</span></button>`).join('');$('#title').textContent=tabs[tab];const q=$('#search').value.trim().toLocaleLowerCase('fr');if(q||groups[tab]){const sourceMatches=q?references.filter(r=>[r.title,r.source,r.status,r.text].join(' ').toLocaleLowerCase('fr').includes(q)):[];const entries=state.entries.filter(e=>(q||groups[tab].includes(e.category))&&(!q||[e.name,e.category,e.description,e.notes,profileSearchText(e.profile)].join(' ').toLocaleLowerCase('fr').includes(q)));$('#content').innerHTML=`<div class="toolbar"><span class="muted">${entries.length} entrée(s)${sourceMatches.length?` · ${sourceMatches.length} référence(s)`:''}${q?' · Recherche globale':''}</span><button id="add" class="primary">+ Ajouter une entrée</button></div><div class="grid">${entries.map(e=>`<article class="card"><span class="tag">${escape(e.category)}</span><h3>${escape(e.name)}</h3><p>${escape(e.description)}</p><details><summary>Consulter la fiche</summary>${renderProfile(e.profile)}<h4>Notes libres</h4>${escape(e.notes)||'Fiche à compléter'}</details><div class="actions"><button data-edit="${escape(e.id)}">Modifier</button><button data-delete="${escape(e.id)}">Supprimer</button></div></article>`).join('')}</div>${sourceMatches.length?`<h3>Références documentaires</h3><div class="grid">${referenceCards(sourceMatches)}</div>`:''}${entries.length||sourceMatches.length?'':'<div class="empty"><img class="empty-mark" src="./assets/anarchy-mark.svg" alt="" width="68" height="68"><h3>Les ombres attendent votre histoire.</h3><p class="muted">Rassemblez vos runners, préparez vos rencontres et gardez vos ressources à portée de main.</p></div>'}`;$('#add').onclick=()=>openEditor();return;}if(tab==='references'){ $('#content').innerHTML='<div class="toolbar"><span class="muted">Références personnelles · aucun PDF publié par le serveur</span></div><div class="grid">'+referenceCards(references)+'</div>';return;}if(tab==='dice'){renderDice($('#content'));return;}renderMap();}
-function openEditor(id){editing=id||null;const e=state.entries.find(e=>e.id===id);$('#form').reset();$('#form-title').textContent=e?'Modifier la fiche':'Nouvelle entrée';$('#form select').innerHTML=Object.values(groups).flat().map(c=>`<option>${c}</option>`).join('');if(e)for(const field of ['name','category','description','notes'])$('#form').elements[field].value=e[field];else $('#form').elements.category.value=(groups[tab]||groups.characters)[0];renderProfileEditor(e?.profile);$('#editor').showModal();}
-$('#form').onsubmit=e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.target));data.name=data.name.trim();if(!data.name)return;const profile={};for(const [k] of numberFields){const v=$('#form').elements['profile_'+k].value;profile[k]=v===''?'':Number(v);}for(const [k] of textFields)profile[k]=$('#form').elements['profile_'+k].value;for(const k of Object.keys(data))if(k.startsWith('profile_'))delete data[k];const previous=state.entries.find(x=>x.id===editing);const entry={...previous,...data,id:editing||crypto.randomUUID()};if(groups.characters.includes(data.category))entry.profile=profile;validateProfile(entry.profile);if(editing)state.entries=state.entries.map(x=>x.id===editing?entry:x);else state.entries.push(entry);save();$('#editor').close();render();};
-function renderProfileEditor(profile={}){let section=$('#profile-editor');if(!section){section=document.createElement('fieldset');section.id='profile-editor';$('#form .actions').before(section);}section.innerHTML='<legend>Fiche Anarchy V2</legend><p class="muted">Structure : fiche officielle, pages PDF 1–2. Valeurs laissées vides par défaut ; aucun coût ni seuil calculé automatiquement.</p><div class="attribute-grid">'+numberFields.map(([key,label])=>`<label>${label}<input name="profile_${key}" type="number" min="0" step="${key==='essence'?'any':'1'}" value="${escape(String(profile[key]??''))}"></label>`).join('')+'</div>'+textFields.map(([key,label])=>`<label>${label}<textarea name="profile_${key}" rows="3">${escape(profile[key]??'')}</textarea></label>`).join('');toggleProfile();}
+function entryCard(e){const character=groups.characters.includes(e.category);return `<article class="card ${character?'character-card':''}" ${character?`data-character="${escape(e.id)}"`:''}><span class="tag">${escape(e.category)}</span><h3>${character?`<button class="character-name" data-open="${escape(e.id)}">${escape(e.name)}</button>`:escape(e.name)}</h3><p>${escape(e.description)}</p>${character?`<button class="sheet-open-button" data-open="${escape(e.id)}">Consulter la fiche</button>`:`<details><summary>Consulter la fiche</summary>${escape(e.notes)||'Fiche à compléter'}</details>`}<div class="actions"><button data-edit="${escape(e.id)}">Modifier</button><button data-delete="${escape(e.id)}">Supprimer</button></div></article>`;}
+function render(){
+ $('nav').innerHTML=Object.entries(tabs).map(([id,label])=>`<button data-tab="${id}" class="${id===tab?'active':''}" ${id===tab?'aria-current="page"':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">${icons[id]}</svg><span>${label}</span></button>`).join('');
+ const entry=state.entries.find(e=>e.id===viewing&&groups.characters.includes(e.category));
+ document.body.classList.toggle('viewing-character',!!entry);$('#title').textContent=entry?'Fiche de personnage':tabs[tab];
+ if(entry){$('#content').innerHTML=characterSheet(entry);return;}
+ const q=$('#search').value.trim().toLocaleLowerCase('fr');
+ if(q||groups[tab]){
+  const sourceMatches=q?references.filter(r=>[r.title,r.source,r.status,r.text].join(' ').toLocaleLowerCase('fr').includes(q)):[];
+  const libraryMatches=q?Object.values(getCatalogs(state)).flat().filter(r=>[r.name,r.category,r.description,r.source].join(' ').toLocaleLowerCase('fr').includes(q)):[];
+  const entries=state.entries.filter(e=>(q||groups[tab].includes(e.category))&&(!q||[e.name,e.category,e.description,e.notes,profileSearchText(e.profile)].join(' ').toLocaleLowerCase('fr').includes(q)));
+  $('#content').innerHTML=`<div class="toolbar"><span class="muted">${entries.length} entrée(s)${q?` · ${libraryMatches.length} compétence(s) / atout(s) · ${sourceMatches.length} référence(s)`:''}</span><button id="add" class="primary">+ Ajouter une entrée</button></div><div class="grid">${entries.map(entryCard).join('')}</div>${libraryMatches.length?`<h3>Compétences & atouts</h3><div class="grid">${libraryMatches.map(r=>`<article class="card"><span class="tag">${escape(r.category)}</span><h3>${escape(r.name)}</h3><p>${escape(r.description)}</p><small>${escape(r.source)}</small></article>`).join('')}</div>`:''}${sourceMatches.length?`<h3>Références documentaires</h3><div class="grid">${referenceCards(sourceMatches)}</div>`:''}${entries.length||sourceMatches.length||libraryMatches.length?'':'<div class="empty"><img class="empty-mark" src="./assets/anarchy-mark.svg" alt="" width="68" height="68"><h3>Les ombres attendent votre histoire.</h3><p class="muted">Rassemblez vos runners, préparez vos rencontres et gardez vos ressources à portée de main.</p></div>'}`;
+  $('#add').onclick=()=>openEditor();return;
+ }
+ if(tab==='library'){renderCatalogLibrary($('#content'),getCatalogs(state),createCatalogEntry);return;}
+ if(tab==='references'){$('#content').innerHTML='<div class="toolbar"><span class="muted">Références personnelles · aucun PDF publié par le serveur</span></div><div class="grid">'+referenceCards(references)+'</div>';return;}
+ if(tab==='dice'){renderDice($('#content'));return;}
+ renderMap();
+}
+function createCatalogEntry(kind,onDone){
+ showCustomEditor(kind,item=>{
+  if(getCatalogs(state)[kind].some(x=>x.name.toLocaleLowerCase('fr')===item.name.toLocaleLowerCase('fr')))throw Error('Ce nom existe déjà dans la liste.');
+  const field=kind==='skills'?'customSkills':'customAssets';
+  const next=validateCampaign({...state,[field]:[...state[field],item]});persist(next);
+  if(typeof onDone==='function')onDone(item);else{render();const select=$('#library-kind');if(select){select.value=kind;select.dispatchEvent(new Event('change'));}}
+ });
+}
+function openEditor(id){
+ editing=id||null;const entry=state.entries.find(e=>e.id===id);const form=$('#form');form.reset();$('#form-error').textContent='';$('#form-title').textContent=entry?'Modifier la fiche':'Nouvelle entrée';
+ form.elements.category.innerHTML=Object.values(groups).flat().map(c=>`<option>${c}</option>`).join('');
+ if(entry)for(const field of ['name','category','description','notes'])form.elements[field].value=entry[field];else form.elements.category.value=(groups[tab]||groups.characters)[0];
+ readProfile=mountCharacterEditor(form,entry?.profile,()=>getCatalogs(state),createCatalogEntry);toggleProfile();$('#editor').showModal();
+}
 function toggleProfile(){const section=$('#profile-editor');if(!section)return;section.hidden=!groups.characters.includes($('#form').elements.category.value);section.disabled=section.hidden;}
 $('#form').elements.category.onchange=toggleProfile;
+$('#form').onsubmit=e=>{
+ e.preventDefault();try{
+  const form=e.target;const data=Object.fromEntries(['name','category','description','notes'].map(k=>[k,form.elements[k].value]));data.name=data.name.trim();if(!data.name)return;
+  const previous=state.entries.find(x=>x.id===editing);const entry={...previous,...data,id:editing||crypto.randomUUID()};if(groups.characters.includes(data.category))entry.profile=readProfile();validateProfile(entry.profile);
+  const entries=editing?state.entries.map(x=>x.id===editing?entry:x):[...state.entries,entry];persist({...state,entries});$('#editor').close();render();
+ }catch(err){$('#form-error').textContent=err.message;$('#form-error').scrollIntoView({block:'nearest'});}
+};
 $('#cancel').onclick=()=>$('#editor').close();
-document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.tab){tab=b.dataset.tab;$('#search').value='';render();}if(b.dataset.edit)openEditor(b.dataset.edit);if(b.dataset.delete&&confirm('Supprimer cette fiche et son pion sur la carte ?')){state.entries=state.entries.filter(x=>x.id!==b.dataset.delete);state.tokens=state.tokens.filter(x=>x.id!==b.dataset.delete);save();render();}});
-$('#search').oninput=render;
+document.addEventListener('click',e=>{
+ const b=e.target.closest('button');
+ if(b?.dataset.tab){tab=b.dataset.tab;viewing=null;$('#search').value='';render();return;}
+ if(b?.hasAttribute('data-sheet-back')){viewing=null;tab='characters';render();return;}
+ if(b?.hasAttribute('data-sheet-print')){window.print();return;}
+ if(b?.dataset.open){viewing=b.dataset.open;render();window.scrollTo(0,0);return;}
+ if(b?.dataset.edit){openEditor(b.dataset.edit);return;}
+ if(b?.dataset.delete&&confirm('Supprimer cette fiche et son pion sur la carte ?')){try{persist({...state,entries:state.entries.filter(x=>x.id!==b.dataset.delete),tokens:state.tokens.filter(x=>x.id!==b.dataset.delete)});render();}catch(err){message(err.message);}return;}
+ const card=e.target.closest('[data-character]');if(card&&!e.target.closest('button,a,input,select,textarea,details')){viewing=card.dataset.character;render();window.scrollTo(0,0);}
+});
+$('#search').oninput=()=>{viewing=null;render();};
 $('.import-button').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('#import').click();}};
-$('#export').onclick=()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='shadowrun-campagne.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
-$('#import').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;if(file.size>5000000)throw Error('Fichier trop volumineux (5 Mo maximum).');const data=validate(JSON.parse(await file.text()));if(confirm('Remplacer la campagne locale par ce fichier ? Exportez d’abord pour garder une copie.')){state=data;save();render();}}catch(err){message('Import refusé : '+err.message);}finally{e.target.value='';}};
-function renderMap(){const characters=state.entries.filter(e=>groups.characters.includes(e.category));$('#content').innerHTML=`<div class="toolbar"><label>Personnage à placer<select id="map-character"><option value="">Choisir une fiche…</option>${characters.map(e=>`<option value="${escape(e.id)}">${escape(e.name)}</option>`).join('')}</select></label><button id="clear-map">Vider la carte</button></div><p class="map-legend">Choisissez un personnage, puis cliquez sur la grille pour placer ou déplacer son pion. Cliquez sur un pion pour le sélectionner. Carte schématique sans échelle de règles.</p><div class="map" id="map">${state.tokens.map(t=>{const e=state.entries.find(e=>e.id===t.id);return `<button class="token" data-token="${escape(t.id)}" style="left:${t.x}%;top:${t.y}%">${escape(e.name)}</button>`;}).join('')}</div>`;$('#map-character').value=characters.some(e=>e.id===selected)?selected:'';$('#map-character').onchange=e=>selected=e.target.value;$('#map').onclick=e=>{const token=e.target.closest('[data-token]');if(token){selected=token.dataset.token;$('#map-character').value=selected;return;}if(!selected){message('Choisissez un personnage à placer.');return;}const rect=$('#map').getBoundingClientRect();const t={id:selected,x:Math.max(0,Math.min(100,(e.clientX-rect.left)/rect.width*100)),y:Math.max(0,Math.min(100,(e.clientY-rect.top)/rect.height*100))};state.tokens=state.tokens.filter(t=>t.id!==selected);state.tokens.push(t);save();renderMap();};$('#clear-map').onclick=()=>{if(confirm('Retirer tous les pions de la carte ?')){state.tokens=[];save();renderMap();}};}
+$('#export').onclick=()=>{const url=URL.createObjectURL(new Blob([unreadableBackup??JSON.stringify(state,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=unreadableBackup?'shadowrun-sauvegarde-a-recuperer.json':'shadowrun-campagne.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+$('#import').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;if(file.size>5000000)throw Error('Fichier trop volumineux (5 Mo maximum).');const data=validateCampaign(JSON.parse(await file.text()));if(confirm('Remplacer la campagne locale et les listes personnelles par ce fichier ? Exportez d’abord pour garder une copie.')){unreadableBackup=null;persist(data);viewing=null;selected=null;render();}}catch(err){message('Import refusé : '+err.message);}finally{e.target.value='';}};
+function renderMap(){
+ const characters=state.entries.filter(e=>groups.characters.includes(e.category));if(!characters.some(e=>e.id===selected))selected=null;
+ $('#content').innerHTML=`<div class="toolbar"><label>Personnage à placer<select id="map-character"><option value="">Choisir une fiche…</option>${characters.map(e=>`<option value="${escape(e.id)}">${escape(e.name)}</option>`).join('')}</select></label><button id="clear-map">Vider la carte</button></div><p class="map-legend">Choisissez un personnage, puis cliquez sur la grille pour placer ou déplacer son pion. Cliquez sur un pion pour le sélectionner. Carte schématique sans échelle de règles.</p><div class="map" id="map">${state.tokens.map(t=>{const e=state.entries.find(e=>e.id===t.id);return `<button class="token" data-token="${escape(t.id)}" style="left:${t.x}%;top:${t.y}%">${escape(e.name)}</button>`;}).join('')}</div>`;
+ $('#map-character').value=selected??'';$('#map-character').onchange=e=>selected=e.target.value;
+ $('#map').onclick=e=>{const token=e.target.closest('[data-token]');if(token){selected=token.dataset.token;$('#map-character').value=selected;return;}if(!selected){message('Choisissez un personnage à placer.');return;}const rect=$('#map').getBoundingClientRect();const t={id:selected,x:Math.max(0,Math.min(100,(e.clientX-rect.left)/rect.width*100)),y:Math.max(0,Math.min(100,(e.clientY-rect.top)/rect.height*100))};try{persist({...state,tokens:[...state.tokens.filter(t=>t.id!==selected),t]});renderMap();}catch(err){message(err.message);}};
+ $('#clear-map').onclick=()=>{if(confirm('Retirer tous les pions de la carte ?'))try{persist({...state,tokens:[]});renderMap();}catch(err){message(err.message);}};
+}
 render();
