@@ -22,6 +22,7 @@ function validateRows(profile){
   if(!r||!['name','catalogId','specialization'].every(k=>typeof r[k]==='string')||!r.name.trim()||!attributeFields.some(([k])=>k===r.attribute)||!Number.isInteger(r.rating)||r.rating<0||r.rating>8||!Number.isInteger(r.rr)||r.rr<0||r.rr>3||typeof r.specialized!=='boolean'||(r.specialized&&(!r.specialization.trim()||r.rating<1)))throw Error('Compétence de fiche invalide.');
  }
  for(const r of profile.assetRows??[]){
+  if(r.target!==undefined&&!['character','vehicle','drone'].includes(r.target))throw Error('Application d’atout invalide.');
   if(!r||!['name','catalogId','category','notes','source'].every(k=>typeof r[k]==='string')||!r.name.trim())throw Error('Atout de fiche invalide.');
   for(const k of ['level','essence'])if(r[k]!==''&&(typeof r[k]!=='number'||!Number.isFinite(r[k])||r[k]<0))throw Error('Valeur d’atout invalide.');
  }

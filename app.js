@@ -1,16 +1,19 @@
-import {validateProfile,profileSearchText} from './sheet.js?v=0.5.0';
-import {references} from './references.js?v=0.5.0';
-import {renderDice} from './dice-ui.js?v=0.5.0';
-import {escape} from './ui.js?v=0.5.0';
-import {groups,validateCampaign} from './campaign.js?v=0.5.0';
-import {getCatalogs} from './catalog.js?v=0.5.0';
-import {renderCatalogLibrary,showCustomEditor} from './catalog-ui.js?v=0.5.0';
-import {mountCharacterEditor} from './character-editor.js?v=0.5.0';
-import {characterSheet} from './character-sheet.js?v=0.5.0';
+import {renderDijonMap} from './dijon-map.js?v=0.6.0';
+import {renderRules} from './rules-ui.js?v=0.6.0';
+import {rules,ruleMatches,ruleSource} from './rules-data.js?v=0.6.0';
+import {validateProfile,profileSearchText} from './sheet.js?v=0.6.0';
+import {references} from './references.js?v=0.6.0';
+import {renderDice} from './dice-ui.js?v=0.6.0';
+import {escape} from './ui.js?v=0.6.0';
+import {groups,validateCampaign} from './campaign.js?v=0.6.0';
+import {getCatalogs,getCharacterCatalogs} from './catalog.js?v=0.6.0';
+import {renderCatalogLibrary,showCustomEditor} from './catalog-ui.js?v=0.6.0';
+import {mountCharacterEditor} from './character-editor.js?v=0.6.0';
+import {characterSheet} from './character-sheet.js?v=0.6.0';
 const $=s=>document.querySelector(s),key='shadowrun-table-v1';
 const icons={characters:'<circle cx="9" cy="8" r="3"/><path d="M3 20v-3a6 6 0 0 1 12 0v3M16 5a3 3 0 0 1 0 6M18 14a5 5 0 0 1 3 4v2"/>',catalog:'<path d="m12 3 9 5-9 5-9-5 9-5ZM3 8v9l9 5 9-5V8M12 13v9"/>',rules:'<path d="M12 5c-3-2-6-2-10-1v15c4-1 7-1 10 1 3-2 6-2 10-1V4c-4-1-7-1-10 1Zm0 0v15"/>',dice:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h.01M17 7h.01M12 12h.01M7 17h.01M17 17h.01" stroke-width="3" stroke-linecap="round"/>',map:'<path d="m3 5 6-2 6 3 6-2v15l-6 2-6-3-6 2V5ZM9 3v15M15 6v15"/>',references:'<path d="M4 4h5v17H4zM10 4h4v17h-4zM15 5l4-1 4 16-4 1z"/>'};
 icons.library=icons.rules;
-const tabs={characters:'Personnages',library:'Compétences & atouts',catalog:'Catalogue',rules:'Règles & références',dice:'Lanceur de dés',map:'Carte tactique',references:'Bibliothèque & sources'};
+const tabs={characters:'Personnages',library:'Compétences & atouts',catalog:'Catalogue',rules:'Règles & références',dice:'Lanceur de dés',map:'Dijon cyberpunk',references:'Bibliothèque & sources'};
 let state={entries:[],tokens:[],customSkills:[],customAssets:[]},tab='characters',editing=null,selected=null,viewing=null,readProfile=null,unreadableBackup=null;
 try{const saved=localStorage.getItem(key);if(saved){unreadableBackup=saved;state=validateCampaign(JSON.parse(saved));unreadableBackup=null;}}catch{message('Sauvegarde illisible. Exportez-la pour la récupérer ou importez une sauvegarde valide avant toute modification.');}
 function message(s){$('#message').textContent=s;}
@@ -27,11 +30,13 @@ function render(){
  document.body.classList.toggle('viewing-character',!!entry);$('#title').textContent=entry?'Fiche de personnage':tabs[tab];
  if(entry){$('#content').innerHTML=characterSheet(entry);return;}
  const q=$('#search').value.trim().toLocaleLowerCase('fr');
+ if(tab==='rules'&&!q){renderRules($('#content'),state.entries.filter(e=>groups.rules.includes(e.category)).map(entryCard).join(''),()=>openEditor());return;}
  if(q||groups[tab]){
+  const bookMatches=q?rules.filter(r=>ruleMatches(r,q)):[];
   const sourceMatches=q?references.filter(r=>[r.title,r.source,r.status,r.text].join(' ').toLocaleLowerCase('fr').includes(q)):[];
   const libraryMatches=q?Object.values(getCatalogs(state)).flat().filter(r=>[r.name,r.category,r.description,r.source].join(' ').toLocaleLowerCase('fr').includes(q)):[];
   const entries=state.entries.filter(e=>(q||groups[tab].includes(e.category))&&(!q||[e.name,e.category,e.description,e.notes,profileSearchText(e.profile)].join(' ').toLocaleLowerCase('fr').includes(q)));
-  $('#content').innerHTML=`<div class="toolbar"><span class="muted">${entries.length} entrée(s)${q?` · ${libraryMatches.length} compétence(s) / atout(s) · ${sourceMatches.length} référence(s)`:''}</span><button id="add" class="primary">+ Ajouter une entrée</button></div><div class="grid">${entries.map(entryCard).join('')}</div>${libraryMatches.length?`<h3>Compétences & atouts</h3><div class="grid">${libraryMatches.map(r=>`<article class="card"><span class="tag">${escape(r.category)}</span><h3>${escape(r.name)}</h3><p>${escape(r.description)}</p><small>${escape(r.source)}</small></article>`).join('')}</div>`:''}${sourceMatches.length?`<h3>Références documentaires</h3><div class="grid">${referenceCards(sourceMatches)}</div>`:''}${entries.length||sourceMatches.length||libraryMatches.length?'':'<div class="empty"><img class="empty-mark" src="./assets/anarchy-mark.svg" alt="" width="68" height="68"><h3>Les ombres attendent votre histoire.</h3><p class="muted">Rassemblez vos runners, préparez vos rencontres et gardez vos ressources à portée de main.</p></div>'}`;
+  $('#content').innerHTML=`<div class="toolbar"><span class="muted">${entries.length} entrée(s)${q?` · ${libraryMatches.length} compétence(s) / atout(s) · ${bookMatches.length} règle(s) · ${sourceMatches.length} référence(s)`:''}</span><button id="add" class="primary">+ Ajouter une entrée</button></div><div class="grid">${entries.map(entryCard).join('')}</div>${libraryMatches.length?`<h3>Compétences & atouts</h3><div class="grid">${libraryMatches.map(r=>`<article class="card"><span class="tag">${escape(r.category)}</span><h3>${escape(r.name)}</h3><p>${escape(r.description)}</p><small>${escape(r.source)}</small></article>`).join('')}</div>`:''}${bookMatches.length?`<h3>Règles du livre</h3><div class="grid">${bookMatches.map(r=>`<article class="card"><span class="tag">${escape(r.category)}</span><h3>${escape(r.title)}</h3><p>${escape(r.summary)}</p><button data-open-rule="${r.id}">Consulter la règle</button><small>${escape(ruleSource(r))}</small></article>`).join('')}</div>`:''}${sourceMatches.length?`<h3>Références documentaires</h3><div class="grid">${referenceCards(sourceMatches)}</div>`:''}${entries.length||sourceMatches.length||libraryMatches.length||bookMatches.length?'':'<div class="empty"><img class="empty-mark" src="./assets/anarchy-mark.svg" alt="" width="68" height="68"><h3>Les ombres attendent votre histoire.</h3><p class="muted">Rassemblez vos runners, préparez vos rencontres et gardez vos ressources à portée de main.</p></div>'}`;
   $('#add').onclick=()=>openEditor();return;
  }
  if(tab==='library'){renderCatalogLibrary($('#content'),getCatalogs(state),createCatalogEntry);return;}
@@ -45,13 +50,13 @@ function createCatalogEntry(kind,onDone){
   const field=kind==='skills'?'customSkills':'customAssets';
   const next=validateCampaign({...state,[field]:[...state[field],item]});persist(next);
   if(typeof onDone==='function')onDone(item);else{render();const select=$('#library-kind');if(select){select.value=kind;select.dispatchEvent(new Event('change'));}}
- });
+ },{characterOnly:typeof onDone==='function'});
 }
 function openEditor(id){
  editing=id||null;const entry=state.entries.find(e=>e.id===id);const form=$('#form');form.reset();$('#form-error').textContent='';$('#form-title').textContent=entry?'Modifier la fiche':'Nouvelle entrée';
  form.elements.category.innerHTML=Object.values(groups).flat().map(c=>`<option>${c}</option>`).join('');
  if(entry)for(const field of ['name','category','description','notes'])form.elements[field].value=entry[field];else form.elements.category.value=(groups[tab]||groups.characters)[0];
- readProfile=mountCharacterEditor(form,entry?.profile,()=>getCatalogs(state),createCatalogEntry);toggleProfile();$('#editor').showModal();
+ readProfile=mountCharacterEditor(form,entry?.profile,()=>getCharacterCatalogs(state),createCatalogEntry);toggleProfile();$('#editor').showModal();
 }
 function toggleProfile(){const section=$('#profile-editor');if(!section)return;section.hidden=!groups.characters.includes($('#form').elements.category.value);section.disabled=section.hidden;}
 $('#form').elements.category.onchange=toggleProfile;
@@ -68,6 +73,7 @@ document.addEventListener('click',e=>{
  if(b?.dataset.tab){tab=b.dataset.tab;viewing=null;$('#search').value='';render();return;}
  if(b?.hasAttribute('data-sheet-back')){viewing=null;tab='characters';render();return;}
  if(b?.hasAttribute('data-sheet-print')){window.print();return;}
+ if(b?.dataset.openRule){tab='rules';viewing=null;$('#search').value='';render();const rule=document.getElementById(b.dataset.openRule);if(rule){rule.open=true;rule.scrollIntoView({block:'center'});}return;}
  if(b?.dataset.open){viewing=b.dataset.open;render();window.scrollTo(0,0);return;}
  if(b?.dataset.edit){openEditor(b.dataset.edit);return;}
  if(b?.dataset.delete&&confirm('Supprimer cette fiche et son pion sur la carte ?')){try{persist({...state,entries:state.entries.filter(x=>x.id!==b.dataset.delete),tokens:state.tokens.filter(x=>x.id!==b.dataset.delete)});render();}catch(err){message(err.message);}return;}
@@ -77,11 +83,5 @@ $('#search').oninput=()=>{viewing=null;render();};
 $('.import-button').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('#import').click();}};
 $('#export').onclick=()=>{const url=URL.createObjectURL(new Blob([unreadableBackup??JSON.stringify(state,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=unreadableBackup?'shadowrun-sauvegarde-a-recuperer.json':'shadowrun-campagne.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
 $('#import').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;if(file.size>5000000)throw Error('Fichier trop volumineux (5 Mo maximum).');const data=validateCampaign(JSON.parse(await file.text()));if(confirm('Remplacer la campagne locale et les listes personnelles par ce fichier ? Exportez d’abord pour garder une copie.')){unreadableBackup=null;persist(data);viewing=null;selected=null;render();}}catch(err){message('Import refusé : '+err.message);}finally{e.target.value='';}};
-function renderMap(){
- const characters=state.entries.filter(e=>groups.characters.includes(e.category));if(!characters.some(e=>e.id===selected))selected=null;
- $('#content').innerHTML=`<div class="toolbar"><label>Personnage à placer<select id="map-character"><option value="">Choisir une fiche…</option>${characters.map(e=>`<option value="${escape(e.id)}">${escape(e.name)}</option>`).join('')}</select></label><button id="clear-map">Vider la carte</button></div><p class="map-legend">Choisissez un personnage, puis cliquez sur la grille pour placer ou déplacer son pion. Cliquez sur un pion pour le sélectionner. Carte schématique sans échelle de règles.</p><div class="map" id="map">${state.tokens.map(t=>{const e=state.entries.find(e=>e.id===t.id);return `<button class="token" data-token="${escape(t.id)}" style="left:${t.x}%;top:${t.y}%">${escape(e.name)}</button>`;}).join('')}</div>`;
- $('#map-character').value=selected??'';$('#map-character').onchange=e=>selected=e.target.value;
- $('#map').onclick=e=>{const token=e.target.closest('[data-token]');if(token){selected=token.dataset.token;$('#map-character').value=selected;return;}if(!selected){message('Choisissez un personnage à placer.');return;}const rect=$('#map').getBoundingClientRect();const t={id:selected,x:Math.max(0,Math.min(100,(e.clientX-rect.left)/rect.width*100)),y:Math.max(0,Math.min(100,(e.clientY-rect.top)/rect.height*100))};try{persist({...state,tokens:[...state.tokens.filter(t=>t.id!==selected),t]});renderMap();}catch(err){message(err.message);}};
- $('#clear-map').onclick=()=>{if(confirm('Retirer tous les pions de la carte ?'))try{persist({...state,tokens:[]});renderMap();}catch(err){message(err.message);}};
-}
+function renderMap(){renderDijonMap($('#content'),state,next=>persist(next));}
 render();

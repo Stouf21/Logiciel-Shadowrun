@@ -1,6 +1,6 @@
 # Shadowrun Anarchy · Écran du meneur
 
-Application indépendante en français pour préparer et mener une campagne d’Anarchy V2. Version 0.5.0, sans dépendance applicative externe.
+Application indépendante en français pour préparer et mener une campagne d’Anarchy V2. Version 0.6.0, sans dépendance applicative externe.
 
 ## Démarrer
 
@@ -16,8 +16,9 @@ Node.js 22 ou supérieur. Depuis le dépôt : `npm start` (port 3000, variable `
 ## Compétences et atouts
 
 - Les 14 compétences de base sont référencées (livre V2, p. 54), avec familles et indications de spécialisations. L’attribut dépend de l’action et reste sélectionnable.
-- 205 atouts nommés et modèles de construction, tirés des exemples et tableaux des chapitres du livre : équipements, armes, armures, drogues, cyberware, bioware, contacts, esprits mentors, focus, pouvoirs d’adepte, cyberdecks, véhicules et drones. Les atouts pour PNJ corrompus sont signalés. Chaque entrée indique sa source.
+- 205 atouts nommés et modèles de construction dans le répertoire général, tirés des exemples et tableaux des chapitres du livre : équipements, armes, armures, drogues, cyberware, bioware, contacts, esprits mentors, focus, pouvoirs d’adepte, cyberdecks, véhicules et drones. Les atouts pour PNJ corrompus sont signalés. Chaque entrée indique sa source.
 - Le jeu autorise la construction d’atouts : ce répertoire n’est pas une limite fermée à tous les atouts possibles. « Compétences & atouts » permet d’ajouter ses propres références, également depuis la création d’un personnage.
+- Dans les fiches et leur création, seuls les atouts applicables aux personnages sont proposés : les catégories Drone / Véhicule, leurs modèles et les créations ciblant un engin sont exclues. Les équipements de rigger portés par le personnage (par exemple une console) restent disponibles. Les anciennes associations d’engins sont conservées séparément, sans suppression.
 - Dans l’éditeur, filtrer la liste, sélectionner une référence puis « Ajouter à la fiche ». Indice, attribut, spécialisation appliquée et RR sont renseignés par compétence. RD = indice + attribut + 2 si la spécialisation est appliquée. Une spécialisation appliquée requiert un indice d’au moins 1.
 - Les atouts sélectionnés conservent leur nom, famille, niveau et coût en essence ; leurs effets et améliorations sont à préciser avec le meneur en consultant la page source. Les effets des créations personnelles sont repris sur la fiche.
 - Les anciennes notes libres sont conservées, visibles et éditables ; aucune interprétation automatique ne risque de les remplacer.
@@ -26,13 +27,21 @@ Node.js 22 ou supérieur. Depuis le dépôt : `npm start` (port 3000, variable `
 
 Lanceur standard V2 : réserve de 1 à 100 d6, dés de risque remplaçant des dés ordinaires, succès doublés, RR 0–3, avantage / désavantage, seuil facultatif et complications. Une relance remplace les succès et conserve la complication initiale. Historique de session limité à 20 jets. Références : livre p. 64–65, 70–71 et 77.
 
+Des cubes 3D à six faces, avec points et animation de roulé/rebond, représentent les d6. Le résultat est déterminé par le moteur de règles et révélé après l’animation ; les relances gardent leur mécanique. Les préférences de réduction des animations sont respectées.
+
 Deux sélecteurs de couleur distinguent les dés ordinaires et les dés de risque. Les couleurs doivent être différentes et sont mémorisées dans ce navigateur. Le texte choisit un contraste clair ou sombre selon le fond ; les dés restent séparés par libellé et les succès portent une étoile.
 
 Les points d’Anarchy sont décomptés manuellement. Le meneur arbitre les complications et les exceptions aux désastres. Les tests opposés, les annulations de succès liées à l’essence et la règle optionnelle de risque ne sont pas automatisés.
 
+## Règles classées
+
+85 synthèses originales en dix thèmes : personnages / création, tests / risques, action / combat, blessures / soins, Anarchy / narration, physique / social, magie / astral, Matrice, véhicules / drones, PNJ / meneur. Filtres par thème, recherche insensible aux accents, options signalées et pages imprimées citées à chaque entrée. La recherche globale retrouve aussi ces synthèses. Les notes et règles personnelles restent modifiables séparément.
+
+Ce récapitulatif couvre les familles de mécanismes, avec leurs principales procédures, formules et exceptions. Il condense le livre ; il ne reproduit pas chaque ligne des tables d’équipement, de sorts, de bestiaire ou des profils de scénarios. Consulter la page source pour les conditions détaillées d’une entrée particulière. Les variantes décrites dans l’aide ne sont pas activées automatiquement dans le lanceur.
+
 ## Campagne et sauvegarde
 
-Catalogue d’objets, sorts et autres ressources saisis par le meneur, aides documentaires et recherche globale. Carte schématique avec placement / déplacement des personnages.
+Catalogue d’objets, sorts et autres ressources saisis par le meneur, aides documentaires et recherche globale. Carte artistique de Dijon cyberpunk avec 11 repères, accroches de scénario fictives, zoom, affichage des repères et pions persistants. Le fond est une illustration originale générée, géographiquement approximative, sans données de navigation : les localisations et ajouts de campagne ne représentent pas un canon officiel. Aucune carte OpenStreetMap n’a été intégrée.
 
 Les campagnes et listes personnelles résident exclusivement dans le localStorage du navigateur ; le serveur ne reçoit aucune campagne. Export / import JSON inclut les personnages, sélections, listes personnalisées et pions. L’import remplace la campagne et ses listes après confirmation. Exporter régulièrement : aucune synchronisation ni sauvegarde distante n’est fournie. Les anciennes sauvegardes restent compatibles. Une sauvegarde illisible est protégée contre l’écrasement et peut être exportée pour récupération.
 
@@ -46,9 +55,9 @@ Thème inspiré des documents V2 : jaune ocre, noir, fonds papier, titres rouill
 
 ## Vérifications
 
-19 tests Node : dés et risque, relances, profils, sélections, compatibilité des sauvegardes, export/import des données, listes personnalisées, réserve de dés et contrastes des couleurs.
+24 tests Node : dés et risque, relances, profils, sélections, compatibilité des sauvegardes, export/import des données, listes personnalisées, réserve de dés et contrastes des couleurs, séparation des atouts corps / engins et recherche des synthèses classées.
 
-Parcours Chromium : création par sélection, ajout d’une référence personnelle depuis le formulaire sans perdre la saisie, sélection de compétences personnelles, fiche recto-verso et impression PDF A4 de deux pages, modification et rechargement, export/import JSON, couleurs distinctes persistantes, relances, affichage mobile et préservation des anciennes notes. Données de test isolées des campagnes utilisateur.
+Parcours Chromium V0.6 : cubes à six faces et points, animation effective puis révélation, relance, réduction des animations, carte Dijon (image, repères, zoom et pions après rechargement), règles (85 entrées, thèmes, quatre options et recherche), anciens atouts d’engins conservés séparément, puis régression complète : création par sélection, ajout d’une référence personnelle depuis le formulaire sans perdre la saisie, sélection de compétences personnelles, fiche recto-verso et impression PDF A4 de deux pages, modification et rechargement, export/import JSON, couleurs distinctes persistantes, relances, affichage mobile et préservation des anciennes notes. Données de test isolées des campagnes utilisateur.
 
 ## Publication sur GitHub Pages
 

@@ -239,3 +239,43 @@ fieldset,.selection-editor,.picker-controls>label,.attribute-grid>label,.skill-i
 .picker-controls select,.skill-inputs select{min-width:0;max-width:100%}
 #profile-editor .table-scroll{width:100%;min-width:0}
 @media(max-width:480px){#profile-editor{padding:14px 10px}.selection-editor .actions{flex-wrap:wrap;align-items:stretch}.selection-editor .actions button{flex:1;font-size:14px}.selected-row{padding:12px}.skill-inputs{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+/* D6 à six faces : les points portent la valeur, les couleurs portent le groupe. */
+.dice-tray{padding:26px 20px;background:#222927;background-image:radial-gradient(#ffffff12 .6px,transparent .7px);background-size:4px 4px;border:5px solid #4f493b;border-bottom-width:10px;border-radius:12px;box-shadow:inset 0 0 30px #0008;margin:20px 0}
+.dice-tray h4{color:#e5d8b5;font:600 17px var(--heading);margin:0 0 15px}.dice-tray .muted{color:#c9c7b9}
+.die,.die.hit,.die.risk-die,.die.risk-die.hit{display:inline-block;position:relative;width:54px;height:54px;background:transparent;border:0;margin:12px 12px 18px 7px;box-shadow:none;perspective:350px;vertical-align:middle;overflow:visible;color:var(--normal-die-text,#fff)}
+.die.risk-die{color:var(--risk-die-text,#000)}
+.die-body{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(-12deg) rotateY(-16deg) rotateX(var(--face-x)) rotateY(var(--face-y));filter:drop-shadow(6px 10px 4px #0006)}
+.die-face{position:absolute;inset:0;display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:9px;gap:3px;border:1px solid #0005;border-radius:7px;background:var(--normal-die-color,#45385f);box-shadow:inset 2px 2px 5px #ffffff40,inset -3px -3px 6px #0005;backface-visibility:hidden}
+.risk-die .die-face{background:var(--risk-die-color,#eeb600)}
+.pip{display:block;align-self:center;justify-self:center;width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:inset 0 1px 2px #0004}
+.face-1{transform:translateZ(27px)}.face-6{transform:rotateY(180deg) translateZ(27px)}.face-2{transform:rotateX(90deg) translateZ(27px)}.face-5{transform:rotateX(-90deg) translateZ(27px)}.face-3{transform:rotateY(90deg) translateZ(27px)}.face-4{transform:rotateY(-90deg) translateZ(27px)}
+.die.hit::after{content:'★';right:-10px;top:-13px;font:14px system-ui,sans-serif;color:#ffe282;text-shadow:0 1px 2px black;z-index:2}
+.is-rolling .die-body{animation:die-tumble .85s cubic-bezier(.17,.67,.44,1) both;animation-delay:var(--roll-delay)}
+.is-rolling .die{animation:die-bounce .85s ease-out both;animation-delay:var(--roll-delay)}
+.is-rolling .die.hit::after{visibility:hidden}
+.roll-status{font:600 16px var(--heading);letter-spacing:.6px;color:var(--rust);margin:16px 0}
+@keyframes die-tumble{0%{transform:translate3d(-25px,-25px,25px) rotateX(430deg) rotateY(720deg) rotateZ(55deg)}40%{transform:translate3d(15px,-7px,30px) rotateX(180deg) rotateY(420deg) rotateZ(-25deg)}75%{transform:translate3d(-3px,-12px,10px) rotateX(50deg) rotateY(130deg)}100%{transform:rotateX(-12deg) rotateY(-16deg) rotateX(var(--face-x)) rotateY(var(--face-y))}}
+@keyframes die-bounce{0%{transform:translateY(-14px)}35%{transform:translateY(12px)}60%{transform:translateY(-9px)}80%{transform:translateY(4px)}100%{transform:none}}
+/* Dijon, carte de campagne artistique avec repères accessibles. */
+.dijon-header h3{font:400 27px Marker,cursive}.dijon-header>.muted,.dijon-header .muted{font-size:12px}
+.map-controls{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:24px 0 5px}.map-controls>label:first-child{min-width:180px;flex:1}.map-controls select{margin:5px 0}.map-zoom{display:flex;align-items:center;gap:10px}.map-zoom output{font:600 16px var(--heading);min-width:50px;text-align:center}
+.dijon-viewport{overflow:auto;height:650px;max-height:75vh;border:3px solid #393d36;border-top:5px solid var(--accent);background:#111a1e;box-shadow:3px 4px #d5cfbd;overscroll-behavior:contain}
+.dijon-map{position:relative;min-width:760px;aspect-ratio:4/3;background:#172326 url('./assets/dijon-cyberpunk.png') center/100% 100% no-repeat;isolation:isolate}
+.map-north{position:absolute;right:18px;top:15px;z-index:1;background:#101c24d9;color:#f5d471;padding:9px 14px;font:600 18px var(--heading);border:1px solid #dcc260}
+.dijon-poi{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;gap:7px;padding:4px 7px 4px 4px;min-height:32px;background:#111e25e8;color:#fff9db;border:1px solid #d4b451;font:600 13px var(--heading);box-shadow:0 2px 8px #0009;white-space:nowrap;z-index:2}
+.dijon-poi b{display:inline-grid;place-items:center;background:var(--accent);color:#221e13;min-width:24px;min-height:24px;font-size:13px}
+.dijon-poi:hover{background:#263f46;color:white;border-color:#88e5e0;z-index:4}.dijon-poi:focus-visible{outline-color:#7bf5e7;z-index:5}
+.dijon-map .token{z-index:6;min-height:35px;max-width:170px;border:2px solid #fff;box-shadow:0 0 0 3px #eeb60088,0 3px 10px #000}
+.hide-places .dijon-poi{display:none}
+.map-inspector{margin:20px 0;padding:18px 20px;border-left:4px solid var(--accent);background:#e8e1cb;font-size:13px}.map-inspector p{margin:7px 0 0}.place-list{display:flex;gap:9px;flex-wrap:wrap;margin:16px 0}.place-list button{font-size:14px}
+/* Aide-mémoire classé : accès rapide et sources au niveau de chaque règle. */
+.rules-heading h3{font:400 28px Marker,cursive}.rules-heading>.muted{font-size:12px;max-width:950px}.rules-filters{display:grid;grid-template-columns:1fr 1.4fr auto;align-items:center;gap:16px;margin:25px 0 5px}.rules-filters>.check-label{grid-column:auto;white-space:nowrap}.rules-jump{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 22px}.rules-jump button{font-size:13px;padding:7px 12px;min-height:34px}.rule-section{margin:25px 0 30px}.rule-section>h3{font-size:25px;border-bottom:3px solid var(--accent);padding-bottom:8px}.rule-card{border:1px solid var(--line);background:var(--paper);margin:10px 0;border-radius:2px}.rule-card summary{display:flex;align-items:center;gap:12px;padding:15px 18px;list-style:none}.rule-card summary::before{content:'+';font:20px var(--heading);color:var(--rust);flex-shrink:0}.rule-card[open] summary::before{content:'−'}.rule-card summary>span{flex:1;color:var(--ink);font-size:19px}.rule-card summary>small{font:11px system-ui,sans-serif;letter-spacing:0;color:var(--muted);text-align:right}.rule-card summary>em{font:600 11px var(--heading);color:var(--violet);background:#ebe4f4;padding:4px 8px;text-transform:uppercase}.rule-card[open] summary{border-bottom:1px solid var(--line)}.rule-body{padding:5px 23px 15px;font-size:13px}.rule-body li{padding:4px 0}.rule-body ul{padding-left:21px}.personal-rules{margin-top:35px;border-top:2px solid var(--line)}.personal-rules>.card{margin:15px 0}
+@media(max-width:800px){.rules-filters{grid-template-columns:1fr 1fr}.rules-filters>.check-label{grid-column:1/-1}.rule-card summary{flex-wrap:wrap;gap:7px}.rule-card summary>small{width:100%;text-align:left;margin-left:20px}.map-controls{gap:12px}.dijon-poi{font-size:12px}.dijon-header h3{font-size:23px}.dice-tray{padding:22px 10px}}
+@media(max-width:480px){.rules-filters{grid-template-columns:1fr;gap:4px}.rules-heading h3{font-size:23px}.rules-jump{gap:5px}.rules-jump button{font-size:12px}.rule-body{padding:5px 16px 12px}.rule-card summary>span{font-size:17px}.map-controls .check-label{flex-basis:100%}.dijon-viewport{height:510px;max-height:70vh}.dice-result-groups{grid-template-columns:1fr}.map-controls>button{font-size:14px}}
+@media(prefers-reduced-motion:reduce){.is-rolling .die-body,.is-rolling .die{animation:none!important}}
+.die-body{filter:none}
+.die::before{content:'';position:absolute;left:0;right:-7px;bottom:-8px;height:14px;border-radius:50%;background:#0005;filter:blur(4px);z-index:-1}
+.roll-outcome h3{color:var(--rust)}
+
+.dijon-poi[data-place="gare"]{transform:translate(-100%,-50%)}
+.dijon-poi[data-place="darcy"]{transform:translate(-35%,-115%)}
