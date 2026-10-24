@@ -1,6 +1,6 @@
-import {isCharacterAsset} from './catalog.js?v=0.6.0';
-import {attributeFields,woundLabels,skillReserve} from './sheet.js?v=0.6.0';
-import {escape,valueOrDash as val} from './ui.js?v=0.6.0';
+import {isCharacterAsset} from './catalog.js?v=0.7.0';
+import {attributeFields,woundLabels,skillReserve} from './sheet.js?v=0.7.0';
+import {escape,valueOrDash as val} from './ui.js?v=0.7.0';
 const block=(title,content,cls='')=>`<section class="sheet-block ${cls}"><h3>${title}</h3>${content}</section>`;
 const note=(title,text)=>block(title,`<p class="sheet-notes">${val(text)}</p>`);
 const smallStat=(label,v)=>`<div class="sheet-small-stat"><span>${label}</span><b>${val(v)}</b></div>`;

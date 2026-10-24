@@ -1,4 +1,4 @@
-import {escape} from './ui.js?v=0.6.0';
+import {escape} from './ui.js?v=0.7.0';
 // Repères approximatifs d'une réinterprétation artistique, pas des données de navigation.
 export const dijonPlaces=[
  {id:'gare',name:'Gare Dijon-Ville',x:42,y:56,hook:'Hub ferroviaire sous surveillance : extraction à la sortie du dernier train.'},

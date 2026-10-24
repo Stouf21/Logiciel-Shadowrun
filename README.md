@@ -1,6 +1,6 @@
 # Shadowrun Anarchy · Écran du meneur
 
-Application indépendante en français pour préparer et mener une campagne d’Anarchy V2. Version 0.6.0, sans dépendance applicative externe.
+Application indépendante en français pour préparer et mener une campagne d’Anarchy V2. Version 0.7.0, sans dépendance applicative externe.
 
 ## Démarrer
 
@@ -39,6 +39,14 @@ Les points d’Anarchy sont décomptés manuellement. Le meneur arbitre les comp
 
 Ce récapitulatif couvre les familles de mécanismes, avec leurs principales procédures, formules et exceptions. Il condense le livre ; il ne reproduit pas chaque ligne des tables d’équipement, de sorts, de bestiaire ou des profils de scénarios. Consulter la page source pour les conditions détaillées d’une entrée particulière. Les variantes décrites dans l’aide ne sont pas activées automatiquement dans le lanceur.
 
+## Corporations
+
+Le menu « Corporations » propose douze dossiers de départ : les dix AAA présentées par le livre V2 (p. 30–35), Omnistar et l’alliance French Touch (p. 36). Les fiches résument secteurs, siège, direction et source. Ces données correspondent à la présentation de cette édition, sans classement chronologique recalculé.
+
+Recherche par nom, sigle, activité, direction ou contenu des notes ; filtres par classement et relation avec le groupe. Chaque dossier permet de noter contacts / filiales / implantation locale, objectifs, secrets du meneur et notes de campagne. Les informations sont personnalisables, et des corporations propres à la campagne peuvent être créées ou supprimées.
+
+Les dossiers modifiés ou personnels sont conservés localement dans la campagne et inclus dans l’export/import JSON. Les anciennes sauvegardes sans cette collection retrouvent les références de départ ; une liste explicitement vide reste vide. Modifier une copie n’altère pas les données de référence du code.
+
 ## Campagne et sauvegarde
 
 Catalogue d’objets, sorts et autres ressources saisis par le meneur, aides documentaires et recherche globale. Carte artistique de Dijon cyberpunk avec 11 repères, accroches de scénario fictives, zoom, affichage des repères et pions persistants. Le fond est une illustration originale générée, géographiquement approximative, sans données de navigation : les localisations et ajouts de campagne ne représentent pas un canon officiel. Aucune carte OpenStreetMap n’a été intégrée.
@@ -55,7 +63,7 @@ Thème inspiré des documents V2 : jaune ocre, noir, fonds papier, titres rouill
 
 ## Vérifications
 
-24 tests Node : dés et risque, relances, profils, sélections, compatibilité des sauvegardes, export/import des données, listes personnalisées, réserve de dés et contrastes des couleurs, séparation des atouts corps / engins et recherche des synthèses classées.
+28 tests Node : dés et risque, relances, profils, sélections, compatibilité des sauvegardes, export/import des données, listes personnalisées, réserve de dés et contrastes des couleurs, séparation des atouts corps / engins, recherche des synthèses classées, compatibilité et sauvegarde des corporations et annotations.
 
 Parcours Chromium V0.6 : cubes à six faces et points, animation effective puis révélation, relance, réduction des animations, carte Dijon (image, repères, zoom et pions après rechargement), règles (85 entrées, thèmes, quatre options et recherche), anciens atouts d’engins conservés séparément, puis régression complète : création par sélection, ajout d’une référence personnelle depuis le formulaire sans perdre la saisie, sélection de compétences personnelles, fiche recto-verso et impression PDF A4 de deux pages, modification et rechargement, export/import JSON, couleurs distinctes persistantes, relances, affichage mobile et préservation des anciennes notes. Données de test isolées des campagnes utilisateur.
 
@@ -66,3 +74,5 @@ L’interface est statique : Node.js n’est pas nécessaire sur cet hébergemen
 Dans GitHub : **Settings → Pages → Build and deployment → Source : Deploy from a branch → Branch : main → / (root) → Save**. Attendre la publication indiquée par GitHub.
 
 Adresse : https://stouf21.github.io/Logiciel-Shadowrun/ . Les sauvegardes sont propres à l’origine du site et au navigateur. Pour déplacer une campagne depuis une autre adresse, l’exporter puis l’importer sur le site.
+
+Parcours Chromium V0.7 : ouverture du menu, douze références (dont dix AAA), filtres, recherche par sigle, édition des relations et annotations, création / suppression, rechargement, export / import, recherche globale dans les contacts et secrets, contenu HTML traité comme texte, liste / dossier / formulaire utilisables en 390 et 768 pixels. Ancien PJ conservé, dés et aide-mémoire accessibles.
