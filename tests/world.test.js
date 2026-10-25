@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mergeWorld,worldSearch,relatedRecords,worldDiagnostics,upsertWorldRecord} from '../world.js';
+import {mergeWorld,worldSearch,relatedRecords,worldDiagnostics,upsertWorldRecord,characterEntryForRecord} from '../world.js';
 import {validateWorld,makeWorldRecord} from '../world-schema.js';
 import {seedRecords,seedRelations} from '../world-data.js';
 import {validateCampaign} from '../campaign.js';
@@ -57,7 +57,8 @@ test('Les fusions répétées et export/import conservent les modifications et l
  assert.deepEqual(restored.entries,before.entries);
  assert.equal(byId(restored,'faction-french-touch').corporationId,'corp-french-touch');
  assert.equal(byId(restored,'faction-renraku-dijon').corporationId,'corp-renraku');
- assert.equal(restored.world.records.filter(r=>r.kind==='faction').length,24);
+ assert.equal(restored.world.records.filter(r=>r.kind==='faction').length,6);
+ assert.equal(restored.world.records.filter(r=>r.kind==='corporation').length,18);
 });
 
 test('Un dossier préexistant nommé comme une graine garde son ID et reçoit des relations correctement remappées',()=>{
@@ -89,10 +90,10 @@ test('Les filtres combinent découverte, métatype, statut, scénario, quartier 
  let state=fresh();
  state=upsertWorldRecord(state,{...byId(state,'char-karl-darmin'),discovery:'Découvert',fields:{...byId(state,'char-karl-darmin').fields,life:'Disparu'}});
  assert.deepEqual(worldSearch(state.world,'',{kind:'character',filters:{metatype:'Elfe',life:'Disparu',discovery:'Découvert',scenario:'scenario-karl',zone:'zone-valmy'}}).map(h=>h.record.id),['char-karl-darmin']);
- const french=worldSearch(state.world,'',{kind:'place',filters:{faction:'faction-french-touch'}});
+ const french=worldSearch(state.world,'',{kind:'place',filters:{corporation:'faction-french-touch'}});
  assert.ok(french.some(h=>h.record.id==='place-restaurant-gastronomie'));
  assert.ok(!french.some(h=>h.record.id==='place-sous-sols-gastronomie'),'Le territoire clandestin reste caché');
- assert.ok(worldSearch(state.world,'',{kind:'place',includeSecrets:true,filters:{faction:'faction-french-touch'}}).some(h=>h.record.id==='place-sous-sols-gastronomie'));
+ assert.ok(worldSearch(state.world,'',{kind:'place',includeSecrets:true,filters:{corporation:'faction-french-touch'}}).some(h=>h.record.id==='place-sous-sols-gastronomie'));
  assert.ok(worldSearch(state.world,'',{filters:{authority:'Étatique'}}).some(h=>h.record.id==='zone-longvic'));
 });
 
@@ -134,4 +135,36 @@ test('Les onze repères hérités gardent exactement leurs positions et chaque r
  const {world}=fresh();
  for(const place of dijonPlaces)assert.equal(world.records.filter(r=>r.mapPlaceId===place.id).length,1);
  assert.equal(world.records.filter(r=>r.mapPlaceId).length,11);
+});
+
+
+test('Les anciennes corporations classées comme factions migrent sans perdre leurs identifiants, notes et relations',()=>{
+ const legacy=fresh();for(const r of legacy.world.records)if(r.kind==='corporation')r.kind='faction';
+ const french=byId(legacy,'faction-french-touch');french.gmNotes='Note préexistante';
+ byId(legacy,'zone-gastronomie').fields.faction='French Touch';
+ const ids=legacy.world.records.map(r=>r.id),relations=structuredClone(legacy.world.relations);
+ const migrated=mergeWorld(validateCampaign(legacy));
+ assert.equal(byId(migrated,'faction-french-touch').kind,'corporation');
+ assert.equal(byId(migrated,'faction-french-touch').gmNotes,'Note préexistante');
+ assert.equal(byId(migrated,'faction-hardis').kind,'faction');
+ assert.equal(byId(migrated,'faction-esus').kind,'corporation');
+ assert.equal(byId(migrated,'zone-gastronomie').fields.corporation,'French Touch');
+ assert.equal(byId(migrated,'zone-gastronomie').fields.faction,'À définir');
+ assert.deepEqual(migrated.world.records.map(r=>r.id),ids);
+ assert.deepEqual(migrated.world.relations,relations);
+ assert.deepEqual(mergeWorld(migrated),migrated);
+ assert.equal(worldSearch(migrated.world,'',{kind:'faction',includeSecrets:true}).length,6);
+ assert.equal(worldSearch(migrated.world,'French Touch',{kind:'faction'}).length,0);
+ assert.equal(worldSearch(migrated.world,'',{filters:{faction:'faction-french-touch'}}).length,0);
+});
+
+test('Lire la fiche d’un personnage sans profil ne crée aucune valeur de jeu et conserve les fiches existantes',()=>{
+ const state=fresh(),record=byId(state,'char-karl-darmin'),before=structuredClone(state);
+ const preview=characterEntryForRecord(state,record);
+ assert.deepEqual(preview.profile,{metatype:'Elfe'});
+ assert.equal(preview.name,'Karl Darmin');
+ assert.equal(preview.profile.force,undefined);
+ assert.deepEqual(state,before);
+ const entry={id:'existing',name:'Karl Darmin',category:'PJ',description:'Ancienne description',notes:'Secret',profile:{force:4,assets:'Atout existant'}};
+ assert.strictEqual(characterEntryForRecord({...state,entries:[entry]},{...record,gameEntryId:'existing'}),entry);
 });

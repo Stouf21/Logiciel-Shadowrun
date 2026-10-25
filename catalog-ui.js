@@ -1,5 +1,5 @@
-import {escape} from './ui.js?v=0.8.0';
-import {attributeFields} from './sheet.js?v=0.8.0';
+import {escape,searchDisclosure} from './ui.js?v=0.9.0';
+import {attributeFields} from './sheet.js?v=0.9.0';
 export function showCustomEditor(kind,onSave,{characterOnly=false}={}){
  const dialog=document.createElement('dialog');
  const skills=kind==='skills';
@@ -10,7 +10,7 @@ export function showCustomEditor(kind,onSave,{characterOnly=false}={}){
  dialog.showModal();
 }
 export function renderCatalogLibrary(container,catalogs,onCreate,query=''){
- container.innerHTML=`<div class="toolbar library-toolbar"><div><h3>Compétences & atouts</h3><p class="muted">${catalogs.skills.length} compétences · ${catalogs.assets.length} atouts et modèles. Exemples nommés du livre et modèles de construction ; les créations personnelles restent ouvertes.</p></div><div class="actions"><button data-create="skills">+ Compétence</button><button class="primary" data-create="assets">+ Atout</button></div></div><div class="library-filters"><label>Liste<select id="library-kind"><option value="skills">Compétences</option><option value="assets">Atouts</option></select></label><label>Rechercher dans les listes<input id="library-search" type="search" placeholder="Nom, famille, effets ou page…" value="${escape(query)}"></label></div><p id="library-count" class="muted" role="status"></p><div id="library-results" class="grid"></div>`;
+ container.innerHTML=`<div class="toolbar library-toolbar"><div><h3>Compétences & atouts</h3><p class="muted">${catalogs.skills.length} compétences · ${catalogs.assets.length} atouts et modèles. Exemples nommés du livre et modèles de construction ; les créations personnelles restent ouvertes.</p></div><div class="actions"><button data-create="skills">+ Compétence</button><button class="primary" data-create="assets">+ Atout</button></div></div>${searchDisclosure('library-search-panel',`<div class="library-filters"><label>Liste<select id="library-kind"><option value="skills">Compétences</option><option value="assets">Atouts</option></select></label><label>Rechercher dans les listes<input id="library-search" type="search" placeholder="Nom, famille, effets ou page…" value="${escape(query)}"></label></div>`)}<p id="library-count" class="muted" role="status"></p><div id="library-results" class="grid"></div>`;
  const results=container.querySelector('#library-results');
  const update=()=>{const kind=container.querySelector('#library-kind').value,q=container.querySelector('#library-search').value.toLocaleLowerCase('fr');const items=catalogs[kind].filter(x=>[x.name,x.category,x.description,x.source].join(' ').toLocaleLowerCase('fr').includes(q));container.querySelector('#library-count').textContent=items.length+' résultat(s)';results.innerHTML=items.map(x=>`<article class="card"><span class="tag">${escape(x.category)}${x.id.startsWith('custom-')?' · Personnel':''}</span><h3>${escape(x.name)}</h3>${kind==='assets'?`<p>Niveau : ${x.level===''?'à déterminer':escape(x.level)} · Essence : ${escape(x.essence)}</p>`:''}<p>${escape(x.description)}</p><small>${escape(x.source)}</small></article>`).join('')||'<p class="muted">Aucune entrée trouvée. Vous pouvez créer la vôtre.</p>';};
  container.querySelector('#library-kind').onchange=update;container.querySelector('#library-search').oninput=update;

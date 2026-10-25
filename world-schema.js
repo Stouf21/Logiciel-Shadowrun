@@ -1,5 +1,5 @@
 export const UNKNOWN='À définir';
-export const worldKinds={character:'Personnage',faction:'Faction',zone:'Quartier / zone',place:'Lieu',scenario:'Scénario',clue:'Indice',secret:'Secret',event:'Événement'};
+export const worldKinds={character:'Personnage',corporation:'Corporation',faction:'Faction',zone:'Quartier / zone',place:'Lieu',scenario:'Scénario',clue:'Indice',secret:'Secret',event:'Événement'};
 export const discoveryStates=['Non découvert','Partiellement découvert','Découvert'];
 export const visibilities=['public','known','rumor','secret','revealed'];
 export const visibilityLabels={public:'Public',known:'Connu des PJ',rumor:'Rumeur',secret:'Secret MJ',revealed:'Révélé'};
@@ -15,6 +15,7 @@ export const worldFields={
  secret:[['subject','Sujet'],['truth','Vérité cachée','secret'],['revealCondition','Condition de révélation','secret']],
  event:[['date','Date / repère temporel'],['status','État de l’événement'],['consequence','Conséquence','secret']]
 };
+worldFields.corporation=worldFields.faction;
 export function makeWorldRecord(kind,id,name,common={},fields={}){
  return {id,kind,name,aliases:[],publicInfo:UNKNOWN,knownInfo:UNKNOWN,rumors:UNKNOWN,secrets:UNKNOWN,revealedInfo:UNKNOWN,discovery:'Non découvert',state:UNKNOWN,gmNotes:UNKNOWN,consequences:UNKNOWN,history:UNKNOWN,portraitUrl:'',isSecret:kind==='secret',gameEntryId:null,corporationId:null,mapPlaceId:null,coordinates:null,source:'Éléments de campagne fournis par le meneur',fields:Object.fromEntries(worldFields[kind].map(([key])=>[key,UNKNOWN])),...common, ...{fields:{...Object.fromEntries(worldFields[kind].map(([key])=>[key,UNKNOWN])),...fields}}};
 }

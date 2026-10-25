@@ -1,8 +1,9 @@
-import {seedRecords,seedRelations,seedSettings} from './world-data.js?v=0.8.0';
-import {makeWorldRecord,worldFields,UNKNOWN,validateWorld} from './world-schema.js?v=0.8.0';
-import {getCorporations} from './corporations.js?v=0.8.0';
+import {seedRecords,seedRelations,seedSettings} from './world-data.js?v=0.9.0';
+import {makeWorldRecord,worldFields,UNKNOWN,validateWorld} from './world-schema.js?v=0.9.0';
+import {getCorporations} from './corporations.js?v=0.9.0';
 export const normalize=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('fr').trim().replace(/[’‘]/g,"'");
-const cloneRecord=r=>({...r,aliases:[...r.aliases],fields:{...r.fields}});
+export const isCorporationRecord=r=>r.kind==='corporation'||r.kind==='faction'&&(!!r.corporationId||/\b(corporation|corporatiste|filiale corporatiste)\b/.test(normalize(r.fields?.type)));
+const cloneRecord=r=>({...r,aliases:[...r.aliases],fields:{...r.fields},kind:isCorporationRecord(r)?'corporation':r.kind});
 const known=v=>['string','number'].includes(typeof v)&&String(v).trim()!==''&&!['a definir','informations a completer','a developper'].includes(normalize(v));
 function stableId(prefix,key){let a=2166136261,b=2246822507;for(const c of String(key)){a=Math.imul(a^c.charCodeAt(0),16777619);b=Math.imul(b^c.charCodeAt(0),3266489909);}return prefix+(a>>>0).toString(16).padStart(8,'0')+(b>>>0).toString(16).padStart(8,'0');}
 const aliasList=r=>Array.isArray(r.aliases)?r.aliases.filter(x=>typeof x==='string'):typeof r.aliases==='string'?r.aliases.split(','):[];
@@ -24,14 +25,15 @@ export function mergeWorld(state){
  }
  for(const entry of gameEntries.filter(e=>!bound.has(e.id))){const r=makeWorldRecord('character',stableId('char-existing-',entry.id),entry.name,{gameEntryId:entry.id,publicInfo:entry.description||UNKNOWN,gmNotes:entry.notes||UNKNOWN,source:'Fiche de jeu préexistante conservée'},{metatype:entry.profile?.metatype||UNKNOWN,age:String(entry.age??UNKNOWN),gender:known(entry.gender)?String(entry.gender):UNKNOWN,role:known(entry.role)?String(entry.role):UNKNOWN});records.push(r);}
  const corporations=getCorporations(state),corpBound=new Set();
- for(const r of records.filter(r=>r.kind==='faction')){
+ for(const r of records.filter(r=>r.kind==='corporation')){
   const corp=corporations.find(c=>c.id===r.corporationId)||corporations.find(c=>!corpBound.has(c.id)&&aliasesMatch(r,{...c,aliases:c.aliases.split(',').map(x=>x.trim())}));
   if(!corp){r.corporationId=null;continue;}r.corporationId=corp.id;corpBound.add(corp.id);
   if(!known(r.gmNotes)&&known(corp.notes))r.gmNotes=corp.notes;
   if(!known(r.secrets)&&known(corp.secrets))r.secrets=corp.secrets;
   if(!known(r.fields.objectives)&&known(corp.objectives))r.fields.objectives=corp.objectives;
  }
- for(const c of corporations.filter(c=>!corpBound.has(c.id)))records.push(makeWorldRecord('faction',stableId('faction-corporation-',c.id),c.name,{corporationId:c.id,aliases:c.aliases.split(',').map(x=>x.trim()).filter(Boolean),publicInfo:c.summary||UNKNOWN,secrets:c.secrets||UNKNOWN,gmNotes:c.notes||UNKNOWN,source:c.source},{officialName:c.name,type:'Corporation '+c.tier,legal:c.sectors||UNKNOWN,objectives:c.objectives||UNKNOWN,headquarters:c.hq||UNKNOWN,leaders:c.leader||UNKNOWN,contacts:c.contacts||UNKNOWN}));
+ for(const c of corporations.filter(c=>!corpBound.has(c.id)))records.push(makeWorldRecord('corporation',stableId('faction-corporation-',c.id),c.name,{corporationId:c.id,aliases:c.aliases.split(',').map(x=>x.trim()).filter(Boolean),publicInfo:c.summary||UNKNOWN,secrets:c.secrets||UNKNOWN,gmNotes:c.notes||UNKNOWN,source:c.source},{officialName:c.name,type:'Corporation '+c.tier,legal:c.sectors||UNKNOWN,objectives:c.objectives||UNKNOWN,headquarters:c.hq||UNKNOWN,leaders:c.leader||UNKNOWN,contacts:c.contacts||UNKNOWN}));
+ for(const r of records.filter(r=>['zone','place'].includes(r.kind)))if(known(r.fields.faction)&&records.some(c=>c.kind==='corporation'&&[c.name,...c.aliases].some(name=>normalize(name)===normalize(r.fields.faction)))){if(!known(r.fields.corporation))r.fields.corporation=r.fields.faction;r.fields.faction=UNKNOWN;}
  const relations=(original?.relations??[]).map(r=>({...r}));
  for(const seed of seedRelations){if(!relations.some(r=>r.id===seed.id))relations.push({...seed,from:remap.get(seed.from)??seed.from,to:remap.get(seed.to)??seed.to});}
  const world={...original,version:1,settings:{...seedSettings,...original?.settings},records,relations};validateWorld(world);return {...state,world};
@@ -48,7 +50,8 @@ export function worldSearch(world,query='',{includeSecrets=false,kind='',filters
   if(filters.discovery&&r.discovery!==filters.discovery)return false;
   if(filters.security&&r.fields.security!==filters.security)return false;
   if(filters.authority&&r.fields.authority!==filters.authority)return false;
-  for(const [key,expectedKind] of [['faction','faction'],['zone','zone'],['scenario','scenario']])if(filters[key]){
+  for(const [key,expectedKind] of [['faction','faction'],['corporation','corporation'],['zone','zone'],['scenario','scenario']])if(filters[key]){
+   if(!world.records.some(x=>x.id===filters[key]&&x.kind===expectedKind))return false;
    const direct=matchesFacet(world,r,key,filters[key],includeSecrets);
    if(!direct&&r.id!==filters[key])return false;
   }
@@ -80,4 +83,11 @@ function matchesFacet(world,record,kind,id,includeSecrets){
  for(let depth=0;depth<3;depth++)for(const relation of links.filter(r=>r.type==='Situé dans'))if(locations.has(relation.from))locations.add(relation.to);
  if(kind==='zone')return locations.has(id);
  return [...locations].some(location=>adjacent(location).includes(id));
+}
+
+// Reading an unconfigured character must not create a saved game profile.
+export function characterEntryForRecord(state,record){
+ const existing=state.entries.find(e=>e.id===record.gameEntryId);if(existing)return existing;
+ const profile={};if(known(record.fields.metatype))profile.metatype=record.fields.metatype;
+ return {id:record.id,name:record.name,category:'PJ / PNJ : À définir',description:known(record.fields.role)?record.fields.role:'',notes:'',profile};
 }

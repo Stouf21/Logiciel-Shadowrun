@@ -1,6 +1,6 @@
 # Shadowrun Anarchy · Écran du meneur
 
-Application indépendante en français pour préparer et mener une campagne d’Anarchy V2. Version 0.8.0, sans dépendance applicative externe.
+Application indépendante en français pour préparer et mener une campagne d’Anarchy V2. Version 0.9.0, sans dépendance applicative externe.
 
 ## Démarrer
 
@@ -8,17 +8,17 @@ Node.js 22 ou supérieur. Depuis le dépôt : `npm start` (port 3000, variable `
 
 ## Campagne Dijon 2082
 
-Tableau de bord et dossiers reliés de personnages, factions, quartiers / zones, lieux, scénarios, indices, secrets et événements. Une campagne neuve charge 115 dossiers et 130 relations. Chaque dossier est modifiable et distingue informations publiques, connues des PJ, rumeurs, découvertes et secrets du MJ masqués par défaut avec « Révéler ». Les valeurs inconnues restent « À définir » ; aucune caractéristique de jeu n’est inventée.
+Tableau de bord et dossiers reliés de personnages, corporations, factions, quartiers / zones, lieux, scénarios, indices, secrets et événements. Une campagne neuve charge 115 dossiers et 130 liens : notamment 18 corporations, 6 factions et 16 personnages. Les corporations possèdent leur propre type ; les anciennes sauvegardes sont reclassées en conservant les identifiants et annotations. Chaque dossier est modifiable et distingue informations publiques, connues des PJ, rumeurs, découvertes et secrets du MJ masqués par défaut avec « Révéler ». Les valeurs inconnues restent « À définir » ; aucune caractéristique de jeu n’est inventée.
 
-Les anciennes fiches de jeu, dont Lim, BOYCOW et Noah lorsqu’elles existent dans votre sauvegarde, restent intactes et se relient à leurs dossiers. La fusion est répétable et conserve vos modifications. Les références des corporations restent accessibles depuis les factions correspondantes. La chronologie accepte les repères relatifs ; l’éditeur de relations permet de préciser confiance, visibilité et évolution.
+Les anciennes fiches de jeu, dont Lim, BOYCOW et Noah lorsqu’elles existent dans votre sauvegarde, restent intactes et se relient à leurs dossiers. La fusion est répétable et conserve vos modifications. Le menu « Corporations & factions » propose deux onglets distincts. « Carte » permet de choisir Dijon, puis d’ouvrir sa carte ou ses quartiers et zones. Relations et Chronologie ne figurent plus au menu ; les liens entre dossiers et les événements enregistrés restent dans la campagne.
 
-La recherche des dossiers propose des filtres par type, métatype, statut vital, faction, quartier, sécurité, scénario et découverte. Une correspondance dans un secret reste masquée jusqu’à révélation explicite. Les exports incluent aussi les notes et secrets du meneur.
+Les recherches sont repliées derrière un bouton, y compris la barre globale et les filtres de carte, des corporations, des listes et des règles. La recherche des dossiers propose des filtres par type, métatype, statut vital, corporation, faction, quartier, sécurité, scénario et découverte. Une correspondance dans un secret reste masquée jusqu’à révélation explicite. Les exports incluent aussi les notes et secrets du meneur.
 
-[Bilan détaillé : architecture, fichiers, données, inconnues et vérifications](docs/DIJON_2082_INTEGRATION.md).
+[Bilan de l’intégration initiale V0.8 : architecture, données et inconnues](docs/DIJON_2082_INTEGRATION.md).
 
 ## Personnages et fiches
 
-- PJ, PNJ principaux et secondaires. Un clic sur le nom, la carte du personnage ou « Consulter la fiche » ouvre la fiche complète.
+- Une liste unique de personnages : cliquer sur le nom ou « Consulter la fiche » ouvre en priorité la fiche de jeu. « En savoir plus sur le personnage » ouvre son dossier narratif. Les PJ / PNJ déjà créés gardent leur profil et leurs notes. Un personnage sans profil affiche une fiche vide avec « Compléter la fiche », sans inventer ni enregistrer de statistiques lors de la consultation.
 - Présentation recto-verso adaptée des rubriques de `Anarchy_v2_Feuille_de_perso_2p_VF_Combo.pdf` (pages PDF 1–2) : attributs, Anarchy, compétences, connaissances, armes / sorts et type, mots-clés, comportements, répliques, essence, nuyens, blessures, cyberdeck, trois véhicules / drones, atouts et équipement.
 - « Modifier la fiche » permet de compléter les valeurs ; « Imprimer / PDF » utilise l’impression du navigateur. Une fiche standard tient sur deux pages A4 ; un contenu très long peut nécessiter des pages supplémentaires.
 - La présentation est adaptée à l’écran ; le PDF original et ses illustrations ne sont pas publiés.
@@ -51,15 +51,15 @@ Ce récapitulatif couvre les familles de mécanismes, avec leurs principales pro
 
 ## Corporations
 
-Le menu « Corporations » propose douze dossiers de départ : les dix AAA présentées par le livre V2 (p. 30–35), Omnistar et l’alliance French Touch (p. 36). Les fiches résument secteurs, siège, direction et source. Ces données correspondent à la présentation de cette édition, sans classement chronologique recalculé.
+L’onglet « Corporations », dans le menu commun avec les factions, regroupe les dossiers corporatistes de campagne et douze références de départ : les dix AAA présentées par le livre V2 (p. 30–35), Omnistar et l’alliance French Touch (p. 36). Les fiches résument secteurs, siège, direction et source. Ces données correspondent à la présentation de cette édition, sans classement chronologique recalculé.
 
-Recherche par nom, sigle, activité, direction ou contenu des notes ; filtres par classement et relation avec le groupe. Chaque dossier permet de noter contacts / filiales / implantation locale, objectifs, secrets du meneur et notes de campagne. Les informations sont personnalisables, et des corporations propres à la campagne peuvent être créées ou supprimées.
+Recherche par nom, sigle, activité, direction ou contenu des notes ; filtres par classement et relation avec le groupe. Les dossiers de campagne sont liés aux références antérieures, dont l’édition reste accessible. Chaque dossier permet de noter contacts / filiales / implantation locale, objectifs, secrets du meneur et notes de campagne. Les informations sont personnalisables, et des corporations propres à la campagne peuvent être créées ou supprimées.
 
 Les dossiers modifiés ou personnels sont conservés localement dans la campagne et inclus dans l’export/import JSON. Les anciennes sauvegardes sans cette collection retrouvent les références de départ ; une liste explicitement vide reste vide. Modifier une copie n’altère pas les données de référence du code.
 
 ## Campagne et sauvegarde
 
-Catalogue d’objets, sorts et autres ressources saisis par le meneur, aides documentaires et recherche globale. Carte artistique de Dijon cyberpunk avec les 11 repères et coordonnées conservés, zoom et pions persistants. Les repères ouvrent les dossiers de campagne ; les anciennes accroches fictives restent consultables séparément. Filtres par autorité, faction, sécurité et type, légende des autorités et mode MJ. Les lieux sans position fiable sont listés sans coordonnées inventées. Le fond est une illustration originale générée, géographiquement approximative, sans données de navigation : les localisations et ajouts de campagne ne représentent pas un canon officiel. Aucune carte OpenStreetMap n’a été intégrée.
+Catalogue d’objets, sorts et autres ressources saisis par le meneur, aides documentaires et recherche globale. Carte artistique de Dijon cyberpunk avec les 11 repères et coordonnées conservés, zoom et pions persistants. Les repères ouvrent les dossiers de campagne ; les anciennes accroches fictives restent consultables séparément. Filtres par autorité, corporation, faction, sécurité et type, légende des autorités et mode MJ. Les lieux sans position fiable sont listés sans coordonnées inventées. Le fond est une illustration originale générée, géographiquement approximative, sans données de navigation : les localisations et ajouts de campagne ne représentent pas un canon officiel. Aucune carte OpenStreetMap n’a été intégrée.
 
 Les campagnes et listes personnelles résident exclusivement dans le localStorage du navigateur ; le serveur ne reçoit aucune campagne. Export / import JSON inclut les personnages, sélections, listes personnalisées, corporations, pions et tout l’univers de campagne (dossiers, relations et réglages). L’import remplace la campagne et ses listes après confirmation. Exporter régulièrement : aucune synchronisation ni sauvegarde distante n’est fournie. Les anciennes sauvegardes restent compatibles. Une sauvegarde illisible est protégée contre l’écrasement et peut être exportée pour récupération.
 
@@ -73,7 +73,7 @@ Thème inspiré des documents V2 : jaune ocre, noir, fonds papier, titres rouill
 
 ## Vérifications
 
-38 tests Node : dix tests de chargement / fusion de Dijon, recherche protégée, relations et carte, en complément des vérifications de dés et risque, relances, profils, sélections, compatibilité des sauvegardes, export/import des données, listes personnalisées, réserve de dés et contrastes des couleurs, séparation des atouts corps / engins, recherche des synthèses classées, compatibilité et sauvegarde des corporations et annotations.
+40 tests Node : douze tests de chargement / fusion de Dijon, recherche protégée, relations, carte, reclassement des corporations et aperçu des fiches sans statistiques, en complément des vérifications de dés et risque, relances, profils, sélections, compatibilité des sauvegardes, export/import des données, listes personnalisées, réserve de dés et contrastes des couleurs, séparation des atouts corps / engins, recherche des synthèses classées, compatibilité et sauvegarde des corporations et annotations.
 
 Parcours Chromium V0.6 : cubes à six faces et points, animation effective puis révélation, relance, réduction des animations, carte Dijon (image, repères, zoom et pions après rechargement), règles (85 entrées, thèmes, quatre options et recherche), anciens atouts d’engins conservés séparément, puis régression complète : création par sélection, ajout d’une référence personnelle depuis le formulaire sans perdre la saisie, sélection de compétences personnelles, fiche recto-verso et impression PDF A4 de deux pages, modification et rechargement, export/import JSON, couleurs distinctes persistantes, relances, affichage mobile et préservation des anciennes notes. Données de test isolées des campagnes utilisateur.
 
@@ -88,3 +88,5 @@ Adresse : https://stouf21.github.io/Logiciel-Shadowrun/ . Les sauvegardes sont p
 Parcours Chromium V0.7 : ouverture du menu, douze références (dont dix AAA), filtres, recherche par sigle, édition des relations et annotations, création / suppression, rechargement, export / import, recherche globale dans les contacts et secrets, contenu HTML traité comme texte, liste / dossier / formulaire utilisables en 390 et 768 pixels. Ancien PJ conservé, dés et aide-mémoire accessibles.
 
 Parcours Chromium V0.8 : préservation de Lim, BOYCOW et Noah, dossiers reliés, masquage des secrets et recherche protégée, édition, filtres, relations, chronologie, onze coordonnées de carte inchangées, pions et export/import ; création de dossier et liaison explicite à une fiche de jeu ; anciens dés, corporations et règles accessibles ; dix sections vérifiées en 390 et 768 pixels, impression standard de deux pages A4.
+
+Parcours Chromium V0.9 : menus simplifiés, onglets Corporations / Factions et reclassement d’une véritable sauvegarde V0.8 sans perte des profils, notes ni liens ; fiche de jeu prioritaire et bouton vers le dossier, complétion d’un profil sans doublon ; Carte → Dijon → Quartiers et zones ; recherches repliées / déployées et filtres distincts corporation / faction ; export/import et rechargement ; compatibilité des listes, règles et dés ; affichage en 390 et 768 pixels et PDF A4 de deux pages.

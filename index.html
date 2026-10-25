@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#eeb600">
   <title>Shadowrun Anarchy 2.0 · Écran du meneur</title>
   <link rel="icon" href="./assets/anarchy-mark.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./style.css?v=0.8.0">
+  <link rel="stylesheet" href="./style.css?v=0.9.0">
 </head>
 <body>
   <a class="skip-link" href="#content">Aller au contenu</a>
@@ -27,7 +27,7 @@
       <div class="file-actions"><button id="export">Exporter</button><label class="button import-button" tabindex="0" role="button">Importer<input id="import" type="file" accept="application/json" hidden></label></div>
     </header>
     <div class="notice"><span class="notice-label">REPÈRE MJ</span><span>Fiches et lanceur Anarchy V2 · Références vérifiées dans la bibliothèque · Arbitrages narratifs au meneur.</span></div>
-    <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="search" type="search" placeholder="Un runner, un sort, une règle…" aria-label="Recherche globale"><span class="search-caption" aria-hidden="true">RECHERCHE RAPIDE</span></label>
+    <div class="search-tools global-search-tools"><button type="button" class="search-toggle" aria-label="Rechercher dans l’application" data-toggle-search="global-search-panel" aria-controls="global-search-panel" aria-expanded="false">Rechercher dans l’application</button><div class="search-panel" id="global-search-panel" hidden><label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="search" type="search" placeholder="Un runner, un sort, une règle…" aria-label="Recherche globale"><span class="search-caption" aria-hidden="true">RECHERCHE RAPIDE</span></label></div></div>
     <p id="message" role="status"></p>
     <section id="content" aria-labelledby="title"></section>
     <footer class="page-footer"><span>SHADOWRUN ANARCHY 2.0</span><span>Écran de jeu indépendant · Sauvegarde dans ce navigateur</span></footer>
@@ -43,6 +43,6 @@
       <p id="form-error" role="alert"></p><div class="actions"><button type="button" id="cancel">Annuler</button><button type="submit" class="primary">Enregistrer</button></div>
     </form>
   </dialog>
-  <script type="module" src="./app.js?v=0.8.0"></script>
+  <script type="module" src="./app.js?v=0.9.0"></script>
 </body>
 </html>

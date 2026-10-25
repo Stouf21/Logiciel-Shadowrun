@@ -1,12 +1,12 @@
-import {secretSection} from './secrets-ui.js?v=0.8.0';
-import {isCharacterAsset} from './catalog.js?v=0.8.0';
-import {attributeFields,woundLabels,skillReserve} from './sheet.js?v=0.8.0';
-import {escape,valueOrDash as val} from './ui.js?v=0.8.0';
+import {secretSection} from './secrets-ui.js?v=0.9.0';
+import {isCharacterAsset} from './catalog.js?v=0.9.0';
+import {attributeFields,woundLabels,skillReserve} from './sheet.js?v=0.9.0';
+import {escape,valueOrDash as val} from './ui.js?v=0.9.0';
 const block=(title,content,cls='')=>`<section class="sheet-block ${cls}"><h3>${title}</h3>${content}</section>`;
 const note=(title,text)=>block(title,`<p class="sheet-notes">${val(text)}</p>`);
 const smallStat=(label,v)=>`<div class="sheet-small-stat"><span>${label}</span><b>${val(v)}</b></div>`;
 function thresholds(r={}){return `<div class="sheet-thresholds">${smallStat('Léger',r.light)}${smallStat('Grave',r.serious)}${smallStat('Incap.',r.incap)}</div>`;}
-export function characterSheet(entry){
+export function characterSheet(entry,{worldId=null,unbound=false}={}){
  const p=entry.profile??{};
  const skills=p.skillRows??[];
  const assets=(p.assetRows??[]).filter(isCharacterAsset);const materialAssets=(p.assetRows??[]).filter(x=>!isCharacterAsset(x));
@@ -17,7 +17,7 @@ export function characterSheet(entry){
  const tableWounds=`<div class="table-scroll"><table class="sheet-table"><thead><tr><th>Seuils</th><th>Légère</th><th>Grave</th><th>Incap.</th><th>RR</th><th>État</th></tr></thead><tbody>${wounds.map(r=>`<tr>${['label','light','serious','incap','rr','status'].map(k=>`<td>${val(r[k])}</td>`).join('')}</tr>`).join('')}</tbody></table></div>${p.wounds?`<p class="sheet-legacy">${escape(p.wounds)}</p>`:''}`;
  const risk=`<table class="sheet-table risk-table"><thead><tr><th>RR</th><th>Faible</th><th>Normal</th><th>Fort</th><th>Extrême</th></tr></thead><tbody>${[[0,1,2,4,'6+'],[1,3,5,7,'10+'],[2,5,8,11,'13+'],[3,8,12,15,'—']].map(row=>`<tr>${row.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')}</tbody></table><p class="sheet-source">Nombre de dés de risque indicatif · livre p. 71</p>`;
  const assetTable=`<div class="table-scroll"><table class="sheet-table"><thead><tr><th>Atouts</th><th>Essence</th><th>Niveau</th></tr></thead><tbody>${assets.map(r=>`<tr><th>${escape(r.name)}<small>${escape(r.category)}</small>${r.notes?`<p>${escape(r.notes)}</p>`:''}<small class="sheet-source">${escape(r.source)}</small></th><td>${r.essence?'−'+escape(r.essence):'—'}</td><td>${val(r.level)}</td></tr>`).join('')||'<tr><td colspan="3">Aucun atout sélectionné</td></tr>'}</tbody></table></div>${p.assets?`<p class="sheet-legacy"><b>Anciennes notes d’atouts</b><br>${escape(p.assets)}</p>`:''}`;
- return `<div class="sheet-toolbar toolbar"><button data-sheet-back>← Personnages</button><div class="actions"><button data-edit="${escape(entry.id)}">Modifier la fiche</button><button class="primary" data-sheet-print>Imprimer / PDF</button></div></div><div class="character-sheet">
+ return `<div class="sheet-toolbar toolbar"><button data-sheet-back>← Personnages</button><div class="actions">${worldId?`<button data-open-world="${escape(worldId)}">En savoir plus sur le personnage</button>`:''}<button ${unbound?`data-create-world-game="${escape(worldId)}"`:`data-edit="${escape(entry.id)}"`}>${unbound?'Compléter la fiche':'Modifier la fiche'}</button><button class="primary" data-sheet-print>Imprimer / PDF</button></div></div><div class="character-sheet">
  <article class="sheet-page" aria-label="Fiche de personnage recto"><div class="sheet-heading"><div><span class="eyebrow">PSEUDO</span><h2>${escape(entry.name)}</h2><p>${escape(entry.category)}${p.metatype?' · '+escape(p.metatype):''}${entry.description?' · '+escape(entry.description):''}</p></div><div class="sheet-logo">ANARCHY <b>2.0</b></div></div>
  <div class="sheet-attributes">${[...attributeFields,['anarchy','Anarchy']].map(([k,l])=>`<div class="sheet-attribute"><span>${l}</span><b>${val(p[k])}</b></div>`).join('')}</div>
  <div class="sheet-recto-columns"><div class="sheet-main-column">${block('Compétences',tableSkills)}${note('Connaissances',p.knowledge)}${block('Armes et sorts',`<table class="sheet-table"><thead><tr><th>Arme ou sort</th><th>Type</th></tr></thead><tbody>${(p.weaponRows??Array.from({length:7},()=>({}))).map(r=>`<tr><td>${val(r.name)}</td><td>${val(r.type)}</td></tr>`).join('')}</tbody></table>${p.weapons?`<p class="sheet-legacy">${escape(p.weapons)}</p>`:''}`)}<div class="sheet-health-grid"><section class="sheet-block essence-block"><h3>Essence</h3><strong>${val(p.essence)}</strong>${smallStat('Succès annulés (magie)',p.magicCancelled)}${smallStat('Succès annulés (soins)',p.healingCancelled)}${smallStat('Désavantage social',p.socialDisadvantage)}${p.essenceEffects?`<p class="sheet-notes">${escape(p.essenceEffects)}</p>`:''}${smallStat('Nuyens',p.nuyens)}</section>${block('Blessures',tableWounds)}</div></div><div class="sheet-narrative-column">${note('Mots-clés',p.keywords)}${note('Comportements',p.behaviors)}${note('Répliques',p.quotes)}${block('Niveau de risque',risk)}</div></div>
