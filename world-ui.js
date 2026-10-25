@@ -1,7 +1,7 @@
-import {escape,searchDisclosure} from './ui.js?v=0.10.0';
-import {secretSection} from './secrets-ui.js?v=0.10.0';
-import {worldKinds,worldFields,UNKNOWN,discoveryStates,visibilities,visibilityLabels,authorities,makeWorldRecord,validateWorld} from './world-schema.js?v=0.10.0';
-import {worldSearch,relatedRecords,relationIsSecret,worldDiagnostics,upsertWorldRecord} from './world.js?v=0.10.0';
+import {escape,searchDisclosure} from './ui.js?v=0.11.0';
+import {secretSection} from './secrets-ui.js?v=0.11.0';
+import {worldKinds,worldFields,UNKNOWN,discoveryStates,visibilities,visibilityLabels,authorities,makeWorldRecord,validateWorld} from './world-schema.js?v=0.11.0';
+import {worldSearch,relatedRecords,relationIsSecret,worldDiagnostics,upsertWorldRecord} from './world.js?v=0.11.0';
 const text=value=>escape(value===undefined||value===''?UNKNOWN:value);
 export const worldLink=(r,label)=>`<button class="world-link" ${r.kind==='character'?'data-open-character':'data-open-world'}="${escape(r.id)}">${escape(label??r.name)}</button>`;
 export function worldCard(hit){

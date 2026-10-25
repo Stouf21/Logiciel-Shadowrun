@@ -1,4 +1,4 @@
-import {baseSkills,baseAssets} from './catalog-data.js?v=0.10.0';
+import {baseSkills,baseAssets} from './catalog-data.js?v=0.11.0';
 export {baseSkills,baseAssets};
 export function getCatalogs(state){return {skills:[...baseSkills,...(state.customSkills??[])],assets:[...baseAssets,...(state.customAssets??[])]};}
 export function validateCustomCatalog(items,kind){

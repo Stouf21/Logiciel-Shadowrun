@@ -1,8 +1,8 @@
-import {validateMapState} from './map-model.js?v=0.10.0';
-import {validateWorld} from './world-schema.js?v=0.10.0';
-import {validateCorporations} from './corporations.js?v=0.10.0';
-import {validateProfile} from './sheet.js?v=0.10.0';
-import {validateCustomCatalog} from './catalog.js?v=0.10.0';
+import {validateMapState} from './map-model.js?v=0.11.0';
+import {validateWorld} from './world-schema.js?v=0.11.0';
+import {validateCorporations} from './corporations.js?v=0.11.0';
+import {validateProfile} from './sheet.js?v=0.11.0';
+import {validateCustomCatalog} from './catalog.js?v=0.11.0';
 export const groups={characters:['PJ','PNJ principal','PNJ secondaire'],catalog:['Objet','Accessoire','Arme','Armure','Sort','Programme','Véhicule','Autre'],rules:['Règle','Aide-mémoire']};
 export function validateCampaign(data){
  if(!data||!Array.isArray(data.entries)||!Array.isArray(data.tokens))throw Error('Format de sauvegarde invalide.');
