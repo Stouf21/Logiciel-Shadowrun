@@ -1,21 +1,21 @@
-import {mergeWorld,worldSearch,characterEntryForRecord} from './world.js?v=0.9.0';
-import {worldKinds,makeWorldRecord} from './world-schema.js?v=0.9.0';
-import {renderDashboard,renderWorldList,renderWorldRecord,openWorldEditor,worldCard} from './world-ui.js?v=0.9.0';
-import {secretSection,toggleSecret} from './secrets-ui.js?v=0.9.0';
-import {getCorporations,corporationMatches} from './corporations.js?v=0.9.0';
-import {renderCorporations,corporationCard} from './corporations-ui.js?v=0.9.0';
-import {renderDijonMap} from './dijon-map.js?v=0.9.0';
-import {renderRules} from './rules-ui.js?v=0.9.0';
-import {rules,ruleMatches,ruleSource} from './rules-data.js?v=0.9.0';
-import {validateProfile,profileSearchText} from './sheet.js?v=0.9.0';
-import {references} from './references.js?v=0.9.0';
-import {renderDice} from './dice-ui.js?v=0.9.0';
-import {escape,toggleSearchDisclosure} from './ui.js?v=0.9.0';
-import {groups,validateCampaign} from './campaign.js?v=0.9.0';
-import {getCatalogs,getCharacterCatalogs} from './catalog.js?v=0.9.0';
-import {renderCatalogLibrary,showCustomEditor} from './catalog-ui.js?v=0.9.0';
-import {mountCharacterEditor} from './character-editor.js?v=0.9.0';
-import {characterSheet} from './character-sheet.js?v=0.9.0';
+import {mergeWorld,worldSearch,characterEntryForRecord} from './world.js?v=0.10.0';
+import {worldKinds,makeWorldRecord} from './world-schema.js?v=0.10.0';
+import {renderDashboard,renderWorldList,renderWorldRecord,openWorldEditor,worldCard} from './world-ui.js?v=0.10.0';
+import {secretSection,toggleSecret} from './secrets-ui.js?v=0.10.0';
+import {getCorporations,corporationMatches} from './corporations.js?v=0.10.0';
+import {renderCorporations,corporationCard} from './corporations-ui.js?v=0.10.0';
+import {renderDijonMap} from './dijon-map.js?v=0.10.0';
+import {renderRules} from './rules-ui.js?v=0.10.0';
+import {rules,ruleMatches,ruleSource} from './rules-data.js?v=0.10.0';
+import {validateProfile,profileSearchText} from './sheet.js?v=0.10.0';
+import {references} from './references.js?v=0.10.0';
+import {renderDice} from './dice-ui.js?v=0.10.0';
+import {escape,toggleSearchDisclosure} from './ui.js?v=0.10.0';
+import {groups,validateCampaign} from './campaign.js?v=0.10.0';
+import {getCatalogs,getCharacterCatalogs} from './catalog.js?v=0.10.0';
+import {renderCatalogLibrary,showCustomEditor} from './catalog-ui.js?v=0.10.0';
+import {mountCharacterEditor} from './character-editor.js?v=0.10.0';
+import {characterSheet} from './character-sheet.js?v=0.10.0';
 const $=s=>document.querySelector(s),key='shadowrun-table-v1';
 const icons={characters:'<circle cx="9" cy="8" r="3"/><path d="M3 20v-3a6 6 0 0 1 12 0v3M16 5a3 3 0 0 1 0 6M18 14a5 5 0 0 1 3 4v2"/>',catalog:'<path d="m12 3 9 5-9 5-9-5 9-5ZM3 8v9l9 5 9-5V8M12 13v9"/>',rules:'<path d="M12 5c-3-2-6-2-10-1v15c4-1 7-1 10 1 3-2 6-2 10-1V4c-4-1-7-1-10 1Zm0 0v15"/>',dice:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h.01M17 7h.01M12 12h.01M7 17h.01M17 17h.01" stroke-width="3" stroke-linecap="round"/>',map:'<path d="m3 5 6-2 6 3 6-2v15l-6 2-6-3-6 2V5ZM9 3v15M15 6v15"/>',references:'<path d="M4 4h5v17H4zM10 4h4v17h-4zM15 5l4-1 4 16-4 1z"/>'};
 icons.library=icons.rules;
@@ -24,7 +24,7 @@ icons.dashboard=icons.catalog;icons.organizations=icons.corporations;icons.place
 const worldTabs={places:'place',scenarios:'scenario'};
 const recordTabs={character:'characters',corporation:'organizations',faction:'organizations',zone:'map',place:'places',scenario:'scenarios',event:'world-search',clue:'world-search',secret:'world-search'};
 const tabs={dashboard:'Tableau de bord',characters:'Personnages',organizations:'Corporations & factions',places:'Lieux',scenarios:'Scénarios',map:'Carte','world-search':'Recherche globale',library:'Compétences & atouts',catalog:'Catalogue',rules:'Règles & références',dice:'Lanceur de dés',references:'Bibliothèque & sources'};
-let organizationSection='corporation',mapCity=null,mapSection='map';
+let organizationSection='corporation',mapCity=null,mapSection='map',disposeMap=null;
 let state={entries:[],tokens:[],customSkills:[],customAssets:[]},tab='dashboard',editing=null,selected=null,viewing=null,readProfile=null,unreadableBackup=null,corporationViewing=null,worldViewing=null,worldReveal=false,worldFilterQuery='',gameForWorld=null;
 try{const saved=localStorage.getItem(key);if(saved){unreadableBackup=saved;state=validateCampaign(JSON.parse(saved));unreadableBackup=null;}}catch{message('Sauvegarde illisible. Exportez-la pour la récupérer ou importez une sauvegarde valide avant toute modification.');}
 state=mergeWorld(state);
@@ -38,6 +38,7 @@ function persist(next){
 function referenceCards(items){return items.map(r=>`<article class="card"><span class="tag">${escape(r.status)}</span><h3>${escape(r.title)}</h3><p>${escape(r.text)}</p><small>${escape(r.source)}</small></article>`).join('');}
 function entryCard(e){const character=groups.characters.includes(e.category);return `<article class="card ${character?'character-card':''}" ${character?`data-character="${escape(e.id)}"`:''}><span class="tag">${escape(e.category)}</span><h3>${character?`<button class="character-name" data-open="${escape(e.id)}">${escape(e.name)}</button>`:escape(e.name)}</h3><p>${escape(e.description)}</p>${character?`<button class="sheet-open-button" data-open="${escape(e.id)}">Consulter la fiche</button>`:secretSection('Notes du MJ',`<p>${escape(e.notes)||'À définir'}</p>`)}<div class="actions"><button data-edit="${escape(e.id)}">Modifier</button><button data-delete="${escape(e.id)}">Supprimer</button></div></article>`;}
 function render(){
+ disposeMap?.();disposeMap=null;
  $('#content').onclick=null;document.querySelector('.edition-strip span').textContent='DIJON / '+state.world.settings.year;
  $('nav').innerHTML=Object.entries(tabs).map(([id,label])=>`<button data-tab="${id}" class="${id===tab?'active':''}" ${id===tab?'aria-current="page"':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">${icons[id]}</svg><span>${label}</span></button>`).join('');
  if(worldViewing){document.body.classList.remove('viewing-character');$('#title').textContent='Dossier de campagne';const target=tab==='organizations'?organizationShell():tab==='map'&&mapCity?cityShell():$('#content');renderWorldRecord(target,state,worldViewing,{}, {reveal:worldReveal});return;}
@@ -119,7 +120,7 @@ document.addEventListener('click',e=>{
  if(b?.dataset.openRule){worldViewing=null;worldReveal=false;tab='rules';viewing=null;$('#search').value='';render();const rule=document.getElementById(b.dataset.openRule);if(rule){rule.open=true;rule.scrollIntoView({block:'center'});}return;}
  if(b?.dataset.open){worldViewing=null;worldReveal=false;viewing=b.dataset.open;tab='characters';render();window.scrollTo(0,0);return;}
  if(b?.dataset.edit){openEditor(b.dataset.edit);return;}
- if(b?.dataset.delete&&confirm('Supprimer cette fiche et son pion sur la carte ?')){try{persist({...state,entries:state.entries.filter(x=>x.id!==b.dataset.delete),tokens:state.tokens.filter(x=>x.id!==b.dataset.delete)});render();}catch(err){message(err.message);}return;}
+ if(b?.dataset.delete&&confirm('Supprimer cette fiche et son pion sur la carte ?')){try{persist({...state,entries:state.entries.filter(x=>x.id!==b.dataset.delete),tokens:state.tokens.filter(x=>x.id!==b.dataset.delete),...(state.mapState?{mapState:{...state.mapState,dijon:{...state.mapState.dijon,positions:state.mapState.dijon.positions.filter(p=>p.id!==b.dataset.delete)}}}:{})});render();}catch(err){message(err.message);}return;}
  const card=e.target.closest('[data-character]');if(card&&!e.target.closest('button,a,input,select,textarea,details')){worldViewing=null;worldReveal=false;viewing=card.dataset.character;render();window.scrollTo(0,0);}
 });
 $('#search').oninput=()=>{worldViewing=null;worldReveal=false;viewing=null;corporationViewing=null;render();};
@@ -140,7 +141,7 @@ function cityShell(){
 }
 function renderMap(){
  if(!mapCity){$('#content').innerHTML='<div class="toolbar"><h3>Choisir une ville</h3></div><div class="grid"><article class="card city-card"><span class="tag">CAMPAGNE / FRANCE</span><h3>Dijon</h3><p>La carte et les quartiers de la Cité des Ducs.</p><button class="primary" data-map-city="dijon">Ouvrir Dijon</button></article></div>';return;}
- const target=cityShell();if(mapSection==='zones')renderWorldList(target,state,'zone',{});else renderDijonMap(target,state,next=>persist(next));
+ const target=cityShell();if(mapSection==='zones')renderWorldList(target,state,'zone',{});else disposeMap=renderDijonMap(target,state,next=>persist(next));
 }
 
 render();

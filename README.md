@@ -1,6 +1,6 @@
 # Shadowrun Anarchy · Écran du meneur
 
-Application indépendante en français pour préparer et mener une campagne d’Anarchy V2. Version 0.9.0, sans dépendance applicative externe.
+Application indépendante en français pour préparer et mener une campagne d’Anarchy V2. Version 0.10.0, en JavaScript natif avec Leaflet 1.9.4 hébergé localement pour la cartographie.
 
 ## Démarrer
 
@@ -59,9 +59,21 @@ Les dossiers modifiés ou personnels sont conservés localement dans la campagne
 
 ## Campagne et sauvegarde
 
-Catalogue d’objets, sorts et autres ressources saisis par le meneur, aides documentaires et recherche globale. Carte artistique de Dijon cyberpunk avec les 11 repères et coordonnées conservés, zoom et pions persistants. Les repères ouvrent les dossiers de campagne ; les anciennes accroches fictives restent consultables séparément. Filtres par autorité, corporation, faction, sécurité et type, légende des autorités et mode MJ. Les lieux sans position fiable sont listés sans coordonnées inventées. Le fond est une illustration originale générée, géographiquement approximative, sans données de navigation : les localisations et ajouts de campagne ne représentent pas un canon officiel. Aucune carte OpenStreetMap n’a été intégrée.
+Catalogue d’objets, sorts et autres ressources saisis par le meneur, aides documentaires et recherche globale.
 
-Les campagnes et listes personnelles résident exclusivement dans le localStorage du navigateur ; le serveur ne reçoit aucune campagne. Export / import JSON inclut les personnages, sélections, listes personnalisées, corporations, pions et tout l’univers de campagne (dossiers, relations et réglages). L’import remplace la campagne et ses listes après confirmation. Exporter régulièrement : aucune synchronisation ni sauvegarde distante n’est fournie. Les anciennes sauvegardes restent compatibles. Une sauvegarde illisible est protégée contre l’écrasement et peut être exportée pour récupération.
+Dans **Carte → Dijon**, le sélecteur « Fond de carte » propose un **plan de rues OpenStreetMap** et l’**illustration cyberpunk**. Les deux vues permettent de déplacer le fond par glisser-déposer, zoomer avec la molette / les boutons / le pincement tactile et revenir au cadrage initial avec « Recentrer ».
+
+- « Tracer un itinéraire » : cliquer pour ajouter des étapes, déplacer les points par glisser-déposer, retirer la dernière étape ou effacer le tracé. Le trajet est sauvegardé séparément sur chaque fond, avec au maximum 100 étapes.
+- Sur le plan des rues, « Calculer par les rues » demande un trajet **en voiture** au service public OSRM et affiche une distance et une durée indicatives, hors circulation. Modifier une étape retire le précédent calcul routier. Si le service est indisponible, le tracé libre reste disponible.
+- « Action sur la carte → Placer un personnage » : choisir le personnage, cliquer pour placer son pion, puis le déplacer par glisser-déposer.
+- « Positionner un lieu » : choisir un dossier puis cliquer sur son emplacement. Les repères du plan des rues peuvent être déplacés dans ce mode. Ils ouvrent les dossiers de campagne.
+- « Filtrer la carte » : autorité, corporation, faction, sécurité, type, noms et informations MJ. Les secrets restent masqués à l’ouverture.
+
+Le fond de rues représente la Dijon actuelle ; il nécessite Internet. Les repères géographiques sont renseignés par le meneur : aucune conversion automatique de l’illustration artistique en GPS n’est effectuée. Le plan et le calcul routier n’utilisent pas de clé Google ou de compte applicatif. Les crédits OpenStreetMap restent visibles sur la carte ; Leaflet et sa licence BSD sont conservés dans `assets/vendor/leaflet/`.
+
+L’illustration originale `assets/dijon-cyberpunk.png` garde les onze repères et leurs coordonnées historiques. Les anciens pions sont conservés sur cette vue ; les positions géographiques, vues / zooms et itinéraires résident dans la collection facultative `mapState`. La validation des imports couvre leurs coordonnées, étapes, références et géométries routières. Les anciens lieux et pions ne sont pas déplacés automatiquement. L’illustration et son tracé libre restent utilisables sans les services de tuiles ou de routage, une fois l’application chargée.
+
+Les campagnes et listes personnelles résident exclusivement dans le localStorage du navigateur ; le serveur applicatif ne reçoit aucune campagne. Le navigateur contacte OpenStreetMap pour le fond de rues et, sur demande de calcul routier, transmet les coordonnées des étapes à OSRM ; les noms et notes de campagne ne sont pas transmis au routage. Export / import JSON inclut les personnages, sélections, listes personnalisées, corporations, pions, cartes / vues / itinéraires et tout l’univers de campagne (dossiers, relations et réglages). L’import remplace la campagne et ses listes après confirmation. Exporter régulièrement : aucune synchronisation ni sauvegarde distante n’est fournie. Les anciennes sauvegardes restent compatibles. Une sauvegarde illisible est protégée contre l’écrasement et peut être exportée pour récupération.
 
 Pas encore de contrôle des coûts de création, de maxima par métatype ni d’application automatique des effets d’atouts, de déduction d’essence ou de calcul des seuils de blessures. Pas de compte, partage multijoueur, campagnes multiples ni outil de suivi de l’ordre des narrations.
 
@@ -73,7 +85,7 @@ Thème inspiré des documents V2 : jaune ocre, noir, fonds papier, titres rouill
 
 ## Vérifications
 
-40 tests Node : douze tests de chargement / fusion de Dijon, recherche protégée, relations, carte, reclassement des corporations et aperçu des fiches sans statistiques, en complément des vérifications de dés et risque, relances, profils, sélections, compatibilité des sauvegardes, export/import des données, listes personnalisées, réserve de dés et contrastes des couleurs, séparation des atouts corps / engins, recherche des synthèses classées, compatibilité et sauvegarde des corporations et annotations.
+48 tests Node : huit tests de compatibilité et validation des cartes, conversion des anciens repères, distances et routage, ainsi que douze tests de chargement / fusion de Dijon, recherche protégée, relations, carte, reclassement des corporations et aperçu des fiches sans statistiques, en complément des vérifications de dés et risque, relances, profils, sélections, compatibilité des sauvegardes, export/import des données, listes personnalisées, réserve de dés et contrastes des couleurs, séparation des atouts corps / engins, recherche des synthèses classées, compatibilité et sauvegarde des corporations et annotations.
 
 Parcours Chromium V0.6 : cubes à six faces et points, animation effective puis révélation, relance, réduction des animations, carte Dijon (image, repères, zoom et pions après rechargement), règles (85 entrées, thèmes, quatre options et recherche), anciens atouts d’engins conservés séparément, puis régression complète : création par sélection, ajout d’une référence personnelle depuis le formulaire sans perdre la saisie, sélection de compétences personnelles, fiche recto-verso et impression PDF A4 de deux pages, modification et rechargement, export/import JSON, couleurs distinctes persistantes, relances, affichage mobile et préservation des anciennes notes. Données de test isolées des campagnes utilisateur.
 
@@ -90,3 +102,5 @@ Parcours Chromium V0.7 : ouverture du menu, douze références (dont dix AAA), f
 Parcours Chromium V0.8 : préservation de Lim, BOYCOW et Noah, dossiers reliés, masquage des secrets et recherche protégée, édition, filtres, relations, chronologie, onze coordonnées de carte inchangées, pions et export/import ; création de dossier et liaison explicite à une fiche de jeu ; anciens dés, corporations et règles accessibles ; dix sections vérifiées en 390 et 768 pixels, impression standard de deux pages A4.
 
 Parcours Chromium V0.9 : menus simplifiés, onglets Corporations / Factions et reclassement d’une véritable sauvegarde V0.8 sans perte des profils, notes ni liens ; fiche de jeu prioritaire et bouton vers le dossier, complétion d’un profil sans doublon ; Carte → Dijon → Quartiers et zones ; recherches repliées / déployées et filtres distincts corporation / faction ; export/import et rechargement ; compatibilité des listes, règles et dés ; affichage en 390 et 768 pixels et PDF A4 de deux pages.
+
+Parcours Chromium V0.10 : zoom boutons / molette, déplacement du fond sans déplacer les pions, étapes déplaçables, géométrie routière et invalidation après modification, erreurs / annulation de requêtes, deux fonds indépendants, anciens repères et pions conservés, positions géographiques et dossiers, filtres et masquage MJ, export/import, rechargement, affichage 390 / 768 pixels, pincement à deux doigts et déplacement tactile, puis repli illustré quand les tuiles sont indisponibles. Les tests utilisent des tuiles et réponses OSRM simulées : l’accès réel à ces services n’est pas validé depuis l’environnement cloud. Les dépendances cartographiques sont servies localement ; aucun nouveau service Node ni compilation n’est nécessaire.
