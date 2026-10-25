@@ -1,6 +1,6 @@
-import {dice3D} from './dice-3d.js?v=0.7.0';
-import {defaultColors,validColors,diceTextColor} from './dice-colors.js?v=0.7.0';
-import {rollAnarchy,rerollAnarchy,describeOutcome} from './anarchy-dice.js?v=0.7.0';
+import {dice3D} from './dice-3d.js?v=0.8.0';
+import {defaultColors,validColors,diceTextColor} from './dice-colors.js?v=0.8.0';
+import {rollAnarchy,rerollAnarchy,describeOutcome} from './anarchy-dice.js?v=0.8.0';
 let lastRoll=null;
 const history=[];
 const colorKey='shadowrun-dice-colors-v1';

@@ -919,7 +919,7 @@ export const baseAssets = [
   },
   {
     "id": "asset-101",
-    "name": "M. Johnson",
+    "name": "M. Dupont",
     "category": "Contact",
     "level": 6,
     "essence": 0,

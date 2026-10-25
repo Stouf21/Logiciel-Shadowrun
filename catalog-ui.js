@@ -1,5 +1,5 @@
-import {escape} from './ui.js?v=0.7.0';
-import {attributeFields} from './sheet.js?v=0.7.0';
+import {escape} from './ui.js?v=0.8.0';
+import {attributeFields} from './sheet.js?v=0.8.0';
 export function showCustomEditor(kind,onSave,{characterOnly=false}={}){
  const dialog=document.createElement('dialog');
  const skills=kind==='skills';
