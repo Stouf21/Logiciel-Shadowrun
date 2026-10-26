@@ -1,24 +1,25 @@
-import {mapPlaceTypes,createMapPlace,positionMapPlace,removeMapPlacePosition} from './map-places.js?v=0.13.0';
-import {secretSection} from './secrets-ui.js?v=0.13.0';
-import {escape,searchDisclosure} from './ui.js?v=0.13.0';
-import {dijonPlaces} from './dijon-places.js?v=0.13.0';
-import {worldSearch} from './world.js?v=0.13.0';
-import {authorities} from './world-schema.js?v=0.13.0';
-import {copyMapState,dijonMapCenter,imageSize,imagePointFromPercent,imagePointToPercent,validMapPoint,routeDistance,routeAfterEdit,formatDistance,maxWaypoints,requestStreetRoute} from './map-model.js?v=0.13.0';
+import {mountMapShapes} from './map-shapes-ui.js?v=0.14.0';
+import {mapPlaceTypes,createMapPlace,positionMapPlace,removeMapPlacePosition} from './map-places.js?v=0.14.0';
+import {secretSection} from './secrets-ui.js?v=0.14.0';
+import {escape,searchDisclosure} from './ui.js?v=0.14.0';
+import {dijonPlaces} from './dijon-places.js?v=0.14.0';
+import {worldSearch} from './world.js?v=0.14.0';
+import {authorities} from './world-schema.js?v=0.14.0';
+import {copyMapState,dijonMapCenter,imageSize,imagePointFromPercent,imagePointToPercent,validMapPoint,routeDistance,routeAfterEdit,formatDistance,maxWaypoints,requestStreetRoute} from './map-model.js?v=0.14.0';
 export {dijonPlaces};
 
 export function renderDijonMap(container,snapshot,onChange){
- let state=snapshot,mode=copyMapState(state.mapState).dijon.mode,map=null,observer=null,destroyed=false,routeRequest=null,placeDialog=null;
+ let state=snapshot,mode=copyMapState(state.mapState).dijon.mode,map=null,observer=null,destroyed=false,routeRequest=null,placeDialog=null,geometry=null;
  let records=state.world?.records??[];const L=globalThis.L;
  const options=items=>'<option value="">Tous / toutes</option>'+items.map(item=>{const [id,label]=Array.isArray(item)?item:[item,item];return `<option value="${escape(id)}">${escape(label)}</option>`;}).join('');
  container.innerHTML=`<div class="dijon-header"><span class="tag">DIJON / ${state.world?.settings.year??2082}</span><h3>Les ombres de la cité des Ducs.</h3></div>
- <div class="map-controls interactive-map-controls"><label>Fond de carte<select id="map-view" aria-label="Fond de carte"><option value="streets">Plan des rues · OpenStreetMap</option><option value="cyberpunk">Illustration cyberpunk</option></select></label><label>Action sur la carte<select id="map-action" aria-label="Action sur la carte"><option value="explore">Explorer</option><option value="route">Tracer un itinéraire</option><option value="character">Placer un personnage</option><option value="place">Positionner un lieu existant</option><option value="create-place">Ajouter un nouveau lieu</option></select></label><div class="map-zoom"><button id="map-minus" aria-label="Réduire le zoom">−</button><output id="map-zoom-value"></output><button id="map-plus" aria-label="Augmenter le zoom">+</button></div><button id="map-recenter">Recentrer</button></div>
+ <div class="map-controls interactive-map-controls"><label>Fond de carte<select id="map-view" aria-label="Fond de carte"><option value="streets">Plan des rues · OpenStreetMap</option><option value="cyberpunk">Illustration cyberpunk</option></select></label><label>Action sur la carte<select id="map-action" aria-label="Action sur la carte"><option value="explore">Explorer</option><option value="route">Tracer un itinéraire</option><option value="character">Placer un personnage</option><option value="place">Positionner un lieu existant</option><option value="create-place">Ajouter un nouveau lieu</option><option value="draw-zone">Dessiner une zone</option><option value="draw-building">Dessiner un bâtiment / arcologie</option><option value="edit-shape">Modifier un contour</option></select></label><div class="map-zoom"><button id="map-minus" aria-label="Réduire le zoom">−</button><output id="map-zoom-value"></output><button id="map-plus" aria-label="Augmenter le zoom">+</button></div><button id="map-recenter">Recentrer</button></div>
  <p id="map-background-note" class="muted map-background-note"></p>
  <div id="map-character-controls" class="map-placement-controls" hidden><label>Personnage à placer<select id="map-character" aria-label="Personnage à placer"></select></label><button id="clear-map">Retirer les pions de cette vue</button></div>
  <div id="map-place-controls" class="map-placement-controls" hidden><label>Lieu à positionner<select id="map-place" aria-label="Lieu à positionner"></select></label><p class="muted">Choisissez un dossier puis cliquez à son emplacement. Les positions du plan de rues sont indépendantes de l’illustration.</p></div>
  ${searchDisclosure('map-search-panel',`<div class="world-filters map-world-filters"><label>Autorité<select id="map-authority" aria-label="Autorité sur la carte">${options(authorities)}</select></label><label>Corporation<select id="map-corporation" aria-label="Corporation sur la carte"></select></label><label>Faction<select id="map-faction" aria-label="Faction sur la carte"></select></label><label>Sécurité<select id="map-security" aria-label="Sécurité sur la carte"></select></label><label>Type de lieu<select id="map-type" aria-label="Type de lieu sur la carte"></select></label><label class="check-label"><input id="map-labels" type="checkbox" checked>Afficher les noms des repères</label><label class="check-label"><input id="map-secrets" type="checkbox">Afficher les secrets du MJ</label></div>`,{label:'Filtrer la carte'})}
  <div class="map-route-controls"><button class="primary" id="map-add-place" aria-pressed="false">+ Ajouter un lieu</button><button id="map-route-toggle" aria-pressed="false">Tracer un itinéraire</button><button id="map-route-road">Calculer par les rues</button><button id="map-route-undo">Retirer la dernière étape</button><button id="map-route-clear">Effacer l’itinéraire</button><output id="map-route-summary" aria-live="polite"></output></div>
- <p id="map-help" class="map-legend">Glissez pour déplacer la vue. Utilisez la molette, le pincement ou les boutons pour zoomer.</p>
+ <div id="map-shape-tools"></div><p id="map-help" class="map-legend">Glissez pour déplacer la vue. Utilisez la molette, le pincement ou les boutons pour zoomer.</p>
  <p id="map-state-status" class="muted" role="status"></p><div id="map" class="interactive-map" role="region" aria-label="Carte interactive de Dijon"></div>
  <div class="map-inspector" id="map-inspector" role="status">Choisissez un repère pour ouvrir son dossier.</div><p id="map-world-count" class="muted" role="status"></p>
  <details><summary>Zones et lieux à positionner sur cette vue</summary><p class="muted">Les repères de l’illustration ne sont pas convertis automatiquement en coordonnées géographiques.</p><div class="place-list" id="unplaced-world-records"></div></details>`;
@@ -89,7 +90,8 @@ export function renderDijonMap(container,snapshot,onChange){
  function inspect(record){
   if(record.isSecret&&!$('#map-secrets').checked)return;
   const original=dijonPlaces.find(p=>p.id===record.mapPlaceId);
-  $('#map-inspector').innerHTML=`<span class="tag">${escape(record.name)} · ${escape(record.fields.authority??'À définir')}</span><p>${escape(record.publicInfo)}</p><div class="actions"><button data-open-world="${escape(record.id)}" ${$('#map-secrets').checked?'data-world-reveal="true"':''}>Ouvrir le dossier de campagne</button><button data-world-edit="${escape(record.id)}">Modifier le dossier</button>${mode==='streets'||!record.mapPlaceId?'<button id="map-move-position">Déplacer le repère</button><button id="map-remove-position">Retirer de cette carte</button>':''}</div>${$('#map-secrets').checked?`<p class="map-secret-text">Secrets MJ : ${escape(record.secrets)}</p>`:''}${original?`<details><summary>Ancienne accroche de campagne</summary><p>${escape(original.hook)}</p></details>`:''}`;
+  $('#map-inspector').innerHTML=`<span class="tag">${escape(record.name)} · ${escape(record.fields.authority??'À définir')}</span><p>${escape(record.publicInfo)}</p><div class="actions"><button data-open-world="${escape(record.id)}" ${$('#map-secrets').checked?'data-world-reveal="true"':''}>Ouvrir le dossier de campagne</button><button data-world-edit="${escape(record.id)}">Modifier le dossier</button>${record.building?'<button id="map-building-file">Fiche du bâtiment et plans</button>':''}${mode==='streets'||!record.mapPlaceId?'<button id="map-move-position">Déplacer le repère</button><button id="map-remove-position">Retirer de cette carte</button>':''}</div>${$('#map-secrets').checked?`<p class="map-secret-text">Secrets MJ : ${escape(record.secrets)}</p>`:''}${original?`<details><summary>Ancienne accroche de campagne</summary><p>${escape(original.hook)}</p></details>`:''}`;
+  const building=$('#map-building-file');if(building)building.onclick=()=>geometry.showBuilding(record.id);
   const move=$('#map-move-position');if(move)move.onclick=()=>{setAction('place');$('#map-place').value=record.id;status('Glissez le repère ou cliquez sur son nouvel emplacement.');$('#map').scrollIntoView({block:'center'});};
   const remove=$('#map-remove-position');if(remove)remove.onclick=()=>{if(!confirm('Retirer ce repère de cette carte ? Son dossier et sa position sur l’autre fond seront conservés.'))return;try{apply(removeMapPlacePosition(state,record.id,mode));updateMarkers();$('#map-inspector').textContent='Repère retiré de cette vue. Le dossier reste dans les lieux.';}catch(error){status(error.message);}};
  }
@@ -105,11 +107,12 @@ export function renderDijonMap(container,snapshot,onChange){
    if(!token)continue;const point=mode==='streets'?token.point:imagePointFromPercent(token);
    pointMarker(point,character.name,`<span class="map-pin character-pin"><i></i><span class="map-pin-name">${escape(character.name)}</span></span>`,{draggable:true,onDrag:point=>placeCharacter(character.id,point),onClick:()=>{$('#map-character').value=character.id;setAction('character');}}).addTo(markerLayer);
   }
-  $('#map-world-count').textContent=mapped.length+' repère(s) · '+(filtered.length-mapped.length)+' dossier(s) à positionner';
-  $('#unplaced-world-records').innerHTML=filtered.filter(r=>!recordPoint(r)).map(r=>`<button data-open-world="${escape(r.id)}" ${r.isSecret?'data-world-reveal="true"':''}>${escape(r.name)}</button>`).join('')||'Tous les dossiers visibles sont positionnés.';
+  const shapeIds=geometry?.mappedIds()??new Set(),unplaced=filtered.filter(r=>!recordPoint(r)&&!shapeIds.has(r.id));
+  $('#map-world-count').textContent=mapped.length+' repère(s) · '+unplaced.length+' dossier(s) à positionner';
+  $('#unplaced-world-records').innerHTML=unplaced.map(r=>`<button data-open-world="${escape(r.id)}" ${r.isSecret?'data-world-reveal="true"':''}>${escape(r.name)}</button>`).join('')||'Tous les dossiers visibles sont positionnés.';
   const previous=$('#map-place').value,placeChoices=filtered.filter(r=>mode==='streets'||!r.mapPlaceId);
   $('#map-place').innerHTML='<option value="">Choisir un lieu…</option>'+placeChoices.map(r=>`<option value="${escape(r.id)}">${escape(r.name)}</option>`).join('');$('#map-place').value=previous;
-  $('#map').classList.toggle('map-labels-off',!$('#map-labels').checked);
+  $('#map').classList.toggle('map-labels-off',!$('#map-labels').checked);geometry?.draw();
  }
  function placeCharacter(id,point){
   if(!validMapPoint(point,mode)){status('Placez le pion dans les limites de cette carte.');updateMarkers();return;}
@@ -121,7 +124,7 @@ export function renderDijonMap(container,snapshot,onChange){
  function editRoute(points){stopRequest();if(saveMap(m=>{m.routes[mode]=routeAfterEdit(points);})){status('');drawRoute();}}
  function drawRoute(){
   routeLayer.clearLayers();const route=currentRoute(),points=route.points;
-  if(points.length>1)L.polyline(route.road?.points??points,{color:route.road?'#65d0e6':'#ffc321',weight:5,opacity:.95,dashArray:route.road?null:'9 7'}).addTo(routeLayer);
+  if(points.length>1)L.polyline(route.road?.points??points,{pane:'campaign-routes',color:route.road?'#65d0e6':'#ffc321',weight:5,opacity:.95,dashArray:route.road?null:'9 7'}).addTo(routeLayer);
   points.forEach((point,index)=>{
    const label=index===0?'Départ':index===points.length-1?'Arrivée':'Étape '+index;
    pointMarker(point,label,`<span class="route-waypoint" title="${label}">${index+1}</span>`,{draggable:true,iconSize:[29,29],iconAnchor:[14,14],onDrag:next=>{if(!validMapPoint(next,mode)){status('L’étape doit rester dans les limites de la carte.');drawRoute();return;}const nextPoints=currentRoute().points.map(p=>[...p]);nextPoints[index]=next;editRoute(nextPoints);}}).addTo(routeLayer);
@@ -133,11 +136,13 @@ export function renderDijonMap(container,snapshot,onChange){
  function setAction(action){
   $('#map-action').value=action;$('#map-character-controls').hidden=action!=='character';$('#map-place-controls').hidden=action!=='place';$('#map-route-toggle').setAttribute('aria-pressed',String(action==='route'));$('#map-add-place').setAttribute('aria-pressed',String(action==='create-place'));
   $('#map').classList.toggle('map-draw-mode',action!=='explore');
-  if(action==='route')map.doubleClickZoom.disable();else map.doubleClickZoom.enable();
-  $('#map-help').textContent=action==='create-place'?'Cliquez sur l’emplacement du nouveau lieu, puis renseignez son nom et son type.':action==='route'?'Cliquez pour ajouter des étapes. Glissez une étape pour la déplacer ; glissez le fond pour déplacer la vue.':action==='character'?'Choisissez un personnage puis cliquez pour placer son pion. Ses pions peuvent être déplacés par glisser-déposer.':action==='place'?'Choisissez un lieu puis cliquez sur son emplacement. Les repères ajoutés peuvent ensuite être déplacés par glisser-déposer.':'Glissez pour déplacer la vue. Utilisez la molette, le pincement ou les boutons pour zoomer.';
+  if(action==='route'||action.startsWith('draw-'))map.doubleClickZoom.disable();else map.doubleClickZoom.enable();
+  geometry?.syncAction();
+  $('#map-help').textContent=action.startsWith('draw-')?'Cliquez pour ajouter les sommets, puis fermez le contour avec le bouton ou le premier point.':action==='edit-shape'?'Choisissez un contour puis « Modifier les sommets ». Glissez un sommet ; les points + ajoutent un sommet.':action==='create-place'?'Cliquez sur l’emplacement du nouveau lieu, puis renseignez son nom et son type.':action==='route'?'Cliquez pour ajouter des étapes. Glissez une étape pour la déplacer ; glissez le fond pour déplacer la vue.':action==='character'?'Choisissez un personnage puis cliquez pour placer son pion. Ses pions peuvent être déplacés par glisser-déposer.':action==='place'?'Choisissez un lieu puis cliquez sur son emplacement. Les repères ajoutés peuvent ensuite être déplacés par glisser-déposer.':'Glissez pour déplacer la vue. Utilisez la molette, le pincement ou les boutons pour zoomer.';
   updateMarkers();
  }
  function updateZoom(){
+  if(destroyed||!map?.getPane('mapPane'))return;
   $('#map-zoom-value').textContent=mode==='streets'?'Zoom '+map.getZoom():Math.round(2**map.getZoom()*100)+' %';
   $('#map-minus').disabled=map.getZoom()<=map.getMinZoom();$('#map-plus').disabled=map.getZoom()>=map.getMaxZoom();
  }
@@ -146,6 +151,7 @@ export function renderDijonMap(container,snapshot,onChange){
   stopRequest();observer?.disconnect();if(map)map.remove();
   const element=$('#map');element.classList.toggle('map-streets',mode==='streets');element.classList.toggle('map-cyberpunk',mode==='cyberpunk');
   map=L.map(element,{crs:mode==='streets'?L.CRS.EPSG3857:L.CRS.Simple,zoomControl:false,minZoom:mode==='streets'?3:-4,maxZoom:mode==='streets'?19:3,zoomSnap:mode==='streets'?1:.25,zoomDelta:mode==='streets'?1:.5,scrollWheelZoom:true,zoomAnimation:false,fadeAnimation:false,markerZoomAnimation:false,attributionControl:true});
+  const activeMap=map,activeMode=mode;
   if(mode==='streets'){
    let failed=0;const streetMap=map;
    const tiles=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'});
@@ -157,14 +163,15 @@ export function renderDijonMap(container,snapshot,onChange){
    $('#map-background-note').textContent='Illustration cyberpunk · disponible sans fond de rues en ligne. Les onze repères préexistants gardent leur position.';
   }
   const saved=model().views[mode];if(saved)map.setView(saved.center,saved.zoom);else resetView();
-  markerLayer=L.layerGroup().addTo(map);routeLayer=L.layerGroup().addTo(map);drawRoute();setAction($('#map-action').value);updateZoom();
+  geometry?.attach();markerLayer=L.layerGroup().addTo(map);routeLayer=L.layerGroup().addTo(map);drawRoute();setAction($('#map-action').value);updateZoom();
   map.on('zoomend',updateZoom);
-  map.on('moveend',()=>{const center=map.getCenter(),point=[center.lat,center.lng];if(mode==='streets'&&!validMapPoint(point,mode))return;saveMap(m=>{m.views[mode]={center:point,zoom:map.getZoom()};});});
+  map.on('moveend',()=>{if(destroyed||map!==activeMap||!activeMap.getPane('mapPane'))return;const center=activeMap.getCenter(),point=[center.lat,center.lng];if(activeMode==='streets'&&!validMapPoint(point,activeMode))return;saveMap(m=>{m.views[activeMode]={center:point,zoom:activeMap.getZoom()};});});
   map.on('click',event=>{
    const point=[event.latlng.lat,event.latlng.lng],action=$('#map-action').value;
    if(action==='explore')return;
    if(!validMapPoint(point,mode)){status('Cliquez dans les limites de la carte.');return;}
    status('');
+   if(geometry?.click(point))return;
    if(action==='route'){const points=currentRoute().points;if(points.length>=maxWaypoints){status('L’itinéraire est limité à '+maxWaypoints+' étapes.');return;}editRoute([...points,point]);}
    if(action==='character'){const id=$('#map-character').value;if(id)placeCharacter(id,point);else status('Choisissez d’abord un personnage.');}
    if(action==='create-place')openPlaceDialog(point);
@@ -174,12 +181,12 @@ export function renderDijonMap(container,snapshot,onChange){
     updateMarkers();
    }
   });
-  observer=new ResizeObserver(()=>{if(!destroyed)map.invalidateSize({pan:false});});observer.observe(element);
+  observer=new ResizeObserver(()=>{if(!destroyed&&map===activeMap&&activeMap.getPane('mapPane'))activeMap.invalidateSize({pan:false});});observer.observe(element);
  }
  $('#map-view').value=mode;
  $('#map-view').onchange=()=>{const selectedMode=$('#map-view').value;if(saveMap(m=>{m.mode=selectedMode;})){mode=selectedMode;status('');createMap();}else $('#map-view').value=mode;};
  $('#map-action').onchange=()=>setAction($('#map-action').value);
- $('#map-add-place').onclick=()=>setAction($('#map-action').value==='create-place'?'explore':'create-place');
+ $('#map-add-place').onclick=()=>{const action=$('#map-action').value==='create-place'?'explore':'create-place';setAction(action);if(action==='create-place')$('#map').scrollIntoView({block:'center'});};
  $('#map-route-toggle').onclick=()=>setAction($('#map-action').value==='route'?'explore':'route');
  $('#map-route-undo').onclick=()=>editRoute(currentRoute().points.slice(0,-1));
  $('#map-route-clear').onclick=()=>{if(confirm('Effacer l’itinéraire de cette vue ?'))editRoute([]);};
@@ -203,6 +210,7 @@ export function renderDijonMap(container,snapshot,onChange){
   else{try{state=onChange({...state,tokens:[]})??{...state,tokens:[]};}catch(error){status(error.message);}}
   updateMarkers();
  };
+ geometry=mountMapShapes({container,L,getMap:()=>map,getState:()=>state,getMode:()=>mode,getAction:()=>$('#map-action').value,setAction,visibleRecords,onSave:next=>{apply(next);return state;},onRefresh:()=>{refreshChoices();updateMarkers();},onInspect:inspect,status});
  refreshChoices();createMap();
- return ()=>{destroyed=true;placeDialog?.close();placeDialog?.remove();placeDialog=null;observer?.disconnect();routeRequest?.abort();routeRequest=null;map?.remove();};
+ return ()=>{destroyed=true;geometry?.dispose();placeDialog?.close();placeDialog?.remove();placeDialog=null;observer?.disconnect();routeRequest?.abort();routeRequest=null;map?.remove();};
 }

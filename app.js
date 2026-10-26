@@ -1,22 +1,22 @@
-import {deleteScenario} from './scenarios.js?v=0.13.0';
-import {mergeWorld,worldSearch,characterEntryForRecord} from './world.js?v=0.13.0';
-import {worldKinds,makeWorldRecord} from './world-schema.js?v=0.13.0';
-import {renderDashboard,renderWorldList,renderWorldRecord,openWorldEditor,worldCard} from './world-ui.js?v=0.13.0';
-import {secretSection,toggleSecret} from './secrets-ui.js?v=0.13.0';
-import {getCorporations,corporationMatches} from './corporations.js?v=0.13.0';
-import {renderCorporations,corporationCard} from './corporations-ui.js?v=0.13.0';
-import {renderDijonMap} from './dijon-map.js?v=0.13.0';
-import {renderRules} from './rules-ui.js?v=0.13.0';
-import {rules,ruleMatches,ruleSource} from './rules-data.js?v=0.13.0';
-import {validateProfile,profileSearchText} from './sheet.js?v=0.13.0';
-import {references} from './references.js?v=0.13.0';
-import {renderDice} from './dice-ui.js?v=0.13.0';
-import {escape,toggleSearchDisclosure} from './ui.js?v=0.13.0';
-import {groups,validateCampaign} from './campaign.js?v=0.13.0';
-import {getCatalogs,getCharacterCatalogs} from './catalog.js?v=0.13.0';
-import {renderCatalogLibrary,showCustomEditor} from './catalog-ui.js?v=0.13.0';
-import {mountCharacterEditor} from './character-editor.js?v=0.13.0';
-import {characterSheet} from './character-sheet.js?v=0.13.0';
+import {deleteScenario} from './scenarios.js?v=0.14.0';
+import {mergeWorld,worldSearch,characterEntryForRecord} from './world.js?v=0.14.0';
+import {worldKinds,makeWorldRecord} from './world-schema.js?v=0.14.0';
+import {renderDashboard,renderWorldList,renderWorldRecord,openWorldEditor,worldCard} from './world-ui.js?v=0.14.0';
+import {secretSection,toggleSecret} from './secrets-ui.js?v=0.14.0';
+import {getCorporations,corporationMatches} from './corporations.js?v=0.14.0';
+import {renderCorporations,corporationCard} from './corporations-ui.js?v=0.14.0';
+import {renderDijonMap} from './dijon-map.js?v=0.14.0';
+import {renderRules} from './rules-ui.js?v=0.14.0';
+import {rules,ruleMatches,ruleSource} from './rules-data.js?v=0.14.0';
+import {validateProfile,profileSearchText} from './sheet.js?v=0.14.0';
+import {references} from './references.js?v=0.14.0';
+import {renderDice} from './dice-ui.js?v=0.14.0';
+import {escape,toggleSearchDisclosure} from './ui.js?v=0.14.0';
+import {groups,validateCampaign} from './campaign.js?v=0.14.0';
+import {getCatalogs,getCharacterCatalogs} from './catalog.js?v=0.14.0';
+import {renderCatalogLibrary,showCustomEditor} from './catalog-ui.js?v=0.14.0';
+import {mountCharacterEditor} from './character-editor.js?v=0.14.0';
+import {characterSheet} from './character-sheet.js?v=0.14.0';
 const $=s=>document.querySelector(s),key='shadowrun-table-v1';
 const icons={characters:'<circle cx="9" cy="8" r="3"/><path d="M3 20v-3a6 6 0 0 1 12 0v3M16 5a3 3 0 0 1 0 6M18 14a5 5 0 0 1 3 4v2"/>',catalog:'<path d="m12 3 9 5-9 5-9-5 9-5ZM3 8v9l9 5 9-5V8M12 13v9"/>',rules:'<path d="M12 5c-3-2-6-2-10-1v15c4-1 7-1 10 1 3-2 6-2 10-1V4c-4-1-7-1-10 1Zm0 0v15"/>',dice:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h.01M17 7h.01M12 12h.01M7 17h.01M17 17h.01" stroke-width="3" stroke-linecap="round"/>',map:'<path d="m3 5 6-2 6 3 6-2v15l-6 2-6-3-6 2V5ZM9 3v15M15 6v15"/>',references:'<path d="M4 4h5v17H4zM10 4h4v17h-4zM15 5l4-1 4 16-4 1z"/>'};
 icons.library=icons.rules;
@@ -25,24 +25,25 @@ icons.dashboard=icons.catalog;icons.organizations=icons.corporations;icons.place
 const worldTabs={places:'place',scenarios:'scenario'};
 const recordTabs={character:'characters',corporation:'organizations',faction:'organizations',zone:'map',place:'places',scenario:'scenarios',event:'world-search',clue:'world-search',secret:'world-search'};
 const tabs={dashboard:'Tableau de bord',characters:'Personnages',organizations:'Corporations & factions',places:'Lieux',scenarios:'Scénarios',map:'Carte','world-search':'Recherche globale',library:'Compétences & atouts',catalog:'Catalogue',rules:'Règles & références',dice:'Lanceur de dés',references:'Bibliothèque & sources'};
-let organizationSection='corporation',mapCity=null,mapSection='map',disposeMap=null;
+let organizationSection='corporation',mapCity=null,mapSection='map',disposeMap=null,disposeWorld=null;
 let state={entries:[],tokens:[],customSkills:[],customAssets:[]},tab='dashboard',editing=null,selected=null,viewing=null,readProfile=null,unreadableBackup=null,corporationViewing=null,worldViewing=null,worldReveal=false,worldFilterQuery='',gameForWorld=null;
 try{const saved=localStorage.getItem(key);if(saved){unreadableBackup=saved;state=validateCampaign(JSON.parse(saved));unreadableBackup=null;}}catch{message('Sauvegarde illisible. Exportez-la pour la récupérer ou importez une sauvegarde valide avant toute modification.');}
 state=mergeWorld(state);
 function message(s){$('#message').textContent=s;}
 function persist(next){
  if(unreadableBackup!==null)throw Error('La sauvegarde illisible est protégée : exportez-la puis importez une sauvegarde valide.');
- state=validateCampaign(mergeWorld(next));
- try{localStorage.setItem(key,JSON.stringify(state));message('Sauvegardé dans ce navigateur.');}catch{message('Échec de sauvegarde locale : exportez vos données pour les conserver.');}
+ const validated=validateCampaign(mergeWorld(next));
+ try{localStorage.setItem(key,JSON.stringify(validated));}catch{throw Error('Sauvegarde locale pleine ou inaccessible. Réduisez la taille des images de plans puis réessayez ; les données précédentes sont conservées.');}
+ state=validated;message('Sauvegardé dans ce navigateur.');
  return state;
 }
 function referenceCards(items){return items.map(r=>`<article class="card"><span class="tag">${escape(r.status)}</span><h3>${escape(r.title)}</h3><p>${escape(r.text)}</p><small>${escape(r.source)}</small></article>`).join('');}
 function entryCard(e){const character=groups.characters.includes(e.category);return `<article class="card ${character?'character-card':''}" ${character?`data-character="${escape(e.id)}"`:''}><span class="tag">${escape(e.category)}</span><h3>${character?`<button class="character-name" data-open="${escape(e.id)}">${escape(e.name)}</button>`:escape(e.name)}</h3><p>${escape(e.description)}</p>${character?`<button class="sheet-open-button" data-open="${escape(e.id)}">Consulter la fiche</button>`:secretSection('Notes du MJ',`<p>${escape(e.notes)||'À définir'}</p>`)}<div class="actions"><button data-edit="${escape(e.id)}">Modifier</button><button data-delete="${escape(e.id)}">Supprimer</button></div></article>`;}
 function render(){
- disposeMap?.();disposeMap=null;
+ disposeMap?.();disposeMap=null;disposeWorld?.();disposeWorld=null;
  $('#content').onclick=null;document.querySelector('.edition-strip span').textContent='DIJON / '+state.world.settings.year;
  $('nav').innerHTML=Object.entries(tabs).map(([id,label])=>`<button data-tab="${id}" class="${id===tab?'active':''}" ${id===tab?'aria-current="page"':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">${icons[id]}</svg><span>${label}</span></button>`).join('');
- if(worldViewing){document.body.classList.remove('viewing-character');$('#title').textContent='Dossier de campagne';const target=tab==='organizations'?organizationShell():tab==='map'&&mapCity?cityShell():$('#content');renderWorldRecord(target,state,worldViewing,{onSave:persist}, {reveal:worldReveal});return;}
+ if(worldViewing){document.body.classList.remove('viewing-character');$('#title').textContent='Dossier de campagne';const target=tab==='organizations'?organizationShell():tab==='map'&&mapCity?cityShell():$('#content');disposeWorld=renderWorldRecord(target,state,worldViewing,{onSave:persist,onRefresh:render}, {reveal:worldReveal});return;}
  const dossier=viewing&&state.world.records.find(r=>r.kind==='character'&&(r.id===viewing||r.gameEntryId===viewing));
  const savedEntry=state.entries.find(e=>e.id===viewing&&groups.characters.includes(e.category));
  const entry=savedEntry??(dossier?characterEntryForRecord(state,dossier):null);
@@ -128,7 +129,7 @@ document.addEventListener('click',e=>{
 $('#search').oninput=()=>{worldViewing=null;worldReveal=false;viewing=null;corporationViewing=null;render();};
 $('.import-button').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('#import').click();}};
 $('#export').onclick=()=>{const url=URL.createObjectURL(new Blob([unreadableBackup??JSON.stringify(state,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=unreadableBackup?'shadowrun-sauvegarde-a-recuperer.json':'shadowrun-campagne.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
-$('#import').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;if(file.size>5000000)throw Error('Fichier trop volumineux (5 Mo maximum).');const data=validateCampaign(JSON.parse(await file.text()));if(confirm('Remplacer la campagne locale et les listes personnelles par ce fichier ? Exportez d’abord pour garder une copie.')){unreadableBackup=null;persist(data);worldViewing=null;worldReveal=false;viewing=null;selected=null;corporationViewing=null;render();}}catch(err){message('Import refusé : '+err.message);}finally{e.target.value='';}};
+$('#import').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;if(file.size>10000000)throw Error('Fichier trop volumineux (10 Mo maximum).');const data=validateCampaign(JSON.parse(await file.text()));if(confirm('Remplacer la campagne locale et les listes personnelles par ce fichier ? Exportez d’abord pour garder une copie.')){const previousBackup=unreadableBackup;unreadableBackup=null;try{persist(data);}catch(error){unreadableBackup=previousBackup;throw error;}worldViewing=null;worldReveal=false;viewing=null;selected=null;corporationViewing=null;render();}}catch(err){message('Import refusé : '+err.message);}finally{e.target.value='';}};
 function openWorld(id,reveal=false){const r=state.world.records.find(x=>x.id===id);if(!r){message('Dossier introuvable.');return;}worldViewing=id;worldReveal=reveal;viewing=null;corporationViewing=null;routeRecord(r.kind);$('#search').value='';render();window.scrollTo(0,0);}
 function routeRecord(kind){tab=recordTabs[kind]??'world-search';if(['corporation','faction'].includes(kind))organizationSection=kind;if(kind==='zone'){mapCity='dijon';mapSection='zones';}}
 function openCharacter(id){const r=state.world.records.find(r=>r.id===id&&r.kind==='character');if(r?.isSecret){openWorld(r.id);return;}worldViewing=null;worldReveal=false;viewing=r?.gameEntryId??r?.id??id;tab='characters';$('#search').value='';render();window.scrollTo(0,0);}

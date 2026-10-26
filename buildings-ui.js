@@ -1,0 +1,63 @@
+import {escape} from './ui.js?v=0.14.0';
+import {secretSection} from './secrets-ui.js?v=0.14.0';
+import {buildingTypes,emptyBuilding} from './building-schema.js?v=0.14.0';
+import {saveBuilding,saveBuildingPlan,removeBuildingPlan,buildingOwner} from './buildings.js?v=0.14.0';
+
+const find=(state,id)=>state.world.records.find(r=>r.id===id);
+const createDialog=(className,html,register)=>{
+ const dialog=document.createElement('dialog');dialog.className=className;dialog.innerHTML=html;document.body.append(dialog);
+ const close=()=>{dialog.close();dialog.remove();};dialog.addEventListener('cancel',e=>{e.preventDefault();close();});dialog.querySelectorAll('[data-dialog-close]').forEach(b=>b.onclick=close);
+ register?.(dialog);dialog.showModal();return {dialog,close};
+};
+export function openBuildingEditor(state,id,onSave,{includeSecrets=false,register}={}){
+ const r=find(state,id),b=r.building??emptyBuilding();
+ const corporations=state.world.records.filter(c=>c.kind==='corporation'&&(includeSecrets||!c.isSecret));
+ const text=(key,label,value)=>`<label>${label}<input name="${key}" maxlength="10000" value="${escape(value)}"></label>`;
+ const {dialog,close}=createDialog('building-editor',`<form><span class="eyebrow">DOSSIER DU BÂTIMENT</span><h2>Modifier le bâtiment</h2><label>Nom du bâtiment<input name="name" required maxlength="200" value="${escape(r.name)}"></label><div class="attribute-grid"><label>Type de bâtiment<select name="type" aria-label="Type du bâtiment">${buildingTypes.map(t=>`<option ${t===b.type?'selected':''}>${t}</option>`).join('')}</select></label><label>Couleur du bâtiment<input name="color" type="color" value="${b.color}"></label></div><label>Corporation propriétaire / exploitante<select name="ownerId" aria-label="Corporation propriétaire du bâtiment"><option value="">Autre / À définir</option>${b.ownerId&&!corporations.some(c=>c.id===b.ownerId)?`<option value="${escape(b.ownerId)}" selected>Corporation réservée au MJ</option>`:''}${corporations.map(c=>`<option value="${escape(c.id)}" ${c.id===b.ownerId?'selected':''}>${escape(c.name)}</option>`).join('')}</select></label>${text('ownerText','Propriétaire / exploitant libre',b.ownerText)}<div class="attribute-grid">${text('floors','Étages / niveaux publics',b.floors)}${text('basements','Sous-sols connus',b.basements)}</div>${text('security','Sécurité du bâtiment',r.fields.security)}<label>Entrées et accès<textarea name="entrances" aria-label="Entrées et accès" rows="3" maxlength="10000">${escape(b.entrances)}</textarea></label><label>Description du bâtiment<textarea aria-label="Description du bâtiment" name="description" rows="4" maxlength="30000">${escape(r.publicInfo)}</textarea></label><label class="check-label"><input name="isSecret" type="checkbox" ${r.isSecret?'checked':''}>Bâtiment entier réservé au MJ</label>${secretSection('Notes du MJ',`<label>Notes privées du bâtiment<textarea aria-label="Notes privées du bâtiment" name="gmNotes" rows="5" maxlength="30000">${escape(r.gmNotes)}</textarea></label>`)}<p class="building-error" role="alert"></p><div class="actions"><button type="button" data-dialog-close>Annuler</button><button type="submit" class="primary">Enregistrer le bâtiment</button></div></form>`,register);
+ dialog.querySelector('form').onsubmit=e=>{e.preventDefault();try{const form=e.target,data=Object.fromEntries(new FormData(form));const building={...b,type:data.type,color:data.color,ownerId:data.ownerId||null,ownerText:data.ownerText.trim(),floors:data.floors.trim(),basements:data.basements.trim(),entrances:data.entrances.trim()};onSave(saveBuilding(state,id,{building,name:data.name,description:data.description,security:data.security,gmNotes:data.gmNotes,isSecret:form.elements.isSecret.checked}));close();}catch(err){dialog.querySelector('.building-error').textContent=err.message;}};
+ return dialog;
+}
+export function openPlanEditor(state,recordId,plan,onSave,{register}={}){
+ const p=plan??{id:'plan-'+crypto.randomUUID(),name:'',level:'',description:'',gmNotes:'',isSecret:true,imageData:''};let imageData=p.imageData,reading=false;
+ const {dialog,close}=createDialog('building-plan-editor',`<form><span class="eyebrow">PLAN INTÉRIEUR</span><h2>${plan?'Modifier le plan':'Ajouter un plan'}</h2><label>Nom du plan<input name="name" required maxlength="200" value="${escape(p.name)}" placeholder="Accueil, laboratoires, appartements…"></label><label>Étage / niveau du plan<input name="level" maxlength="200" value="${escape(p.level)}" placeholder="RDC, étage 12, sous-sol 1…"></label><label>Description du plan<textarea aria-label="Description du plan" name="description" rows="3" maxlength="30000">${escape(p.description)}</textarea></label><label>Image du plan (PNG, JPEG ou WebP · 500 Ko maximum)<input name="image" type="file" accept="image/png,image/jpeg,image/webp"></label><p class="muted">L’image est conservée dans votre campagne et suit la visibilité du plan.</p><div class="plan-upload-preview">${p.imageData?`<img src="${p.imageData}" alt="Aperçu du plan">`:''}</div><button type="button" data-remove-plan-image ${imageData?'':'hidden'}>Retirer l’image du plan</button><label class="check-label"><input name="isSecret" type="checkbox" ${p.isSecret?'checked':''}>Plan réservé au MJ</label>${secretSection('Notes du MJ',`<label>Notes privées du plan<textarea aria-label="Notes privées du plan" name="gmNotes" rows="4" maxlength="30000">${escape(p.gmNotes)}</textarea></label>`)}<p class="building-error" role="alert"></p><div class="actions"><button type="button" data-dialog-close>Annuler</button><button type="submit" class="primary">Enregistrer le plan</button></div></form>`,register);
+ const form=dialog.querySelector('form'),preview=dialog.querySelector('.plan-upload-preview'),error=dialog.querySelector('.building-error'),remove=dialog.querySelector('[data-remove-plan-image]');
+ form.elements.image.onchange=async()=>{
+  const file=form.elements.image.files[0];if(!file)return;reading=true;form.querySelector('[type="submit"]').disabled=true;error.textContent='';
+  try{if(file.size>500000||!['image/png','image/jpeg','image/webp'].includes(file.type))throw Error('Choisissez une image PNG, JPEG ou WebP de 500 Ko maximum.');
+   const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(Error('Lecture de l’image impossible.'));reader.readAsDataURL(file);});
+   const img=new Image();img.src=data;await img.decode();if(img.naturalWidth>10000||img.naturalHeight>10000)throw Error('Le plan doit mesurer au maximum 10 000 pixels par côté.');
+   if(!dialog.isConnected)return;imageData=data;preview.replaceChildren(img);img.alt='Aperçu du plan';remove.hidden=false;
+  }catch(err){if(dialog.isConnected)error.textContent=err.message;}finally{reading=false;if(dialog.isConnected)form.querySelector('[type="submit"]').disabled=false;}
+ };
+ remove.onclick=()=>{imageData='';preview.replaceChildren();form.elements.image.value='';remove.hidden=true;};
+ form.onsubmit=e=>{e.preventDefault();if(reading)return;try{const data=Object.fromEntries(new FormData(form));onSave(saveBuildingPlan(state,recordId,{...p,name:data.name.trim(),level:data.level.trim(),description:data.description,gmNotes:data.gmNotes,isSecret:form.elements.isSecret.checked,imageData}));close();}catch(err){error.textContent=err.message;}};
+ return dialog;
+}
+export function openPlanViewer(plan,{register}={}){
+ const {dialog}=createDialog('building-plan-viewer',`<div class="toolbar"><div><span class="tag">${plan.isSecret?'PLAN MJ':'PLAN INTÉRIEUR'} · ${escape(plan.level||'Niveau à définir')}</span><h2>${escape(plan.name)}</h2></div><button data-dialog-close>Fermer le plan</button></div><p>${escape(plan.description)}</p>${plan.imageData?`<div class="plan-zoom-controls"><button data-plan-out aria-label="Réduire le plan">−</button><output>100 %</output><button data-plan-in aria-label="Agrandir le plan">+</button><button data-plan-reset>Adapter le plan</button></div><div class="plan-image-viewport"><img src="${plan.imageData}" alt="${escape(plan.name)}"></div>`:'<p class="muted">Ce plan est descriptif. Vous pouvez lui associer une image en le modifiant.</p>'}${secretSection('Notes privées du plan',`<p>${escape(plan.gmNotes)||'À définir'}</p>`)}`,register);
+ let zoom=100;const update=()=>{dialog.querySelector('.plan-image-viewport img').style.width=zoom+'%';dialog.querySelector('output').textContent=zoom+' %';dialog.querySelector('[data-plan-in]').disabled=zoom===300;dialog.querySelector('[data-plan-out]').disabled=zoom===50;};
+ if(plan.imageData){dialog.querySelector('[data-plan-in]').onclick=()=>{zoom=Math.min(300,zoom+25);update();};dialog.querySelector('[data-plan-out]').onclick=()=>{zoom=Math.max(50,zoom-25);update();};dialog.querySelector('[data-plan-reset]').onclick=()=>{zoom=100;update();};}
+ return dialog;
+}
+export function renderBuildingPanel(container,initialState,id,onSave,{includeSecrets=false,afterSave}={}){
+ let state=initialState,showPlans=false;const dialogs=new Set();
+ const register=dialog=>{dialogs.add(dialog);dialog.addEventListener('close',()=>dialogs.delete(dialog),{once:true});};
+ const apply=next=>{state=onSave(next)??next;render();if(afterSave)queueMicrotask(afterSave);};
+ function render(){
+  const r=find(state,id),b=r?.building;if(!b){container.innerHTML='';return;}
+  if(r.isSecret&&!includeSecrets){container.innerHTML='<p class="muted">Bâtiment réservé au MJ enregistré.</p>';return;}
+  const plans=b.plans.filter(p=>showPlans||!p.isSecret);
+  container.innerHTML=`<section class="building-dossier"><div class="toolbar"><div><span class="tag">${escape(b.type)}</span><h3>${escape(r.name)}</h3></div><button class="primary" data-building-edit>Modifier le bâtiment</button></div><dl class="building-facts">${[['Propriétaire / exploitant',buildingOwner(state.world,b,{includeSecrets})],['Étages / niveaux publics',b.floors],['Sous-sols connus',b.basements],['Sécurité',r.fields.security],['Entrées et accès',b.entrances]].map(([label,value])=>`<div><dt>${label}</dt><dd>${escape(value||'À définir')}</dd></div>`).join('')}</dl><div class="toolbar"><h4>Plans intérieurs</h4><button data-plan-add>+ Ajouter un plan intérieur</button></div><label class="check-label"><input data-plans-secrets type="checkbox" ${showPlans?'checked':''}>Afficher les plans réservés au MJ</label><div class="building-plans">${plans.map(p=>`<article class="building-plan-card"><span class="tag">${p.isSecret?'Plan MJ':'Plan'} · ${escape(p.level||'Niveau à définir')}</span><h4>${escape(p.name)}</h4><p>${escape(p.description)}</p><div class="actions"><button data-plan-view="${p.id}">Ouvrir le plan</button><button data-plan-edit="${p.id}">Modifier le plan</button><button data-plan-delete="${p.id}" aria-label="Supprimer le plan ${escape(p.name)}">Supprimer</button></div></article>`).join('')||'<p class="muted">Aucun plan visible. Ajoutez vos images ou vos descriptions étage par étage.</p>'}</div><p class="building-panel-error" role="alert"></p></section>`;
+  container.querySelector('[data-building-edit]').onclick=()=>openBuildingEditor(state,id,apply,{includeSecrets,register});
+  container.querySelector('[data-plan-add]').onclick=()=>openPlanEditor(state,id,null,apply,{register});
+  container.querySelector('[data-plans-secrets]').onchange=e=>{showPlans=e.target.checked;render();};
+  for(const [selector,handler] of [['data-plan-view',p=>openPlanViewer(p,{register})],['data-plan-edit',p=>openPlanEditor(state,id,p,apply,{register})]])container.querySelectorAll('['+selector+']').forEach(button=>button.onclick=()=>handler(b.plans.find(p=>p.id===button.getAttribute(selector))));
+  container.querySelectorAll('[data-plan-delete]').forEach(button=>button.onclick=()=>{if(!confirm('Supprimer ce plan intérieur ? Le bâtiment sera conservé.'))return;try{apply(removeBuildingPlan(state,id,button.dataset.planDelete));}catch(err){container.querySelector('.building-panel-error').textContent=err.message;}});
+ }
+ render();return ()=>{for(const dialog of [...dialogs]){dialog.close();dialog.remove();}dialogs.clear();};
+}
+export function openBuildingDialog(state,id,onSave,{includeSecrets=false}={}){
+ const {dialog,close}=createDialog('building-viewer',`<button data-dialog-close>Fermer la fiche</button><div class="building-modal-content"></div>`);
+ const dispose=renderBuildingPanel(dialog.querySelector('.building-modal-content'),state,id,onSave,{includeSecrets});dialog.addEventListener('close',dispose,{once:true});
+ return {close:()=>{dispose();close();},dialog};
+}

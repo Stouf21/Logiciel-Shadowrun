@@ -1,4 +1,5 @@
-import {makeWorldRecord as R} from './world-schema.js?v=0.13.0';
+import {makeWorldRecord as R} from './world-schema.js?v=0.14.0';
+import {emptyBuilding} from './building-schema.js?v=0.14.0';
 export const seedSettings={city:'Dijon',year:2082,system:'Shadowrun: Anarchy V2',johnsonMale:'M. Dupont',johnsonFemale:'Mme Dupont',openQuestions:'Identité des corporations d’Osvald et de Valmy, capacité de la biopuce, circonstances de la mort d’Osvald : À définir.'};
 export const seedRecords=[
  R('character','char-anilla-yusupova','Anilla Yusupova',{aliases:['Anilla'],publicInfo:'Jeune femme d’origine russe vivant à Dijon. Retrouvée morte, poignardée dans son appartement, le lendemain d’une soirée avec David.',secrets:'Son père lui a implanté une biopuce expérimentale pendant son enfance. Elle contient l’unique exemplaire fonctionnel d’un ancien projet secret-défense. Ce qu’Anilla en savait réellement : À définir.',state:'Morte au début de l’affaire Anilla'},{gender:'Femme',life:'Mort',usualLocation:'Dijon ; appartement, adresse À définir',implants:'Biopuce expérimentale, capacité exacte À définir'}),
@@ -88,6 +89,13 @@ export const seedRecords=[
  R('event','event-disparition-karl','Disparition de Karl',{publicInfo:'Karl disparaît devant son domicile.',secrets:'Il organise lui-même le faux enlèvement.'},{date:'À définir'}),
  R('event','event-refuge-kassy','Refuge demandé par Kassy',{publicInfo:'Kassy demande de l’aide à Noah, Sarah et Malik ; les agents corporatistes arrivent en Audi noires.'},{date:'À définir'})
 ];
+// Caractéristiques connues de campagne ; aucun emplacement ni plan intérieur inventé.
+for(const [id,building] of [
+ ['place-arcologie-fontaine',{...emptyBuilding('Arcologie','#d48df0'),floors:'25 à 30',ownerText:'Corporation gestionnaire : nom À définir'}],
+ ['zone-toison',{...emptyBuilding('Complexe','#ffcf42'),floors:'5 niveaux publics',basements:'2 niveaux de parking',entrances:'Héliport sur le toit ; navettes VIP d’environ 20 passagers'}],
+ ['zone-gastronomie',{...emptyBuilding('Complexe','#c897ed'),ownerId:'faction-french-touch'}],
+ ['place-hotel-gastronomie',{...emptyBuilding('Bâtiment','#c897ed'),ownerId:'faction-french-touch',entrances:'Héliport'}]
+])seedRecords.find(r=>r.id===id).building=building;
 const relations=[];
 const L=(id,from,to,type,description='À définir',visibility='public',confidence='À définir')=>relations.push({id:'rel-'+id,from,to,type,description,visibility,confidence,evolution:'À définir'});
 L('anilla-osvald','char-anilla-yusupova','char-osvald-yusulov','Fille de','Lien familial');

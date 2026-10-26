@@ -1,3 +1,4 @@
+import {validateBuilding} from './building-schema.js?v=0.14.0';
 export const UNKNOWN='À définir';
 export const worldKinds={character:'Personnage',corporation:'Corporation',faction:'Faction',zone:'Quartier / zone',place:'Lieu',scenario:'Scénario',clue:'Indice',secret:'Secret',event:'Événement'};
 export const discoveryStates=['Non découvert','Partiellement découvert','Découvert'];
@@ -24,6 +25,8 @@ export function validateWorld(world){
  if(world===undefined)return;
  if(!world||world.version!==1||!world.settings||world.settings.system!=='Shadowrun: Anarchy V2'||!Number.isInteger(world.settings.year)||typeof world.settings.city!=='string'||!Array.isArray(world.records)||!Array.isArray(world.relations))throw Error('Univers de campagne invalide.');
  const ids=new Set();for(const r of world.records){
+  validateBuilding(r?.building);
+  if(r?.building&&!['zone','place'].includes(r.kind))throw Error('Un bâtiment doit être un lieu ou une zone.');
   if(!r||!technicalId(r.id)||ids.has(r.id)||!Object.hasOwn(worldKinds,r.kind)||typeof r.name!=='string'||!r.name.trim())throw Error('Fiche d’univers invalide ou identifiant dupliqué.');ids.add(r.id);
   for(const key of ['publicInfo','knownInfo','rumors','secrets','revealedInfo','state','gmNotes','consequences','history','source','portraitUrl'])if(typeof r[key]!=='string')throw Error('Champ d’univers invalide : '+key);
   if(!Array.isArray(r.aliases)||r.aliases.some(x=>typeof x!=='string')||!discoveryStates.includes(r.discovery)||typeof r.isSecret!=='boolean'||!r.fields||typeof r.fields!=='object'||Array.isArray(r.fields)||Object.values(r.fields).some(x=>typeof x!=='string'))throw Error('Métadonnées de fiche invalides.');
@@ -31,6 +34,7 @@ export function validateWorld(world){
   if(r.portraitUrl&&!/^https?:\/\/[^\s]+$/i.test(r.portraitUrl))throw Error('Portrait : utilisez une adresse HTTP ou HTTPS.');
   for(const key of ['gameEntryId','corporationId','mapPlaceId'])if(r[key]!==null&&typeof r[key]!=='string')throw Error('Lien externe de fiche invalide.');
  }
+ for(const r of world.records)if(r.building?.ownerId&&!world.records.some(owner=>owner.id===r.building.ownerId&&(owner.kind==='corporation'||owner.kind==='faction'&&(owner.corporationId||/corporation|corporatiste/i.test(owner.fields.type)))))throw Error('Corporation propriétaire du bâtiment introuvable.');
  const relationIds=new Set();for(const r of world.relations){
   if(!r||!technicalId(r.id)||relationIds.has(r.id)||!ids.has(r.from)||!ids.has(r.to))throw Error('Relation invalide : '+(r?.id??'identifiant absent')+' (extrémité introuvable).');relationIds.add(r.id);
   for(const key of ['type','description','confidence','evolution'])if(typeof r[key]!=='string')throw Error('Champ de relation invalide.');

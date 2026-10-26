@@ -1,3 +1,4 @@
+import {validateMapShapes} from './map-shape-schema.js?v=0.14.0';
 export const mapModes=['streets','cyberpunk'];
 export const dijonMapCenter=[47.322,5.0415];
 export const imageSize={width:1600,height:1200};
@@ -26,10 +27,11 @@ export function routeDistance(points){
 export function routeAfterEdit(points){return {points:points.map(point=>[...point])};}
 export function formatDistance(metres){return metres<1000?Math.round(metres)+' m':(metres/1000).toLocaleString('fr-FR',{maximumFractionDigits:1})+' km';}
 
-export function validateMapState(value,allowedPositionIds){
+export function validateMapState(value,allowedPositionIds,recordKinds){
  if(value===undefined)return;
  if(!value||value.version!==1||!value.dijon)throw Error('Sauvegarde de carte invalide.');
  const m=value.dijon;
+ validateMapShapes(m.shapes,validMapPoint,recordKinds);
  if(!mapModes.includes(m.mode)||!m.views||typeof m.views!=='object'||Array.isArray(m.views)||!m.routes||!Array.isArray(m.positions)||m.positions.length>3000)throw Error('Données de carte invalides.');
  for(const [mode,view] of Object.entries(m.views)){
   const imageView=mode==='cyberpunk';

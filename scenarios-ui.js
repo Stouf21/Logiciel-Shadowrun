@@ -1,7 +1,7 @@
-import {mountScenarioDrag} from './scenario-drag.js?v=0.13.0';
-import {escape} from './ui.js?v=0.13.0';
-import {makeWorldRecord,UNKNOWN} from './world-schema.js?v=0.13.0';
-import {scenarioMembers,attachScenarioRecord,detachScenarioRecord,moveScenarioEvent,placeScenarioEvent} from './scenarios.js?v=0.13.0';
+import {mountScenarioDrag} from './scenario-drag.js?v=0.14.0';
+import {escape} from './ui.js?v=0.14.0';
+import {makeWorldRecord,UNKNOWN} from './world-schema.js?v=0.14.0';
+import {scenarioMembers,attachScenarioRecord,detachScenarioRecord,moveScenarioEvent,placeScenarioEvent} from './scenarios.js?v=0.14.0';
 
 export function renderScenarioWorkspace(container,initialState,scenarioId,{onSave,editRecord}){
  let state=initialState,showSecrets=false,disposeDrag=()=>{};

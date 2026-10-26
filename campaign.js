@@ -1,8 +1,8 @@
-import {validateMapState} from './map-model.js?v=0.13.0';
-import {validateWorld} from './world-schema.js?v=0.13.0';
-import {validateCorporations} from './corporations.js?v=0.13.0';
-import {validateProfile} from './sheet.js?v=0.13.0';
-import {validateCustomCatalog} from './catalog.js?v=0.13.0';
+import {validateMapState} from './map-model.js?v=0.14.0';
+import {validateWorld} from './world-schema.js?v=0.14.0';
+import {validateCorporations} from './corporations.js?v=0.14.0';
+import {validateProfile} from './sheet.js?v=0.14.0';
+import {validateCustomCatalog} from './catalog.js?v=0.14.0';
 export const groups={characters:['PJ','PNJ principal','PNJ secondaire'],catalog:['Objet','Accessoire','Arme','Armure','Sort','Programme','Véhicule','Autre'],rules:['Règle','Aide-mémoire']};
 export function validateCampaign(data){
  if(!data||!Array.isArray(data.entries)||!Array.isArray(data.tokens))throw Error('Format de sauvegarde invalide.');
@@ -11,7 +11,7 @@ export function validateCampaign(data){
  for(const r of data.world?.records??[])if(r.kind==='character')ids.add(r.id);
  for(const t of data.tokens)if(!t||!ids.has(t.id)||!Number.isFinite(t.x)||!Number.isFinite(t.y)||t.x<0||t.x>100||t.y<0||t.y>100)throw Error('Position invalide.');
  const positionIds=new Set(data.entries.filter(e=>groups.characters.includes(e.category)).map(e=>e.id));for(const r of data.world?.records??[])if(['character','zone','place'].includes(r.kind))positionIds.add(r.id);
- validateMapState(data.mapState,positionIds);
+ validateMapState(data.mapState,positionIds,new Map((data.world?.records??[]).map(r=>[r.id,r.kind])));
  validateCorporations(data.corporations);
  validateCustomCatalog(data.customSkills,'skills');validateCustomCatalog(data.customAssets,'assets');
  return {...data,customSkills:data.customSkills??[],customAssets:data.customAssets??[]};
