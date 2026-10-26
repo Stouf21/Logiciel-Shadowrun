@@ -36,4 +36,10 @@ export function validateWorld(world){
   for(const key of ['type','description','confidence','evolution'])if(typeof r[key]!=='string')throw Error('Champ de relation invalide.');
   if(!visibilities.includes(r.visibility))throw Error('Visibilité de relation invalide.');
  }
+ for(const [key,active] of [['deletedRecordIds',ids],['deletedRelationIds',relationIds]])if(world[key]!==undefined){
+  const values=world[key];if(!Array.isArray(values)||values.some(id=>!technicalId(id)||active.has(id))||new Set(values).size!==values.length)throw Error('Historique de suppression invalide.');
+ }
+ for(const r of world.records)if(r.timelineOrder!==undefined){
+  if(r.kind!=='scenario'||!Array.isArray(r.timelineOrder)||new Set(r.timelineOrder).size!==r.timelineOrder.length||r.timelineOrder.some(id=>!world.records.some(x=>x.id===id&&x.kind==='event')||!world.relations.some(link=>(link.from===r.id&&link.to===id)||(link.to===r.id&&link.from===id))))throw Error('Ordre de la frise invalide.');
+ }
 }

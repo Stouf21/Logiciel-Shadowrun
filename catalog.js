@@ -1,4 +1,4 @@
-import {baseSkills,baseAssets} from './catalog-data.js?v=0.11.0';
+import {baseSkills,baseAssets} from './catalog-data.js?v=0.12.0';
 export {baseSkills,baseAssets};
 export function getCatalogs(state){return {skills:[...baseSkills,...(state.customSkills??[])],assets:[...baseAssets,...(state.customAssets??[])]};}
 export function validateCustomCatalog(items,kind){
@@ -9,6 +9,7 @@ export function validateCustomCatalog(items,kind){
   if(!x||typeof x.id!=='string'||!x.id.startsWith('custom-')||ids.has(x.id)||!['name','category','description','source'].every(k=>typeof x[k]==='string')||!x.name.trim())throw Error('Entrée personnalisée invalide.');
   ids.add(x.id);
   if(kind==='skills'&&!['force','agilite','volonte','logique','charisme'].includes(x.attribute))throw Error('Attribut de compétence invalide.');
+  if(kind==='skills'&&x.specializations!==undefined&&(!Array.isArray(x.specializations)||x.specializations.length>200||x.specializations.some(s=>typeof s!=='string'||!s.trim()||s.length>120)||new Set(x.specializations).size!==x.specializations.length))throw Error('Spécialisations personnelles invalides (200 maximum, 120 caractères chacune).');
   if(x.target!==undefined&&!['character','vehicle','drone'].includes(x.target))throw Error('Application d’atout invalide.');
   if(kind==='assets')for(const k of ['level','essence'])if(x[k]!==''&&(typeof x[k]!=='number'||!Number.isFinite(x[k])||x[k]<0))throw Error('Valeur d’atout invalide.');
  }

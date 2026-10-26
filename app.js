@@ -1,21 +1,22 @@
-import {mergeWorld,worldSearch,characterEntryForRecord} from './world.js?v=0.11.0';
-import {worldKinds,makeWorldRecord} from './world-schema.js?v=0.11.0';
-import {renderDashboard,renderWorldList,renderWorldRecord,openWorldEditor,worldCard} from './world-ui.js?v=0.11.0';
-import {secretSection,toggleSecret} from './secrets-ui.js?v=0.11.0';
-import {getCorporations,corporationMatches} from './corporations.js?v=0.11.0';
-import {renderCorporations,corporationCard} from './corporations-ui.js?v=0.11.0';
-import {renderDijonMap} from './dijon-map.js?v=0.11.0';
-import {renderRules} from './rules-ui.js?v=0.11.0';
-import {rules,ruleMatches,ruleSource} from './rules-data.js?v=0.11.0';
-import {validateProfile,profileSearchText} from './sheet.js?v=0.11.0';
-import {references} from './references.js?v=0.11.0';
-import {renderDice} from './dice-ui.js?v=0.11.0';
-import {escape,toggleSearchDisclosure} from './ui.js?v=0.11.0';
-import {groups,validateCampaign} from './campaign.js?v=0.11.0';
-import {getCatalogs,getCharacterCatalogs} from './catalog.js?v=0.11.0';
-import {renderCatalogLibrary,showCustomEditor} from './catalog-ui.js?v=0.11.0';
-import {mountCharacterEditor} from './character-editor.js?v=0.11.0';
-import {characterSheet} from './character-sheet.js?v=0.11.0';
+import {deleteScenario} from './scenarios.js?v=0.12.0';
+import {mergeWorld,worldSearch,characterEntryForRecord} from './world.js?v=0.12.0';
+import {worldKinds,makeWorldRecord} from './world-schema.js?v=0.12.0';
+import {renderDashboard,renderWorldList,renderWorldRecord,openWorldEditor,worldCard} from './world-ui.js?v=0.12.0';
+import {secretSection,toggleSecret} from './secrets-ui.js?v=0.12.0';
+import {getCorporations,corporationMatches} from './corporations.js?v=0.12.0';
+import {renderCorporations,corporationCard} from './corporations-ui.js?v=0.12.0';
+import {renderDijonMap} from './dijon-map.js?v=0.12.0';
+import {renderRules} from './rules-ui.js?v=0.12.0';
+import {rules,ruleMatches,ruleSource} from './rules-data.js?v=0.12.0';
+import {validateProfile,profileSearchText} from './sheet.js?v=0.12.0';
+import {references} from './references.js?v=0.12.0';
+import {renderDice} from './dice-ui.js?v=0.12.0';
+import {escape,toggleSearchDisclosure} from './ui.js?v=0.12.0';
+import {groups,validateCampaign} from './campaign.js?v=0.12.0';
+import {getCatalogs,getCharacterCatalogs} from './catalog.js?v=0.12.0';
+import {renderCatalogLibrary,showCustomEditor} from './catalog-ui.js?v=0.12.0';
+import {mountCharacterEditor} from './character-editor.js?v=0.12.0';
+import {characterSheet} from './character-sheet.js?v=0.12.0';
 const $=s=>document.querySelector(s),key='shadowrun-table-v1';
 const icons={characters:'<circle cx="9" cy="8" r="3"/><path d="M3 20v-3a6 6 0 0 1 12 0v3M16 5a3 3 0 0 1 0 6M18 14a5 5 0 0 1 3 4v2"/>',catalog:'<path d="m12 3 9 5-9 5-9-5 9-5ZM3 8v9l9 5 9-5V8M12 13v9"/>',rules:'<path d="M12 5c-3-2-6-2-10-1v15c4-1 7-1 10 1 3-2 6-2 10-1V4c-4-1-7-1-10 1Zm0 0v15"/>',dice:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h.01M17 7h.01M12 12h.01M7 17h.01M17 17h.01" stroke-width="3" stroke-linecap="round"/>',map:'<path d="m3 5 6-2 6 3 6-2v15l-6 2-6-3-6 2V5ZM9 3v15M15 6v15"/>',references:'<path d="M4 4h5v17H4zM10 4h4v17h-4zM15 5l4-1 4 16-4 1z"/>'};
 icons.library=icons.rules;
@@ -41,7 +42,7 @@ function render(){
  disposeMap?.();disposeMap=null;
  $('#content').onclick=null;document.querySelector('.edition-strip span').textContent='DIJON / '+state.world.settings.year;
  $('nav').innerHTML=Object.entries(tabs).map(([id,label])=>`<button data-tab="${id}" class="${id===tab?'active':''}" ${id===tab?'aria-current="page"':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">${icons[id]}</svg><span>${label}</span></button>`).join('');
- if(worldViewing){document.body.classList.remove('viewing-character');$('#title').textContent='Dossier de campagne';const target=tab==='organizations'?organizationShell():tab==='map'&&mapCity?cityShell():$('#content');renderWorldRecord(target,state,worldViewing,{}, {reveal:worldReveal});return;}
+ if(worldViewing){document.body.classList.remove('viewing-character');$('#title').textContent='Dossier de campagne';const target=tab==='organizations'?organizationShell():tab==='map'&&mapCity?cityShell():$('#content');renderWorldRecord(target,state,worldViewing,{onSave:persist}, {reveal:worldReveal});return;}
  const dossier=viewing&&state.world.records.find(r=>r.kind==='character'&&(r.id===viewing||r.gameEntryId===viewing));
  const savedEntry=state.entries.find(e=>e.id===viewing&&groups.characters.includes(e.category));
  const entry=savedEntry??(dossier?characterEntryForRecord(state,dossier):null);
@@ -67,18 +68,18 @@ function render(){
   $('#content').innerHTML=`<div class="toolbar"><span class="muted">${entries.length} entrée(s)${q?` · ${worldHits.length} dossier(s) de campagne`:''}${q?` · ${libraryMatches.length} compétence(s) / atout(s) · ${bookMatches.length} règle(s) · ${corporationMatchesList.length} corporation(s) · ${sourceMatches.length} référence(s)`:''}</span><button id="add" class="primary">+ Ajouter une entrée</button></div><div class="grid">${entries.map(entryCard).join('')}</div>${worldHits.length?`<div class="toolbar"><h3>Univers de campagne</h3><button data-tab="world-search">Affiner les filtres de l’univers</button></div><div class="grid">${worldHits.map(worldCard).join('')}</div>`:''}${corporationMatchesList.length?`<h3>Corporations</h3><div class="grid">${corporationMatchesList.map(corporationCard).join('')}</div>`:''}${libraryMatches.length?`<h3>Compétences & atouts</h3><div class="grid">${libraryMatches.map(r=>`<article class="card"><span class="tag">${escape(r.category)}</span><h3>${escape(r.name)}</h3><p>${escape(r.description)}</p><small>${escape(r.source)}</small></article>`).join('')}</div>`:''}${bookMatches.length?`<h3>Règles du livre</h3><div class="grid">${bookMatches.map(r=>`<article class="card"><span class="tag">${escape(r.category)}</span><h3>${escape(r.title)}</h3><p>${escape(r.summary)}</p><button data-open-rule="${r.id}">Consulter la règle</button><small>${escape(ruleSource(r))}</small></article>`).join('')}</div>`:''}${sourceMatches.length?`<h3>Références documentaires</h3><div class="grid">${referenceCards(sourceMatches)}</div>`:''}${entries.length||sourceMatches.length||libraryMatches.length||bookMatches.length||corporationMatchesList.length||worldHits.length?'':'<div class="empty"><img class="empty-mark" src="./assets/anarchy-mark.svg" alt="" width="68" height="68"><h3>Les ombres attendent votre histoire.</h3><p class="muted">Rassemblez vos runners, préparez vos rencontres et gardez vos ressources à portée de main.</p></div>'}`;
   $('#add').onclick=()=>openEditor();return;
  }
- if(tab==='library'){renderCatalogLibrary($('#content'),getCatalogs(state),createCatalogEntry);return;}
+ if(tab==='library'){renderCatalogLibrary($('#content'),getCatalogs(state),(kind,onDone)=>createCatalogEntry(kind,onDone,{characterOnly:false}));return;}
  if(tab==='references'){$('#content').innerHTML='<div class="toolbar"><span class="muted">Références personnelles · aucun PDF publié par le serveur</span></div><div class="grid">'+referenceCards(references)+'</div>';return;}
  if(tab==='dice'){renderDice($('#content'));return;}
  renderMap();
 }
-function createCatalogEntry(kind,onDone){
+function createCatalogEntry(kind,onDone,{characterOnly=typeof onDone==='function'}={}){
  showCustomEditor(kind,item=>{
   if(getCatalogs(state)[kind].some(x=>x.name.toLocaleLowerCase('fr')===item.name.toLocaleLowerCase('fr')))throw Error('Ce nom existe déjà dans la liste.');
   const field=kind==='skills'?'customSkills':'customAssets';
   const next=validateCampaign({...state,[field]:[...state[field],item]});persist(next);
-  if(typeof onDone==='function')onDone(item);else{render();const select=$('#library-kind');if(select){select.value=kind;select.dispatchEvent(new Event('change'));}}
- },{characterOnly:typeof onDone==='function'});
+  if(typeof onDone==='function')onDone(item);else render();
+ },{characterOnly});
 }
 function openEditor(id,worldId=null){
  gameForWorld=worldId;
@@ -105,6 +106,7 @@ document.addEventListener('click',e=>{
  const b=e.target.closest('button');
  if(b?.dataset.openCharacter){openCharacter(b.dataset.openCharacter);return;}
  if(b?.dataset.openWorld){openWorld(b.dataset.openWorld,b.dataset.worldReveal==='true');return;}
+ if(b?.dataset.scenarioDelete){if(confirm('Supprimer ce scénario ? Les personnages et les événements seront conservés dans la campagne.')){try{persist(deleteScenario(state,b.dataset.scenarioDelete));worldViewing=null;viewing=null;worldReveal=false;tab='scenarios';render();}catch(err){message(err.message);}}return;}
  if(b?.dataset.worldNew){if(b.dataset.worldNew==='character'){openEditor();return;}const r=makeWorldRecord(b.dataset.worldNew,b.dataset.worldNew+'-'+crypto.randomUUID(),'');openWorldEditor(state,r,(next,id)=>{persist(next);openWorld(id);});return;}
  if(b?.dataset.worldEdit){openWorldEditor(state,state.world.records.find(r=>r.id===b.dataset.worldEdit),(next,id)=>{persist(next);openWorld(id);});return;}
  if(b?.dataset.createWorldGame){openEditor(null,b.dataset.createWorldGame);return;}

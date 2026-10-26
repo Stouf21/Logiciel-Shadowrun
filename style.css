@@ -17,11 +17,7 @@ button.primary:hover{background:#ffd044;border-color:#ffd044}
 aside{position:fixed;inset:0 auto 0 0;width:var(--sidebar);height:100dvh;overflow-y:auto;display:flex;flex-direction:column;background-color:#191a1a;background-image:radial-gradient(#ffffff0d .65px,transparent .65px);background-size:5px 5px;color:#f0efe8;padding:32px 25px 24px;border-right:5px solid var(--accent);z-index:5}
 aside::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:repeating-linear-gradient(125deg,var(--accent) 0 20px,#191a1a 20px 33px)}
 .brand{position:relative;padding:5px 0 19px;border-bottom:1px solid #ffffff26;isolation:isolate}
-.brand-world{display:block;font:600 20px/1 var(--heading);letter-spacing:6px;color:#f0efe8;padding-left:9px}
-.brand strong{display:block;position:relative;font:400 42px/1.45 Marker,cursive;color:var(--accent);letter-spacing:-1px;transform:rotate(-5deg);text-shadow:2px 2px #000;white-space:nowrap}
-.brand strong::after{content:'';position:absolute;left:2px;right:8px;bottom:8px;height:4px;background:var(--accent);transform:rotate(-2deg);clip-path:polygon(0 10%,98% 0,89% 42%,100% 67%,14% 100%,2% 65%)}
-.brand-edition{display:flex;align-items:center;justify-content:space-between;font:600 16px var(--heading);letter-spacing:2px;margin:10px 7px 0;color:#fff}
-.brand-edition span{font:10px system-ui,sans-serif;letter-spacing:1.7px;color:#b9b8b0}
+.brand-logo{display:block;width:100%;height:auto;max-width:100%;border-radius:2px}
 .sidebar-intro{margin-top:32px}
 .eyebrow{font:600 11px var(--heading);letter-spacing:2px;color:var(--rust)}
 aside .eyebrow{color:var(--accent)}
@@ -321,3 +317,37 @@ aside nav{gap:3px;margin-top:20px;margin-bottom:25px}aside nav button{min-height
 @media(max-width:480px){.interactive-map{height:480px;max-height:70vh;min-height:320px}.interactive-map-controls{gap:10px}.interactive-map-controls>label{flex-basis:100%;min-width:0}.map-placement-controls{padding:11px}.map-route-controls{gap:6px}.map-route-controls button{flex:1;font-size:13px}.map-route-controls output{flex-basis:100%;padding:5px 0}.map-pin{max-width:145px;font-size:12px}}
 
 .map-place-symbol{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}.map-place-editor{width:min(640px,calc(100vw - 28px))}.map-place-editor h2{margin-bottom:10px}.map-place-editor>.muted,.map-place-editor form>.muted{font-size:12px}.map-place-error{color:#a13220;font-size:13px}.map-place-editor .check-label{margin:14px 0}.map-inspector .actions{display:flex;gap:8px;flex-wrap:wrap}.map-inspector .actions button{font-size:14px}
+
+/* Scénarios : distribution et frise propres à chaque intrigue. */
+button.danger{color:var(--rust);border-color:var(--rust)}
+.world-detail-actions>.actions{margin:0;flex-wrap:wrap}
+.scenario-workspace{margin:24px 0 30px;padding:24px;background:#f0ece2;border:1px solid var(--line);border-top:4px solid var(--accent)}
+.scenario-workspace-heading{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+.scenario-workspace h4{margin:8px 0 15px;font-size:23px;color:var(--ink)}
+.scenario-workspace-heading .check-label{font-size:12px;margin:0}
+.scenario-count{display:inline-grid;place-items:center;min-width:27px;height:27px;padding:0 7px;background:var(--ink);color:var(--paper);font-size:16px;vertical-align:middle;margin-left:6px}
+.scenario-picker{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin:18px 0}
+.scenario-picker label{flex:1;min-width:180px;margin:0}
+.scenario-picker select{margin-bottom:0;max-width:100%;width:100%}
+.scenario-picker button{flex-shrink:0}
+.scenario-cast{padding-bottom:25px;border-bottom:1px solid var(--line)}
+.scenario-cast-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:10px}
+.scenario-character{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px;background:var(--panel);border:1px solid var(--line)}
+.scenario-character>div{min-width:0}.scenario-character h5,.scenario-event h5{font:600 22px/1.2 var(--heading);margin:5px 0;overflow-wrap:anywhere}
+.scenario-character p{font-size:12px;margin:5px 0 0}.scenario-remove{font-size:13px;padding:8px 10px;min-height:36px;flex-shrink:0}
+.scenario-timeline-section{padding-top:20px}
+.scenario-timeline{list-style:none;padding:0;margin:25px 0 0}
+.scenario-timeline-item{position:relative;margin:0;padding:0 0 24px 50px;min-width:0}
+.scenario-timeline-item::before{content:'';position:absolute;left:17px;top:17px;bottom:-17px;width:2px;background:#b9ae91}
+.scenario-timeline-item:last-child::before{bottom:24px}
+.scenario-step{position:absolute;left:0;top:15px;display:grid;place-items:center;width:36px;height:36px;background:var(--accent);border:2px solid var(--ink);color:var(--ink);font:600 18px var(--heading);z-index:1}
+.scenario-event{padding:20px;background:var(--panel);border:1px solid var(--line);box-shadow:3px 3px #ddd6c5}
+.scenario-event-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.scenario-event .timeline-date{font:600 15px var(--heading);color:var(--rust)}
+.scenario-event>.actions{flex-wrap:wrap;margin-bottom:0}.scenario-order{display:flex;gap:6px;flex-wrap:wrap}.scenario-order button{min-width:40px;padding:7px 10px;font-size:14px}
+.scenario-error{color:var(--rust)}
+/* Répertoires distincts, puis fiche détaillée de chaque compétence. */
+.library-intro{border-left:4px solid var(--accent);padding:1px 20px;background:#ebe5d4;margin:16px 0 24px}.library-tabs button{display:flex;align-items:center;justify-content:center;gap:12px}.library-tabs span{font-size:14px;border:1px solid currentColor;min-width:26px;padding:1px 6px;border-radius:20px}
+.skill-card{border-top:4px solid var(--violet)}.asset-card{border-top:4px solid var(--accent)}.skill-card .world-link{font-size:25px;text-align:left}.skill-attribute{font:600 16px var(--heading);color:var(--violet)}
+.skill-dossier{padding:28px;background:var(--panel);border:1px solid var(--line);margin-top:24px;max-width:1000px}.skill-dossier header{margin:25px 0 15px;flex-wrap:wrap;justify-content:space-between}.skill-dossier h3{font-size:38px;margin-top:8px}.skill-dossier h4{font-size:22px;margin-bottom:10px}.skill-rules{padding:2px 22px 20px;background:#ece8f1;border-left:4px solid var(--violet);margin:24px 0}.specialization-list{display:grid;gap:10px;margin:18px 0 24px}.specialization-list details{background:var(--paper);border:1px solid var(--line);padding:0}.specialization-list summary{padding:15px 18px;cursor:pointer;font:600 19px/1.4 var(--heading)}.specialization-list summary>span:first-child{margin-right:16px}.specialization-attribute{font-size:14px;color:var(--violet)}.specialization-list p{padding:0 18px 5px;margin:6px 0 15px}
+@media(max-width:800px){.brand{display:block;width:min(327px,100%);padding:0}.world-detail-actions{flex-wrap:wrap}.scenario-workspace{padding:18px}.skill-dossier{padding:22px}}
+@media(max-width:480px){.scenario-workspace{padding:15px 10px}.scenario-picker{align-items:stretch}.scenario-picker label{flex-basis:100%;min-width:0}.scenario-picker button{flex:1;font-size:14px;padding:10px}.scenario-character{flex-wrap:wrap}.scenario-timeline-item{padding-left:34px}.scenario-step{width:26px;height:26px;font-size:14px}.scenario-timeline-item::before{left:12px}.scenario-event{padding:14px 12px}.scenario-event .actions{align-items:flex-start}.skill-dossier{padding:18px 14px}.skill-rules{padding-left:15px;padding-right:15px}.specialization-attribute{display:block}.library-tabs button{gap:8px}.world-detail-actions>.actions{gap:8px}}

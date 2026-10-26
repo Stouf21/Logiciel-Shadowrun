@@ -1,6 +1,6 @@
-import {seedRecords,seedRelations,seedSettings} from './world-data.js?v=0.11.0';
-import {makeWorldRecord,worldFields,UNKNOWN,validateWorld} from './world-schema.js?v=0.11.0';
-import {getCorporations} from './corporations.js?v=0.11.0';
+import {seedRecords,seedRelations,seedSettings} from './world-data.js?v=0.12.0';
+import {makeWorldRecord,worldFields,UNKNOWN,validateWorld} from './world-schema.js?v=0.12.0';
+import {getCorporations} from './corporations.js?v=0.12.0';
 export const normalize=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('fr').trim().replace(/[’‘]/g,"'");
 export const isCorporationRecord=r=>r.kind==='corporation'||r.kind==='faction'&&(!!r.corporationId||/\b(corporation|corporatiste|filiale corporatiste)\b/.test(normalize(r.fields?.type)));
 const cloneRecord=r=>({...r,aliases:[...r.aliases],fields:{...r.fields},kind:isCorporationRecord(r)?'corporation':r.kind});
@@ -8,11 +8,12 @@ const known=v=>['string','number'].includes(typeof v)&&String(v).trim()!==''&&![
 function stableId(prefix,key){let a=2166136261,b=2246822507;for(const c of String(key)){a=Math.imul(a^c.charCodeAt(0),16777619);b=Math.imul(b^c.charCodeAt(0),3266489909);}return prefix+(a>>>0).toString(16).padStart(8,'0')+(b>>>0).toString(16).padStart(8,'0');}
 const aliasList=r=>Array.isArray(r.aliases)?r.aliases.filter(x=>typeof x==='string'):typeof r.aliases==='string'?r.aliases.split(','):[];
 function aliasesMatch(a,b){return [a.name,...aliasList(a)].some(x=>[b.name,...aliasList(b)].some(y=>normalize(x)===normalize(y)));}
-function fillMissing(existing,seed){return {...seed,...existing,aliases:[...new Set([...(existing.aliases??[]),...(seed.aliases??[])])],fields:{...seed.fields,...existing.fields}};}
+function fillMissing(existing,seed){return {...seed,...existing,aliases:[...new Set([...(existing.aliases??[]),...(seed.aliases??[]),...(existing.id!==seed.id?[seed.name]:[])])],fields:{...seed.fields,...existing.fields}};}
 export function mergeWorld(state){
  const original=state.world;
+ const deletedRecords=new Set(original?.deletedRecordIds??[]),deletedRelations=new Set(original?.deletedRelationIds??[]);
  const records=(original?.records??[]).map(cloneRecord),remap=new Map();
- for(const seed of seedRecords){const match=records.find(r=>r.id===seed.id)||records.find(r=>r.kind===seed.kind&&aliasesMatch(r,seed));if(match){remap.set(seed.id,match.id);Object.assign(match,fillMissing(match,seed));}else{records.push(cloneRecord(seed));remap.set(seed.id,seed.id);}}
+ for(const seed of seedRecords){if(deletedRecords.has(seed.id))continue;const match=records.find(r=>r.id===seed.id)||records.find(r=>r.kind===seed.kind&&aliasesMatch(r,seed));if(match){remap.set(seed.id,match.id);Object.assign(match,fillMissing(match,seed));}else{records.push(cloneRecord(seed));remap.set(seed.id,seed.id);}}
  const gameEntries=state.entries.filter(e=>['PJ','PNJ principal','PNJ secondaire'].includes(e.category));
  const bound=new Set();
  for(const r of records.filter(r=>r.kind==='character')){
@@ -35,7 +36,8 @@ export function mergeWorld(state){
  for(const c of corporations.filter(c=>!corpBound.has(c.id)))records.push(makeWorldRecord('corporation',stableId('faction-corporation-',c.id),c.name,{corporationId:c.id,aliases:c.aliases.split(',').map(x=>x.trim()).filter(Boolean),publicInfo:c.summary||UNKNOWN,secrets:c.secrets||UNKNOWN,gmNotes:c.notes||UNKNOWN,source:c.source},{officialName:c.name,type:'Corporation '+c.tier,legal:c.sectors||UNKNOWN,objectives:c.objectives||UNKNOWN,headquarters:c.hq||UNKNOWN,leaders:c.leader||UNKNOWN,contacts:c.contacts||UNKNOWN}));
  for(const r of records.filter(r=>['zone','place'].includes(r.kind)))if(known(r.fields.faction)&&records.some(c=>c.kind==='corporation'&&[c.name,...c.aliases].some(name=>normalize(name)===normalize(r.fields.faction)))){if(!known(r.fields.corporation))r.fields.corporation=r.fields.faction;r.fields.faction=UNKNOWN;}
  const relations=(original?.relations??[]).map(r=>({...r}));
- for(const seed of seedRelations){if(!relations.some(r=>r.id===seed.id))relations.push({...seed,from:remap.get(seed.from)??seed.from,to:remap.get(seed.to)??seed.to});}
+ const recordIds=new Set(records.map(r=>r.id));
+ for(const seed of seedRelations){const from=remap.get(seed.from)??seed.from,to=remap.get(seed.to)??seed.to;if(!deletedRelations.has(seed.id)&&recordIds.has(from)&&recordIds.has(to)&&!relations.some(r=>r.id===seed.id))relations.push({...seed,from,to});}
  const world={...original,version:1,settings:{...seedSettings,...original?.settings},records,relations};validateWorld(world);return {...state,world};
 }
 export function recordSecretText(r){const secretFields=worldFields[r.kind].filter(([, ,scope])=>scope==='secret').map(([key])=>r.fields[key]??'');return [r.secrets,r.gmNotes,r.consequences,r.history,...secretFields].join(' ');}

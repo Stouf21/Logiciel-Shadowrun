@@ -1,6 +1,6 @@
-# Shadowrun Anarchy · Écran du meneur
+# Shadowrun Anarchy · Campagne
 
-Application indépendante en français pour préparer et mener une campagne d’Anarchy V2. Version 0.11.0, en JavaScript natif avec Leaflet 1.9.4 hébergé localement pour la cartographie.
+Application indépendante en français pour préparer et mener une campagne d’Anarchy V2. Version 0.12.0, en JavaScript natif avec Leaflet 1.9.4 hébergé localement pour la cartographie.
 
 ## Démarrer
 
@@ -16,6 +16,14 @@ Les recherches sont repliées derrière un bouton, y compris la barre globale et
 
 [Bilan de l’intégration initiale V0.8 : architecture, données et inconnues](docs/DIJON_2082_INTEGRATION.md).
 
+## Scénarios et frise
+
+Ouvrir un scénario donne accès à sa distribution et à sa frise chronologique. Chaque section propose d’ajouter une fiche existante ou d’en créer une. « Retirer du scénario » détache uniquement le lien : le personnage ou l’événement reste dans la campagne et peut servir ailleurs. Les personnages nouvellement créés ont un dossier narratif, puis une fiche Anarchy V2 à compléter sans statistiques inventées.
+
+Les événements se modifient depuis la frise, y compris leur date ou repère relatif. Les flèches changent l’ordre local du scénario ; aucune date absolue n’est déduite. Les éléments réservés au MJ et les associations secrètes restent masqués jusqu’à l’activation explicite de leur case. L’ordre et les retraits sont conservés après rechargement et export/import.
+
+« Supprimer le scénario », dans son dossier, demande confirmation puis supprime le scénario et ses liens. Les personnages, événements et autres dossiers liés sont conservés. L’historique de suppression empêche les scénarios et associations de départ de réapparaître lors des fusions suivantes.
+
 ## Personnages et fiches
 
 - Une liste unique de personnages : cliquer sur le nom ou « Consulter la fiche » ouvre en priorité la fiche de jeu. « En savoir plus sur le personnage » ouvre son dossier narratif. Les PJ / PNJ déjà créés gardent leur profil et leurs notes. Un personnage sans profil affiche une fiche vide avec « Compléter la fiche », sans inventer ni enregistrer de statistiques lors de la consultation.
@@ -25,7 +33,7 @@ Les recherches sont repliées derrière un bouton, y compris la barre globale et
 
 ## Compétences et atouts
 
-- Les 14 compétences de base sont référencées (livre V2, p. 54), avec familles et indications de spécialisations. L’attribut dépend de l’action et reste sélectionnable.
+- Deux onglets visibles séparent les Compétences et les Atouts, avec une explication de leur différence. Les 14 compétences de base disposent d’une fiche : synthèse originale, attributs associés, règle des spécialisations et liste de spécialisations dépliables avec explication de leur usage (livre V2, p. 52–58). Les exceptions d’attribut sont explicites : course avec Force, cybercombat avec Volonté, etc. Les compétences personnelles peuvent aussi recevoir une liste de spécialisations, une par ligne. L’attribut de la fiche de jeu reste sélectionnable.
 - 205 atouts nommés et modèles de construction dans le répertoire général, tirés des exemples et tableaux des chapitres du livre : équipements, armes, armures, drogues, cyberware, bioware, contacts, esprits mentors, focus, pouvoirs d’adepte, cyberdecks, véhicules et drones. Les atouts pour PNJ corrompus sont signalés. Chaque entrée indique sa source.
 - Le jeu autorise la construction d’atouts : ce répertoire n’est pas une limite fermée à tous les atouts possibles. « Compétences & atouts » permet d’ajouter ses propres références, également depuis la création d’un personnage.
 - Dans les fiches et leur création, seuls les atouts applicables aux personnages sont proposés : les catégories Drone / Véhicule, leurs modèles et les créations ciblant un engin sont exclues. Les équipements de rigger portés par le personnage (par exemple une console) restent disponibles. Les anciennes associations d’engins sont conservées séparément, sans suppression.
@@ -81,13 +89,13 @@ Pas encore de contrôle des coûts de création, de maxima par métatype ni d’
 
 ## Sources et thème
 
-Les six parties du livre principal sont consultables dans les pièces jointes de la conversation de travail. Les PDF et extractions restent hors du dépôt. La France des Ombres est une référence de contexte SR6 : guide de lecture du sommaire intégré, sans conversion de statistiques. L’intégration détaillée du supplément Cadeau reste à poursuivre.
+Les six parties du livre principal sont consultables dans les pièces jointes de la conversation de travail. Les PDF et extractions de texte restent hors du dépôt ; seul le visuel du logo demandé est intégré. La France des Ombres est une référence de contexte SR6 : guide de lecture du sommaire intégré, sans conversion de statistiques. L’intégration détaillée du supplément Cadeau reste à poursuivre.
 
-Thème inspiré des documents V2 : jaune ocre, noir, fonds papier, titres rouille et accents violets. Polices Permanent Marker et Barlow Condensed hébergées localement ; licences Apache 2.0 et SIL OFL conservées dans `assets/fonts/`. Graphismes d’interface originaux.
+Thème inspiré des documents V2 : jaune ocre, noir, fonds papier, titres rouille et accents violets. Polices Permanent Marker et Barlow Condensed hébergées localement ; licences Apache 2.0 et SIL OFL conservées dans `assets/fonts/`. Le titre utilise le lettrage exact du logo fourni, extrait de la seule zone du titre de la couverture jointe ; ce visuel est enregistré dans `assets/anarchy-logo.png`. La mention « Écran du meneur » est retirée du titre et de l’habillage de l’application. Les autres graphismes d’interface sont originaux.
 
 ## Vérifications
 
-53 tests Node : cinq tests de création / positionnement de lieux, rattachement aux quartiers, secrets, retrait par vue et conservation des repères historiques ; huit tests de compatibilité et validation des cartes, conversion des anciens repères, distances et routage, ainsi que douze tests de chargement / fusion de Dijon, recherche protégée, relations, carte, reclassement des corporations et aperçu des fiches sans statistiques, en complément des vérifications de dés et risque, relances, profils, sélections, compatibilité des sauvegardes, export/import des données, listes personnalisées, réserve de dés et contrastes des couleurs, séparation des atouts corps / engins, recherche des synthèses classées, compatibilité et sauvegarde des corporations et annotations.
+61 tests Node : six tests de suppression persistante des scénarios, détachement / réajout, ordre local, secrets, alias et validation, ainsi que deux tests de détails / spécialisations des compétences ; cinq tests de création / positionnement de lieux, rattachement aux quartiers, secrets, retrait par vue et conservation des repères historiques ; huit tests de compatibilité et validation des cartes, conversion des anciens repères, distances et routage, ainsi que douze tests de chargement / fusion de Dijon, recherche protégée, relations, carte, reclassement des corporations et aperçu des fiches sans statistiques, en complément des vérifications de dés et risque, relances, profils, sélections, compatibilité des sauvegardes, export/import des données, listes personnalisées, réserve de dés et contrastes des couleurs, séparation des atouts corps / engins, recherche des synthèses classées, compatibilité et sauvegarde des corporations et annotations.
 
 Parcours Chromium V0.6 : cubes à six faces et points, animation effective puis révélation, relance, réduction des animations, carte Dijon (image, repères, zoom et pions après rechargement), règles (85 entrées, thèmes, quatre options et recherche), anciens atouts d’engins conservés séparément, puis régression complète : création par sélection, ajout d’une référence personnelle depuis le formulaire sans perdre la saisie, sélection de compétences personnelles, fiche recto-verso et impression PDF A4 de deux pages, modification et rechargement, export/import JSON, couleurs distinctes persistantes, relances, affichage mobile et préservation des anciennes notes. Données de test isolées des campagnes utilisateur.
 
@@ -108,3 +116,5 @@ Parcours Chromium V0.9 : menus simplifiés, onglets Corporations / Factions et r
 Parcours Chromium V0.10 : zoom boutons / molette, déplacement du fond sans déplacer les pions, étapes déplaçables, géométrie routière et invalidation après modification, erreurs / annulation de requêtes, deux fonds indépendants, anciens repères et pions conservés, positions géographiques et dossiers, filtres et masquage MJ, export/import, rechargement, affichage 390 / 768 pixels, pincement à deux doigts et déplacement tactile, puis repli illustré quand les tuiles sont indisponibles. Les tests utilisent des tuiles et réponses OSRM simulées : l’accès réel à ces services n’est pas validé depuis l’environnement cloud. Les dépendances cartographiques sont servies localement ; aucun nouveau service Node ni compilation n’est nécessaire.
 
 Parcours Chromium V0.11 : ajout de boutique et lieu important depuis un clic sur les deux fonds, validation du formulaire, type personnalisé, notes privées, lien au quartier, recherche des nouveaux lieux, édition, déplacement, retrait sur une vue, secrets masqués par défaut, rechargement et export/import. Vérification des formulaires en 390 / 768 pixels, puis régression des zooms, déplacement de vue, tracés, routage et pions. Les tests de services externes restent simulés.
+
+Parcours Chromium V0.12 : logo exact et retrait du sous-titre, ajout / retrait persistant et réajout de personnages ou d’événements, création de dossiers, édition des dates relatives, ordre de la frise, associations et événements secrets, suppression et annulation, conservation des profils existants, rechargement et export/import. Onglets distincts compétences / atouts, fiches explicatives, attributs particuliers, spécialisations dépliables et personnelles persistantes ; affichage 390 / 768 pixels.
