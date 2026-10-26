@@ -1,4 +1,4 @@
-import {baseSkills,baseAssets} from './catalog-data.js?v=0.14.0';
+import {baseSkills,baseAssets} from './catalog-data.js?v=0.15.0';
 export {baseSkills,baseAssets};
 export function getCatalogs(state){return {skills:[...baseSkills,...(state.customSkills??[])],assets:[...baseAssets,...(state.customAssets??[])]};}
 export function assetReferenceText(asset){return [asset.description,asset.conditions,asset.price?'Prix : '+asset.price:''].filter(Boolean).join('\n');}

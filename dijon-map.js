@@ -1,26 +1,27 @@
-import {mountMapShapes} from './map-shapes-ui.js?v=0.14.0';
-import {mapPlaceTypes,createMapPlace,positionMapPlace,removeMapPlacePosition} from './map-places.js?v=0.14.0';
-import {secretSection} from './secrets-ui.js?v=0.14.0';
-import {escape,searchDisclosure} from './ui.js?v=0.14.0';
-import {dijonPlaces} from './dijon-places.js?v=0.14.0';
-import {worldSearch} from './world.js?v=0.14.0';
-import {authorities} from './world-schema.js?v=0.14.0';
-import {copyMapState,dijonMapCenter,imageSize,imagePointFromPercent,imagePointToPercent,validMapPoint,routeDistance,routeAfterEdit,formatDistance,maxWaypoints,requestStreetRoute} from './map-model.js?v=0.14.0';
+import {scaleMapLabels} from './map-labels.js?v=0.15.0';
+import {mountMapShapes} from './map-shapes-ui.js?v=0.15.0';
+import {mapPlaceTypes,createMapPlace,positionMapPlace,removeMapPlacePosition} from './map-places.js?v=0.15.0';
+import {secretSection} from './secrets-ui.js?v=0.15.0';
+import {escape,searchDisclosure} from './ui.js?v=0.15.0';
+import {dijonPlaces} from './dijon-places.js?v=0.15.0';
+import {worldSearch} from './world.js?v=0.15.0';
+import {authorities} from './world-schema.js?v=0.15.0';
+import {copyMapState,dijonMapCenter,imageSize,imagePointFromPercent,imagePointToPercent,validMapPoint,routeDistance,routeAfterEdit,formatDistance,maxWaypoints,requestStreetRoute} from './map-model.js?v=0.15.0';
 export {dijonPlaces};
 
-export function renderDijonMap(container,snapshot,onChange){
+export function renderDijonMap(container,snapshot,onChange,{onOpenRecord}={}){
  let state=snapshot,mode=copyMapState(state.mapState).dijon.mode,map=null,observer=null,destroyed=false,routeRequest=null,placeDialog=null,geometry=null;
  let records=state.world?.records??[];const L=globalThis.L;
  const options=items=>'<option value="">Tous / toutes</option>'+items.map(item=>{const [id,label]=Array.isArray(item)?item:[item,item];return `<option value="${escape(id)}">${escape(label)}</option>`;}).join('');
  container.innerHTML=`<div class="dijon-header"><span class="tag">DIJON / ${state.world?.settings.year??2082}</span><h3>Les ombres de la cité des Ducs.</h3></div>
- <div class="map-controls interactive-map-controls"><label>Fond de carte<select id="map-view" aria-label="Fond de carte"><option value="streets">Plan des rues · OpenStreetMap</option><option value="cyberpunk">Illustration cyberpunk</option></select></label><label>Action sur la carte<select id="map-action" aria-label="Action sur la carte"><option value="explore">Explorer</option><option value="route">Tracer un itinéraire</option><option value="character">Placer un personnage</option><option value="place">Positionner un lieu existant</option><option value="create-place">Ajouter un nouveau lieu</option><option value="draw-zone">Dessiner une zone</option><option value="draw-building">Dessiner un bâtiment / arcologie</option><option value="edit-shape">Modifier un contour</option></select></label><div class="map-zoom"><button id="map-minus" aria-label="Réduire le zoom">−</button><output id="map-zoom-value"></output><button id="map-plus" aria-label="Augmenter le zoom">+</button></div><button id="map-recenter">Recentrer</button></div>
+ <div class="map-controls interactive-map-controls"><label>Fond de carte<select id="map-view" aria-label="Fond de carte"><option value="streets">Plan des rues · OpenStreetMap</option><option value="cyberpunk">Illustration cyberpunk</option></select></label><label>Action sur la carte<select id="map-action" aria-label="Action sur la carte"><option value="explore">Explorer</option><option value="route">Tracer un itinéraire</option><option value="character">Placer un personnage</option><option value="place">Positionner un lieu existant</option><option value="create-place">Ajouter un nouveau lieu</option><option value="draw-zone">Dessiner une zone</option><option value="draw-building">Dessiner un bâtiment / arcologie</option><option value="edit-shape">Modifier un contour</option></select></label><div class="map-zoom"><output id="map-zoom-value"></output></div><button id="map-recenter">Recentrer</button></div>
  <p id="map-background-note" class="muted map-background-note"></p>
  <div id="map-character-controls" class="map-placement-controls" hidden><label>Personnage à placer<select id="map-character" aria-label="Personnage à placer"></select></label><button id="clear-map">Retirer les pions de cette vue</button></div>
  <div id="map-place-controls" class="map-placement-controls" hidden><label>Lieu à positionner<select id="map-place" aria-label="Lieu à positionner"></select></label><p class="muted">Choisissez un dossier puis cliquez à son emplacement. Les positions du plan de rues sont indépendantes de l’illustration.</p></div>
  ${searchDisclosure('map-search-panel',`<div class="world-filters map-world-filters"><label>Autorité<select id="map-authority" aria-label="Autorité sur la carte">${options(authorities)}</select></label><label>Corporation<select id="map-corporation" aria-label="Corporation sur la carte"></select></label><label>Faction<select id="map-faction" aria-label="Faction sur la carte"></select></label><label>Sécurité<select id="map-security" aria-label="Sécurité sur la carte"></select></label><label>Type de lieu<select id="map-type" aria-label="Type de lieu sur la carte"></select></label><label class="check-label"><input id="map-labels" type="checkbox" checked>Afficher les noms des repères</label><label class="check-label"><input id="map-secrets" type="checkbox">Afficher les secrets du MJ</label></div>`,{label:'Filtrer la carte'})}
  <div class="map-route-controls"><button class="primary" id="map-add-place" aria-pressed="false">+ Ajouter un lieu</button><button id="map-route-toggle" aria-pressed="false">Tracer un itinéraire</button><button id="map-route-road">Calculer par les rues</button><button id="map-route-undo">Retirer la dernière étape</button><button id="map-route-clear">Effacer l’itinéraire</button><output id="map-route-summary" aria-live="polite"></output></div>
  <div id="map-shape-tools"></div><p id="map-help" class="map-legend">Glissez pour déplacer la vue. Utilisez la molette, le pincement ou les boutons pour zoomer.</p>
- <p id="map-state-status" class="muted" role="status"></p><div id="map" class="interactive-map" role="region" aria-label="Carte interactive de Dijon"></div>
+ <p id="map-state-status" class="muted" role="status"></p><div id="map-draw-dock"></div><div id="map" class="interactive-map" role="region" aria-label="Carte interactive de Dijon"></div>
  <div class="map-inspector" id="map-inspector" role="status">Choisissez un repère pour ouvrir son dossier.</div><p id="map-world-count" class="muted" role="status"></p>
  <details><summary>Zones et lieux à positionner sur cette vue</summary><p class="muted">Les repères de l’illustration ne sont pas convertis automatiquement en coordonnées géographiques.</p><div class="place-list" id="unplaced-world-records"></div></details>`;
  const $=selector=>container.querySelector(selector);
@@ -79,9 +80,9 @@ export function renderDijonMap(container,snapshot,onChange){
   if(mode==='streets')return model().positions.find(p=>p.id===record.id)?.point;
   const original=dijonPlaces.find(p=>p.id===record.mapPlaceId);return original?imagePointFromPercent(original):record.coordinates?imagePointFromPercent(record.coordinates):null;
  }
- function pointMarker(point,label,html,{draggable=false,onDrag,onClick,iconSize=[160,32],iconAnchor=[11,16]}={}){
-  const marker=L.marker(point,{icon:L.divIcon({className:'campaign-marker',html,iconSize,iconAnchor}),title:label,keyboard:true,draggable});
-  marker.on('add',()=>marker.getElement()?.setAttribute('aria-label',label));
+ function pointMarker(point,label,html,{draggable=false,onDrag,onClick,recordId=null,iconSize=[160,32],iconAnchor=[11,16]}={}){
+  const marker=L.marker(point,{icon:L.divIcon({className:'campaign-marker'+(iconSize[0]===160?' scalable-map-label':''),html,iconSize,iconAnchor}),title:label,keyboard:true,draggable});
+  marker.on('add',()=>{const root=marker.getElement();root?.setAttribute('aria-label',label);if(iconSize[0]===160&&root)root.dataset.labelAnchor='point';const link=root?.querySelector('[data-map-dossier]');if(link)link.onclick=e=>{e.preventDefault();e.stopPropagation();if(marker.dragging?.moved())return;if($('#map-action').value==='explore'&&onOpenRecord)onOpenRecord(recordId,$('#map-secrets').checked);else onClick?.();};scaleMapLabels($('#map'),mode,map.getZoom());});
   if(onClick)marker.on('click',onClick);
   if(onDrag)marker.on('dragend',()=>onDrag([marker.getLatLng().lat,marker.getLatLng().lng]));
   return marker;
@@ -97,22 +98,22 @@ export function renderDijonMap(container,snapshot,onChange){
  }
  function saveStreetPosition(id,point){return saveMap(m=>{m.positions=[...m.positions.filter(p=>p.id!==id),{id,point}];});}
  function updateMarkers(){
-  markerLayer.clearLayers();const filtered=visibleRecords(),mapped=filtered.filter(r=>recordPoint(r));
+  markerLayer.clearLayers();const filtered=visibleRecords(),shapeIds=geometry?.mappedIds()??new Set(),mapped=filtered.filter(r=>recordPoint(r)&&!shapeIds.has(r.id));
   for(const record of mapped){
-   const point=recordPoint(record),html=`<span class="map-pin authority-${authorityClass(record)}"><i></i>${placeSymbol(record.fields.type)}<span class="map-pin-name">${escape(record.name)}</span></span>`;
-   pointMarker(point,record.name,html,{draggable:$('#map-action').value==='place'&&(mode==='streets'||!record.mapPlaceId),onDrag:point=>{try{apply(positionMapPlace(state,record.id,mode,point));}catch(error){status(error.message);}updateMarkers();},onClick:()=>inspect(record)}).addTo(markerLayer);
+   const point=recordPoint(record),html=`<a href="#" data-map-dossier class="map-pin authority-${authorityClass(record)}"><i></i>${placeSymbol(record.fields.type)}<span class="map-pin-name">${escape(record.name)}</span></a>`;
+   pointMarker(point,record.name,html,{recordId:record.id,draggable:$('#map-action').value==='place'&&(mode==='streets'||!record.mapPlaceId),onDrag:point=>{try{apply(positionMapPlace(state,record.id,mode,point));}catch(error){status(error.message);}updateMarkers();},onClick:()=>inspect(record)}).addTo(markerLayer);
   }
   for(const character of characters()){
    const token=mode==='streets'?model().positions.find(p=>p.id===character.id):state.tokens.find(p=>p.id===character.id);
    if(!token)continue;const point=mode==='streets'?token.point:imagePointFromPercent(token);
    pointMarker(point,character.name,`<span class="map-pin character-pin"><i></i><span class="map-pin-name">${escape(character.name)}</span></span>`,{draggable:true,onDrag:point=>placeCharacter(character.id,point),onClick:()=>{$('#map-character').value=character.id;setAction('character');}}).addTo(markerLayer);
   }
-  const shapeIds=geometry?.mappedIds()??new Set(),unplaced=filtered.filter(r=>!recordPoint(r)&&!shapeIds.has(r.id));
+  const unplaced=filtered.filter(r=>!recordPoint(r)&&!shapeIds.has(r.id));
   $('#map-world-count').textContent=mapped.length+' repère(s) · '+unplaced.length+' dossier(s) à positionner';
   $('#unplaced-world-records').innerHTML=unplaced.map(r=>`<button data-open-world="${escape(r.id)}" ${r.isSecret?'data-world-reveal="true"':''}>${escape(r.name)}</button>`).join('')||'Tous les dossiers visibles sont positionnés.';
   const previous=$('#map-place').value,placeChoices=filtered.filter(r=>mode==='streets'||!r.mapPlaceId);
   $('#map-place').innerHTML='<option value="">Choisir un lieu…</option>'+placeChoices.map(r=>`<option value="${escape(r.id)}">${escape(r.name)}</option>`).join('');$('#map-place').value=previous;
-  $('#map').classList.toggle('map-labels-off',!$('#map-labels').checked);geometry?.draw();
+  $('#map').classList.toggle('map-labels-off',!$('#map-labels').checked);geometry?.draw();scaleMapLabels($('#map'),mode,map.getZoom());
  }
  function placeCharacter(id,point){
   if(!validMapPoint(point,mode)){status('Placez le pion dans les limites de cette carte.');updateMarkers();return;}
@@ -143,6 +144,7 @@ export function renderDijonMap(container,snapshot,onChange){
  }
  function updateZoom(){
   if(destroyed||!map?.getPane('mapPane'))return;
+  scaleMapLabels($('#map'),mode,map.getZoom());
   $('#map-zoom-value').textContent=mode==='streets'?'Zoom '+map.getZoom():Math.round(2**map.getZoom()*100)+' %';
   $('#map-minus').disabled=map.getZoom()<=map.getMinZoom();$('#map-plus').disabled=map.getZoom()>=map.getMaxZoom();
  }
@@ -152,6 +154,7 @@ export function renderDijonMap(container,snapshot,onChange){
   const element=$('#map');element.classList.toggle('map-streets',mode==='streets');element.classList.toggle('map-cyberpunk',mode==='cyberpunk');
   map=L.map(element,{crs:mode==='streets'?L.CRS.EPSG3857:L.CRS.Simple,zoomControl:false,minZoom:mode==='streets'?3:-4,maxZoom:mode==='streets'?19:3,zoomSnap:mode==='streets'?1:.25,zoomDelta:mode==='streets'?1:.5,scrollWheelZoom:true,zoomAnimation:false,fadeAnimation:false,markerZoomAnimation:false,attributionControl:true});
   const activeMap=map,activeMode=mode;
+  const Zoom=L.Control.extend({options:{position:'topright'},onAdd(){const box=L.DomUtil.create('div','map-floating-zoom leaflet-control leaflet-bar');box.innerHTML='<button id="map-plus" type="button" aria-label="Augmenter le zoom">+</button><button id="map-minus" type="button" aria-label="Réduire le zoom">−</button>';L.DomEvent.disableClickPropagation(box);L.DomEvent.disableScrollPropagation(box);box.querySelector('#map-plus').onclick=()=>activeMap.zoomIn();box.querySelector('#map-minus').onclick=()=>activeMap.zoomOut();return box;}});new Zoom().addTo(map);
   if(mode==='streets'){
    let failed=0;const streetMap=map;
    const tiles=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'});
@@ -200,7 +203,7 @@ export function renderDijonMap(container,snapshot,onChange){
   }catch(error){if(!destroyed&&!controller.signal.aborted)status('Calcul routier indisponible. Le tracé libre reste utilisable.');else if(!destroyed&&routeRequest===controller)status('Le calcul routier a pris trop de temps. Le tracé libre est conservé.');}
   finally{clearTimeout(timeout);if(routeRequest===controller)routeRequest=null;if(!destroyed)drawRoute();}
  };
- $('#map-plus').onclick=()=>map.zoomIn();$('#map-minus').onclick=()=>map.zoomOut();$('#map-recenter').onclick=resetView;
+ $('#map-recenter').onclick=resetView;
  $('#map-labels').onchange=updateMarkers;
  $('#map-secrets').onchange=()=>{refreshChoices();updateMarkers();$('#map-inspector').textContent='Choisissez un repère pour ouvrir son dossier.';};
  for(const id of ['map-authority','map-corporation','map-faction','map-security','map-type'])$('#'+id).onchange=()=>{updateMarkers();$('#map-inspector').textContent='Choisissez un repère pour ouvrir son dossier.';};
@@ -210,7 +213,7 @@ export function renderDijonMap(container,snapshot,onChange){
   else{try{state=onChange({...state,tokens:[]})??{...state,tokens:[]};}catch(error){status(error.message);}}
   updateMarkers();
  };
- geometry=mountMapShapes({container,L,getMap:()=>map,getState:()=>state,getMode:()=>mode,getAction:()=>$('#map-action').value,setAction,visibleRecords,onSave:next=>{apply(next);return state;},onRefresh:()=>{refreshChoices();updateMarkers();},onInspect:inspect,status});
+ geometry=mountMapShapes({container,L,getMap:()=>map,getState:()=>state,getMode:()=>mode,getAction:()=>$('#map-action').value,setAction,visibleRecords,onSave:next=>{apply(next);return state;},onRefresh:()=>{refreshChoices();updateMarkers();},onInspect:inspect,onOpenRecord,getRecordPoint:recordPoint,scaleLabels:()=>scaleMapLabels($('#map'),mode,map.getZoom()),status});
  refreshChoices();createMap();
  return ()=>{destroyed=true;geometry?.dispose();placeDialog?.close();placeDialog?.remove();placeDialog=null;observer?.disconnect();routeRequest?.abort();routeRequest=null;map?.remove();};
 }

@@ -1,13 +1,13 @@
-import {mountScenarioDrag} from './scenario-drag.js?v=0.14.0';
-import {escape} from './ui.js?v=0.14.0';
-import {makeWorldRecord,UNKNOWN} from './world-schema.js?v=0.14.0';
-import {scenarioMembers,attachScenarioRecord,detachScenarioRecord,moveScenarioEvent,placeScenarioEvent} from './scenarios.js?v=0.14.0';
+import {mountScenarioDrag} from './scenario-drag.js?v=0.15.0';
+import {escape} from './ui.js?v=0.15.0';
+import {makeWorldRecord,UNKNOWN} from './world-schema.js?v=0.15.0';
+import {scenarioMembers,attachScenarioRecord,detachScenarioRecord,moveScenarioEvent,placeScenarioEvent} from './scenarios.js?v=0.15.0';
 
-export function renderScenarioWorkspace(container,initialState,scenarioId,{onSave,editRecord}){
+export function renderScenarioWorkspace(container,initialState,scenarioId,{onSave,editRecord,getState}){
  let state=initialState,showSecrets=false,disposeDrag=()=>{};
  const link=r=>`<button class="world-link" ${r.kind==='character'?'data-open-character':'data-open-world'}="${escape(r.id)}" ${r.isSecret?'data-world-reveal="true"':''}>${escape(r.name)}</button>`;
  const apply=next=>{state=onSave(next)??next;render();};
- const attempt=action=>{try{action();}catch(err){container.querySelector('.scenario-error').textContent=err.message;}};
+ const attempt=action=>{state=getState?.()??state;try{action();}catch(err){container.querySelector('.scenario-error').textContent=err.message;}};
  const members=kind=>scenarioMembers(state.world,scenarioId,kind,{includeSecrets:showSecrets});
  const picker=kind=>{
   const attached=new Set(scenarioMembers(state.world,scenarioId,kind,{includeSecrets:true}).map(r=>r.id));
@@ -25,8 +25,8 @@ export function renderScenarioWorkspace(container,initialState,scenarioId,{onSav
   container.querySelectorAll('.scenario-picker').forEach(form=>form.onsubmit=e=>{e.preventDefault();attempt(()=>apply(attachScenarioRecord(state,scenarioId,form.elements.record.value)));});
   container.querySelectorAll('[data-scenario-remove]').forEach(b=>b.onclick=()=>attempt(()=>apply(detachScenarioRecord(state,scenarioId,b.dataset.scenarioRemove))));
   container.querySelectorAll('[data-scenario-move]').forEach(b=>b.onclick=()=>attempt(()=>apply(moveScenarioEvent(state,scenarioId,b.dataset.scenarioMove,Number(b.dataset.direction),{includeSecrets:showSecrets}))));
-  container.querySelectorAll('[data-scenario-new]').forEach(b=>b.onclick=()=>{const kind=b.dataset.scenarioNew;editRecord(state,makeWorldRecord(kind,kind+'-'+crypto.randomUUID(),''),(next,id)=>apply(attachScenarioRecord(next,scenarioId,id)));});
-  container.querySelectorAll('[data-scenario-edit]').forEach(b=>b.onclick=()=>editRecord(state,state.world.records.find(r=>r.id===b.dataset.scenarioEdit),next=>apply(next)));
+  container.querySelectorAll('[data-scenario-new]').forEach(b=>b.onclick=()=>{state=getState?.()??state;const kind=b.dataset.scenarioNew;editRecord(state,makeWorldRecord(kind,kind+'-'+crypto.randomUUID(),''),(next,id)=>apply(attachScenarioRecord(next,scenarioId,id)));});
+  container.querySelectorAll('[data-scenario-edit]').forEach(b=>b.onclick=()=>{state=getState?.()??state;editRecord(state,state.world.records.find(r=>r.id===b.dataset.scenarioEdit),next=>apply(next));});
  }
  render();
 }

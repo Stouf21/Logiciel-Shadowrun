@@ -1,13 +1,14 @@
-import {escape} from './ui.js?v=0.14.0';
-import {buildingTypes} from './building-schema.js?v=0.14.0';
-import {getMapShapes,initializeMapShapes,saveMapShape,updateMapShape,removeMapShape,shapeCenter} from './map-shapes.js?v=0.14.0';
-import {validPolygon} from './map-shape-schema.js?v=0.14.0';
-import {validMapPoint} from './map-model.js?v=0.14.0';
-import {openBuildingDialog} from './buildings-ui.js?v=0.14.0';
+import {escape} from './ui.js?v=0.15.0';
+import {buildingTypes} from './building-schema.js?v=0.15.0';
+import {getMapShapes,initializeMapShapes,saveMapShape,updateMapShape,removeMapShape,shapeCenter} from './map-shapes.js?v=0.15.0';
+import {validPolygon} from './map-shape-schema.js?v=0.15.0';
+import {validMapPoint} from './map-model.js?v=0.15.0';
+import {openBuildingDialog} from './buildings-ui.js?v=0.15.0';
 
-export function mountMapShapes({container,L,getMap,getState,getMode,getAction,setAction,visibleRecords,onSave,onRefresh,onInspect,status}){
+export function mountMapShapes({container,L,getMap,getState,getMode,getAction,setAction,visibleRecords,onSave,onRefresh,onInspect,onOpenRecord,getRecordPoint,scaleLabels,status}){
  const $=s=>container.querySelector(s);let layer=null,draftLayer=null,draft=null,editing=null,dialog=null,buildingDialog=null;
  $('#map-shape-tools').innerHTML=`<div class="map-shape-toolbar"><button id="map-draw-zone">+ Dessiner une zone</button><button id="map-draw-building">+ Bâtiment / arcologie</button><button id="map-arcologies">Arcologies de la campagne</button><label class="check-label"><input id="map-show-zones" type="checkbox" checked>Zones colorées</label><label class="check-label"><input id="map-show-buildings" type="checkbox" checked>Bâtiments</label></div><div class="map-draw-controls" hidden><b id="map-draw-count"></b><button id="map-finish-shape" class="primary">Fermer le contour</button><button id="map-undo-shape">Retirer le dernier point</button><button id="map-cancel-shape">Annuler le dessin</button></div><p class="map-shape-note muted"></p><button id="map-preview-proposals">Voir l’illustration avec les contours préparés</button><details class="map-features-list"><summary>Zones, bâtiments et arcologies</summary><div id="map-shape-list"></div></details>`;
+ $('#map-draw-dock').append($('.map-draw-controls'));
  const save=next=>{onSave(next);onRefresh();};
  const levels=b=>!b.floors||b.floors==='À définir'?'Étages à définir':/niveaux?|étages?/i.test(b.floors)?b.floors:b.floors+' étages';
  const shapes=()=>getMapShapes(getState(),getMode());
@@ -44,7 +45,7 @@ export function mountMapShapes({container,L,getMap,getState,getMode,getAction,se
  }
  function showBuilding(id){
   const record=getState().world.records.find(r=>r.id===id);if(!record||record.isSecret&&!$('#map-secrets').checked)return;
-  buildingDialog?.close();buildingDialog=openBuildingDialog(getState(),id,next=>{save(next);const updated=getState().world.records.find(r=>r.id===id),shape=shapes().find(s=>s.recordId===id&&s.kind==='building');if(updated.isSecret&&!$('#map-secrets').checked)$('#map-inspector').textContent='Bâtiment réservé au MJ enregistré.';else if(shape)inspectShape(shape.id);else onInspect(updated);return getState();},{includeSecrets:$('#map-secrets').checked});
+  buildingDialog?.close();buildingDialog=openBuildingDialog(getState(),id,next=>{save(next);const updated=getState().world.records.find(r=>r.id===id),shape=shapes().find(s=>s.recordId===id&&s.kind==='building');if(updated.isSecret&&!$('#map-secrets').checked)$('#map-inspector').textContent='Bâtiment réservé au MJ enregistré.';else if(shape)inspectShape(shape.id);else onInspect(updated);return getState();},{includeSecrets:$('#map-secrets').checked,getState});
  }
  function renderList(){
   const shown=visible(),all=shapes();const records=visibleRecords().filter(r=>r.kind==='zone'||r.building);
@@ -61,13 +62,17 @@ export function mountMapShapes({container,L,getMap,getState,getMode,getAction,se
  }
  function draw(){
   if(!layer)return;layer.clearLayers();draftLayer.clearLayers();const shown=visible(),action=getAction(),interactive=action==='explore'||action==='edit-shape';
-  for(const shape of shapes().filter(s=>shown.has(s.recordId)&&$('#map-show-'+(s.kind==='zone'?'zones':'buildings')).checked)){
+  const visibleShapes=shapes().filter(s=>shown.has(s.recordId)&&$('#map-show-'+(s.kind==='zone'?'zones':'buildings')).checked),preferred=new Map();
+  for(const shape of visibleShapes)if(!preferred.has(shape.recordId)||shape.kind==='building')preferred.set(shape.recordId,shape.id);
+  for(const shape of visibleShapes){
    const record=getState().world.records.find(r=>r.id===shape.recordId),building=shape.kind==='building';
    const polygon=L.polygon(shape.points,{pane:building?'campaign-buildings':'campaign-zones',color:shape.color,fillColor:shape.color,fillOpacity:building ? .42 : .12,weight:building?3:2,dashArray:building?null:'7 4',interactive,bubblingMouseEvents:false,className:building?'campaign-building-shape':'campaign-zone-shape'}).addTo(layer);
-   if($('#map-labels').checked)polygon.bindTooltip(escape(record.name),{permanent:!record.mapPlaceId,direction:'center',className:building?'building-shape-label':'zone-shape-label'});
    polygon.on('click',()=>inspectShape(shape.id));
    const element=polygon.getElement();if(element&&interactive){element.setAttribute('tabindex','0');element.setAttribute('role','button');element.setAttribute('aria-label',(building?'Bâtiment : ':'Zone : ')+record.name);element.addEventListener('keydown',e=>{if(['Enter',' '].includes(e.key)){e.preventDefault();inspectShape(shape.id);}});}
-   if(building&&record.building){const badge=L.marker(shapeCenter(shape),{pane:'campaign-building-labels',interactive,icon:L.divIcon({className:'map-building-badge',html:`<span aria-hidden="true">▥</span><b>${escape(record.building.type)}</b>${record.building.floors!=='À définir'?`<small>${escape(levels(record.building))}</small>`:''}`,iconSize:[100,record.building.floors==='À définir'?26:42],iconAnchor:[50,-22]}),title:record.name+' · fiche du bâtiment'}).addTo(layer);badge.on('click',()=>showBuilding(record.id));}
+   if(preferred.get(record.id)===shape.id&&$('#map-labels').checked){
+    const point=getRecordPoint(record)??shapeCenter(shape),label=L.marker(point,{pane:'campaign-building-labels',interactive,icon:L.divIcon({className:'campaign-marker map-feature-label scalable-map-label',html:`<a href="#" data-map-dossier class="map-pin ${building?'building-label':'zone-label'}"><span class="map-pin-name">${escape(record.name)}</span></a>`,iconSize:[190,32],iconAnchor:[95,16]}),title:record.name+' · ouvrir la fiche'}).addTo(layer);
+    const root=label.getElement();if(root){root.setAttribute('aria-label',record.name+' · ouvrir la fiche');root.querySelector('a').onclick=e=>{e.preventDefault();e.stopPropagation();if(interactive&&onOpenRecord)onOpenRecord(record.id,$('#map-secrets').checked);else inspectShape(shape.id);};}label.on('click',()=>inspectShape(shape.id));
+   }
   }
   const shape=shapes().find(s=>s.id===editing);
   if(shape&&shown.has(shape.recordId)&&action==='edit-shape')shape.points.forEach((point,i)=>{
@@ -80,17 +85,17 @@ export function mountMapShapes({container,L,getMap,getState,getMode,getAction,se
    draft.points.forEach((p,i)=>vertexMarker(p,'<span class="shape-vertex">'+(i+1)+'</span>',i===0?'Fermer le contour au premier point':'Point '+(i+1),false,null,i===0?openShapeForm:null).addTo(draftLayer));
   }
   $('.map-draw-controls').hidden=!draft;$('#map-draw-count').textContent=(draft?.points.length??0)+' point(s)';$('#map-finish-shape').disabled=!draft||draft.points.length<3;$('#map-undo-shape').disabled=!draft?.points.length;
-  $('#map-draw-zone').setAttribute('aria-pressed',String(action==='draw-zone'));$('#map-draw-building').setAttribute('aria-pressed',String(action==='draw-building'));renderList();
+  $('#map-draw-zone').setAttribute('aria-pressed',String(action==='draw-zone'));$('#map-draw-building').setAttribute('aria-pressed',String(action==='draw-building'));renderList();scaleLabels();
  }
  $('#map-draw-zone').onclick=()=>begin('zone');$('#map-draw-building').onclick=()=>begin('building');$('#map-finish-shape').onclick=openShapeForm;$('#map-undo-shape').onclick=()=>{draft?.points.pop();draw();};$('#map-cancel-shape').onclick=()=>{cancel();draw();};
- $('#map-show-zones').onchange=draw;$('#map-show-buildings').onchange=draw;
+ $('#map-show-zones').onchange=onRefresh;$('#map-show-buildings').onchange=onRefresh;
  $('#map-arcologies').onclick=()=>{$('.map-features-list').open=true;$('#map-shape-list [data-building-kind="Arcologie"]')?.scrollIntoView({block:'center'});};
  $('#map-preview-proposals').onclick=()=>{$('#map-view').value='cyberpunk';$('#map-view').dispatchEvent(new Event('change'));};
  return {
   attach(){cancel(false);closeDialog();buildingDialog?.close();buildingDialog=null;const initialized=initializeMapShapes(getState());if(initialized!==getState())try{onSave(initialized);}catch(error){status(error.message);}const map=getMap();for(const [name,z] of [['campaign-zones',410],['campaign-buildings',420],['campaign-routes',450],['campaign-building-labels',620]]){const pane=map.getPane(name)??map.createPane(name);pane.style.zIndex=z;}layer=L.layerGroup().addTo(map);draftLayer=L.layerGroup().addTo(map);},
   click(point){if(!getAction().startsWith('draw-'))return false;if(!draft)draft={kind:getAction()==='draw-zone'?'zone':'building',recordId:'',points:[]};if(draft.points.length>=200){status('Un contour est limité à 200 points.');return true;}if(!draft.points.length||point.some((v,i)=>v!==draft.points.at(-1)[i]))draft.points.push(point);draw();return true;},
   syncAction(){if(!getAction().startsWith('draw-')&&draft){draft=null;draftLayer?.clearLayers();}if(getAction()!=='edit-shape')editing=null;},
-  draw,showBuilding,begin,mappedIds:()=>new Set(shapes().map(s=>s.recordId)),
+  draw,showBuilding,begin,mappedIds:()=>new Set(shapes().filter(s=>$('#map-show-'+(s.kind==='zone'?'zones':'buildings')).checked).map(s=>s.recordId)),
   dispose(){cancel(false);closeDialog();buildingDialog?.close();buildingDialog=null;layer?.clearLayers();draftLayer?.clearLayers();layer=null;draftLayer=null;}
  };
 }

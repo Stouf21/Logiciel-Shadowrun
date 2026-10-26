@@ -1,31 +1,33 @@
-import {deleteScenario} from './scenarios.js?v=0.14.0';
-import {mergeWorld,worldSearch,characterEntryForRecord} from './world.js?v=0.14.0';
-import {worldKinds,makeWorldRecord} from './world-schema.js?v=0.14.0';
-import {renderDashboard,renderWorldList,renderWorldRecord,openWorldEditor,worldCard} from './world-ui.js?v=0.14.0';
-import {secretSection,toggleSecret} from './secrets-ui.js?v=0.14.0';
-import {getCorporations,corporationMatches} from './corporations.js?v=0.14.0';
-import {renderCorporations,corporationCard} from './corporations-ui.js?v=0.14.0';
-import {renderDijonMap} from './dijon-map.js?v=0.14.0';
-import {renderRules} from './rules-ui.js?v=0.14.0';
-import {rules,ruleMatches,ruleSource} from './rules-data.js?v=0.14.0';
-import {validateProfile,profileSearchText} from './sheet.js?v=0.14.0';
-import {references} from './references.js?v=0.14.0';
-import {renderDice} from './dice-ui.js?v=0.14.0';
-import {escape,toggleSearchDisclosure} from './ui.js?v=0.14.0';
-import {groups,validateCampaign} from './campaign.js?v=0.14.0';
-import {getCatalogs,getCharacterCatalogs} from './catalog.js?v=0.14.0';
-import {renderCatalogLibrary,showCustomEditor} from './catalog-ui.js?v=0.14.0';
-import {mountCharacterEditor} from './character-editor.js?v=0.14.0';
-import {characterSheet} from './character-sheet.js?v=0.14.0';
+import {entryField,mountEntryInline} from './entry-inline.js?v=0.15.0';
+import {mountCharacterInline} from './character-inline.js?v=0.15.0';
+import {deleteScenario} from './scenarios.js?v=0.15.0';
+import {mergeWorld,worldSearch,characterEntryForRecord} from './world.js?v=0.15.0';
+import {worldKinds,makeWorldRecord} from './world-schema.js?v=0.15.0';
+import {renderDashboard,renderWorldList,renderWorldRecord,openWorldEditor,worldCard} from './world-ui.js?v=0.15.0';
+import {secretSection,toggleSecret} from './secrets-ui.js?v=0.15.0';
+import {getCorporations,corporationMatches} from './corporations.js?v=0.15.0';
+import {renderCorporations,corporationCard} from './corporations-ui.js?v=0.15.0';
+import {renderDijonMap} from './dijon-map.js?v=0.15.0';
+import {renderRules} from './rules-ui.js?v=0.15.0';
+import {rules,ruleMatches,ruleSource} from './rules-data.js?v=0.15.0';
+import {validateProfile,profileSearchText} from './sheet.js?v=0.15.0';
+import {references} from './references.js?v=0.15.0';
+import {mountQuickDice,renderDiceSettings} from './dice-ui.js?v=0.15.0';
+import {escape,toggleSearchDisclosure} from './ui.js?v=0.15.0';
+import {groups,validateCampaign} from './campaign.js?v=0.15.0';
+import {getCatalogs,getCharacterCatalogs} from './catalog.js?v=0.15.0';
+import {renderCatalogLibrary,showCustomEditor} from './catalog-ui.js?v=0.15.0';
+import {mountCharacterEditor} from './character-editor.js?v=0.15.0';
+import {characterSheet} from './character-sheet.js?v=0.15.0';
 const $=s=>document.querySelector(s),key='shadowrun-table-v1';
 const icons={characters:'<circle cx="9" cy="8" r="3"/><path d="M3 20v-3a6 6 0 0 1 12 0v3M16 5a3 3 0 0 1 0 6M18 14a5 5 0 0 1 3 4v2"/>',catalog:'<path d="m12 3 9 5-9 5-9-5 9-5ZM3 8v9l9 5 9-5V8M12 13v9"/>',rules:'<path d="M12 5c-3-2-6-2-10-1v15c4-1 7-1 10 1 3-2 6-2 10-1V4c-4-1-7-1-10 1Zm0 0v15"/>',dice:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h.01M17 7h.01M12 12h.01M7 17h.01M17 17h.01" stroke-width="3" stroke-linecap="round"/>',map:'<path d="m3 5 6-2 6 3 6-2v15l-6 2-6-3-6 2V5ZM9 3v15M15 6v15"/>',references:'<path d="M4 4h5v17H4zM10 4h4v17h-4zM15 5l4-1 4 16-4 1z"/>'};
-icons.library=icons.rules;
+icons.library=icons.rules;icons.settings='<circle cx="12" cy="12" r="4"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/>';
 icons.corporations='<path d="M3 21V7h7v14M10 21V3h11v18M1 21h22M6 10h1M6 14h1M6 18h1M14 7h3M14 11h3M14 15h3M14 19h3"/>';
 icons.dashboard=icons.catalog;icons.organizations=icons.corporations;icons.places=icons.map;icons.scenarios=icons.rules;icons['world-search']=icons.references;
 const worldTabs={places:'place',scenarios:'scenario'};
 const recordTabs={character:'characters',corporation:'organizations',faction:'organizations',zone:'map',place:'places',scenario:'scenarios',event:'world-search',clue:'world-search',secret:'world-search'};
-const tabs={dashboard:'Tableau de bord',characters:'Personnages',organizations:'Corporations & factions',places:'Lieux',scenarios:'Scénarios',map:'Carte','world-search':'Recherche globale',library:'Compétences & atouts',catalog:'Catalogue',rules:'Règles & références',dice:'Lanceur de dés',references:'Bibliothèque & sources'};
-let organizationSection='corporation',mapCity=null,mapSection='map',disposeMap=null,disposeWorld=null;
+const tabs={dashboard:'Tableau de bord',characters:'Personnages',organizations:'Corporations & factions',places:'Lieux',scenarios:'Scénarios',map:'Carte','world-search':'Recherche globale',library:'Compétences & atouts',catalog:'Catalogue',rules:'Règles & références',references:'Bibliothèque & sources',settings:'Paramètres'};
+let organizationSection='corporation',mapCity=null,mapSection='map',disposeMap=null,disposeWorld=null,disposeCharacter=null,disposeCorp=null,disposeEntries=null;
 let state={entries:[],tokens:[],customSkills:[],customAssets:[]},tab='dashboard',editing=null,selected=null,viewing=null,readProfile=null,unreadableBackup=null,corporationViewing=null,worldViewing=null,worldReveal=false,worldFilterQuery='',gameForWorld=null;
 try{const saved=localStorage.getItem(key);if(saved){unreadableBackup=saved;state=validateCampaign(JSON.parse(saved));unreadableBackup=null;}}catch{message('Sauvegarde illisible. Exportez-la pour la récupérer ou importez une sauvegarde valide avant toute modification.');}
 state=mergeWorld(state);
@@ -38,17 +40,17 @@ function persist(next){
  return state;
 }
 function referenceCards(items){return items.map(r=>`<article class="card"><span class="tag">${escape(r.status)}</span><h3>${escape(r.title)}</h3><p>${escape(r.text)}</p><small>${escape(r.source)}</small></article>`).join('');}
-function entryCard(e){const character=groups.characters.includes(e.category);return `<article class="card ${character?'character-card':''}" ${character?`data-character="${escape(e.id)}"`:''}><span class="tag">${escape(e.category)}</span><h3>${character?`<button class="character-name" data-open="${escape(e.id)}">${escape(e.name)}</button>`:escape(e.name)}</h3><p>${escape(e.description)}</p>${character?`<button class="sheet-open-button" data-open="${escape(e.id)}">Consulter la fiche</button>`:secretSection('Notes du MJ',`<p>${escape(e.notes)||'À définir'}</p>`)}<div class="actions"><button data-edit="${escape(e.id)}">Modifier</button><button data-delete="${escape(e.id)}">Supprimer</button></div></article>`;}
+function entryCard(e){const character=groups.characters.includes(e.category);return `<article class="card ${character?'character-card':''}" ${character?`data-character="${escape(e.id)}"`:''}><span class="tag">${character?escape(e.category):entryField(e,'category','Catégorie de l’entrée')}</span><h3>${character?`<button class="character-name" data-open="${escape(e.id)}">${escape(e.name)}</button>`:entryField(e,'name','Nom de l’entrée')}</h3><div>${character?escape(e.description):entryField(e,'description','Description de l’entrée')}</div>${character?`<button class="sheet-open-button" data-open="${escape(e.id)}">Consulter la fiche</button>`:secretSection('Notes du MJ',`<div>${entryField(e,'notes','Notes du MJ de l’entrée')}</div>`)}<div class="actions"><button data-edit="${escape(e.id)}">Modifier</button><button data-delete="${escape(e.id)}">Supprimer</button></div></article>`;}
 function render(){
- disposeMap?.();disposeMap=null;disposeWorld?.();disposeWorld=null;
+ disposeMap?.();disposeMap=null;disposeWorld?.();disposeWorld=null;disposeCharacter?.();disposeCharacter=null;disposeCorp?.();disposeCorp=null;disposeEntries?.();disposeEntries=null;
  $('#content').onclick=null;document.querySelector('.edition-strip span').textContent='DIJON / '+state.world.settings.year;
  $('nav').innerHTML=Object.entries(tabs).map(([id,label])=>`<button data-tab="${id}" class="${id===tab?'active':''}" ${id===tab?'aria-current="page"':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">${icons[id]}</svg><span>${label}</span></button>`).join('');
- if(worldViewing){document.body.classList.remove('viewing-character');$('#title').textContent='Dossier de campagne';const target=tab==='organizations'?organizationShell():tab==='map'&&mapCity?cityShell():$('#content');disposeWorld=renderWorldRecord(target,state,worldViewing,{onSave:persist,onRefresh:render}, {reveal:worldReveal});return;}
+ if(worldViewing){document.body.classList.remove('viewing-character');$('#title').textContent='Dossier de campagne';const target=tab==='organizations'?organizationShell():tab==='map'&&mapCity?cityShell():$('#content');disposeWorld=renderWorldRecord(target,state,worldViewing,{onSave:persist,onRefresh:render,getState:()=>state}, {reveal:worldReveal});return;}
  const dossier=viewing&&state.world.records.find(r=>r.kind==='character'&&(r.id===viewing||r.gameEntryId===viewing));
  const savedEntry=state.entries.find(e=>e.id===viewing&&groups.characters.includes(e.category));
  const entry=savedEntry??(dossier?characterEntryForRecord(state,dossier):null);
  document.body.classList.toggle('viewing-character',!!entry);$('#title').textContent=entry?'Fiche de personnage':tabs[tab];
- if(entry){$('#content').innerHTML=characterSheet(entry,{worldId:dossier?.id,unbound:!savedEntry});return;}
+ if(entry){$('#content').innerHTML=characterSheet(entry,{worldId:dossier?.id,unbound:!savedEntry});disposeCharacter=mountCharacterInline($('#content'),{getState:()=>state,target:{entryId:entry.id,worldId:dossier?.id},onSave:persist,onEntry:id=>viewing=id,onRefresh:render});return;}
  const q=$('#search').value.trim().toLocaleLowerCase('fr');
  if(!q){
   if(tab==='dashboard'){renderDashboard($('#content'),state);return;}
@@ -58,7 +60,7 @@ function render(){
   if(tab==='organizations'){renderOrganizations();return;}
   if(tab==='map'){renderMap();return;}
  }
- if(tab==='rules'&&!q){renderRules($('#content'),state.entries.filter(e=>groups.rules.includes(e.category)).map(entryCard).join(''),()=>openEditor());return;}
+ if(tab==='rules'&&!q){renderRules($('#content'),state.entries.filter(e=>groups.rules.includes(e.category)).map(entryCard).join(''),()=>openEditor());disposeEntries=mountEntryInline($('#content'),{getState:()=>state,onSave:persist,onRefresh:render});return;}
  if(q||groups[tab]){
   const worldHits=q?worldSearch(state.world,q):[];
   const corporationMatchesList=q?getCorporations(state).filter(c=>corporationMatches(c,q)):[];
@@ -67,11 +69,11 @@ function render(){
   const libraryMatches=q?Object.values(getCatalogs(state)).flat().filter(r=>[r.name,r.category,r.description,r.source].join(' ').toLocaleLowerCase('fr').includes(q)):[];
   const entries=state.entries.filter(e=>(q||groups[tab].includes(e.category))&&(!q||[e.name,e.category,e.description,e.notes,profileSearchText(e.profile)].join(' ').toLocaleLowerCase('fr').includes(q)));
   $('#content').innerHTML=`<div class="toolbar"><span class="muted">${entries.length} entrée(s)${q?` · ${worldHits.length} dossier(s) de campagne`:''}${q?` · ${libraryMatches.length} compétence(s) / atout(s) · ${bookMatches.length} règle(s) · ${corporationMatchesList.length} corporation(s) · ${sourceMatches.length} référence(s)`:''}</span><button id="add" class="primary">+ Ajouter une entrée</button></div><div class="grid">${entries.map(entryCard).join('')}</div>${worldHits.length?`<div class="toolbar"><h3>Univers de campagne</h3><button data-tab="world-search">Affiner les filtres de l’univers</button></div><div class="grid">${worldHits.map(worldCard).join('')}</div>`:''}${corporationMatchesList.length?`<h3>Corporations</h3><div class="grid">${corporationMatchesList.map(corporationCard).join('')}</div>`:''}${libraryMatches.length?`<h3>Compétences & atouts</h3><div class="grid">${libraryMatches.map(r=>`<article class="card"><span class="tag">${escape(r.category)}</span><h3>${escape(r.name)}</h3><p>${escape(r.description)}</p><small>${escape(r.source)}</small></article>`).join('')}</div>`:''}${bookMatches.length?`<h3>Règles du livre</h3><div class="grid">${bookMatches.map(r=>`<article class="card"><span class="tag">${escape(r.category)}</span><h3>${escape(r.title)}</h3><p>${escape(r.summary)}</p><button data-open-rule="${r.id}">Consulter la règle</button><small>${escape(ruleSource(r))}</small></article>`).join('')}</div>`:''}${sourceMatches.length?`<h3>Références documentaires</h3><div class="grid">${referenceCards(sourceMatches)}</div>`:''}${entries.length||sourceMatches.length||libraryMatches.length||bookMatches.length||corporationMatchesList.length||worldHits.length?'':'<div class="empty"><img class="empty-mark" src="./assets/anarchy-mark.svg" alt="" width="68" height="68"><h3>Les ombres attendent votre histoire.</h3><p class="muted">Rassemblez vos runners, préparez vos rencontres et gardez vos ressources à portée de main.</p></div>'}`;
-  $('#add').onclick=()=>openEditor();return;
+  disposeEntries=mountEntryInline($('#content'),{getState:()=>state,onSave:persist,onRefresh:render});$('#add').onclick=()=>openEditor();return;
  }
  if(tab==='library'){renderCatalogLibrary($('#content'),getCatalogs(state),(kind,onDone)=>createCatalogEntry(kind,onDone,{characterOnly:false}));return;}
  if(tab==='references'){$('#content').innerHTML='<div class="toolbar"><span class="muted">Références personnelles · aucun PDF publié par le serveur</span></div><div class="grid">'+referenceCards(references)+'</div>';return;}
- if(tab==='dice'){renderDice($('#content'));return;}
+ if(tab==='settings'){renderDiceSettings($('#content'));return;}
  renderMap();
 }
 function createCatalogEntry(kind,onDone,{characterOnly=typeof onDone==='function'}={}){
@@ -137,14 +139,15 @@ function organizationShell(){
  $('#content').innerHTML=`<div class="section-tabs" role="tablist" aria-label="Corporations et factions"><button id="corporation-tab" role="tab" data-organization-section="corporation" aria-selected="${organizationSection==='corporation'}" aria-controls="organization-content">Corporations</button><button id="faction-tab" role="tab" data-organization-section="faction" aria-selected="${organizationSection==='faction'}" aria-controls="organization-content">Factions</button></div><div id="organization-content" role="tabpanel" aria-labelledby="${organizationSection==='corporation'?'corporation-tab':'faction-tab'}"></div>`;
  return $('#organization-content');
 }
-function renderOrganizations(){const target=organizationShell();if(organizationSection==='faction')renderWorldList(target,state,'faction',{});else renderCorporations(target,state,next=>persist(next),corporationViewing);}
+function renderOrganizations(){const target=organizationShell();if(organizationSection==='faction')renderWorldList(target,state,'faction',{});else disposeCorp=renderCorporations(target,state,next=>persist(next),corporationViewing,{getState:()=>state});}
 function cityShell(){
  $('#content').innerHTML=`<div class="city-heading"><button data-map-back>← Choisir une ville</button><h3>Dijon</h3></div><div class="section-tabs" role="tablist" aria-label="Dijon"><button id="dijon-map-tab" role="tab" data-map-section="map" aria-selected="${mapSection==='map'}" aria-controls="city-content">Carte de Dijon</button><button id="dijon-zones-tab" role="tab" data-map-section="zones" aria-selected="${mapSection==='zones'}" aria-controls="city-content">Quartiers et zones</button></div><div id="city-content" role="tabpanel" aria-labelledby="${mapSection==='map'?'dijon-map-tab':'dijon-zones-tab'}"></div>`;
  return $('#city-content');
 }
 function renderMap(){
  if(!mapCity){$('#content').innerHTML='<div class="toolbar"><h3>Choisir une ville</h3></div><div class="grid"><article class="card city-card"><span class="tag">CAMPAGNE / FRANCE</span><h3>Dijon</h3><p>La carte et les quartiers de la Cité des Ducs.</p><button class="primary" data-map-city="dijon">Ouvrir Dijon</button></article></div>';return;}
- const target=cityShell();if(mapSection==='zones')renderWorldList(target,state,'zone',{});else disposeMap=renderDijonMap(target,state,next=>persist(next));
+ const target=cityShell();if(mapSection==='zones')renderWorldList(target,state,'zone',{});else disposeMap=renderDijonMap(target,state,next=>persist(next),{onOpenRecord:(id,reveal)=>openWorld(id,reveal)});
 }
 
+mountQuickDice($('#quick-dice-container'));
 render();

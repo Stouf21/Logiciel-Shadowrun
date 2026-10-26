@@ -1,7 +1,7 @@
-import {seedRecords,seedRelations,seedSettings} from './world-data.js?v=0.14.0';
-import {makeWorldRecord,worldFields,UNKNOWN,validateWorld} from './world-schema.js?v=0.14.0';
-import {getCorporations} from './corporations.js?v=0.14.0';
-import {buildingSearchText} from './building-schema.js?v=0.14.0';
+import {seedRecords,seedRelations,seedSettings} from './world-data.js?v=0.15.0';
+import {makeWorldRecord,worldFields,UNKNOWN,validateWorld} from './world-schema.js?v=0.15.0';
+import {getCorporations} from './corporations.js?v=0.15.0';
+import {buildingSearchText} from './building-schema.js?v=0.15.0';
 export const normalize=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('fr').trim().replace(/[’‘]/g,"'");
 export const isCorporationRecord=r=>r.kind==='corporation'||r.kind==='faction'&&(!!r.corporationId||/\b(corporation|corporatiste|filiale corporatiste)\b/.test(normalize(r.fields?.type)));
 const cloneRecord=r=>({...r,aliases:[...r.aliases],fields:{...r.fields},kind:isCorporationRecord(r)?'corporation':r.kind});
