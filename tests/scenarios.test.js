@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {mergeWorld,upsertWorldRecord,worldSearch} from '../world.js';
 import {validateCampaign} from '../campaign.js';
 import {makeWorldRecord} from '../world-schema.js';
-import {scenarioMembers,attachScenarioRecord,detachScenarioRecord,moveScenarioEvent,deleteScenario} from '../scenarios.js';
+import {scenarioMembers,attachScenarioRecord,detachScenarioRecord,moveScenarioEvent,placeScenarioEvent,deleteScenario} from '../scenarios.js';
 const fresh=()=>validateCampaign(mergeWorld({entries:[],tokens:[]}));
 const restore=state=>mergeWorld(validateCampaign(JSON.parse(JSON.stringify(state))));
 const eventIds=state=>scenarioMembers(state.world,'scenario-anilla','event',{includeSecrets:true}).map(r=>r.id);
@@ -75,4 +75,25 @@ test('Les ordres et suppressions incohérents sont refusés à l’import, sans 
  assert.throws(()=>moveScenarioEvent(state,'scenario-anilla','event-refuge-kassy',1));
  for(const invalid of [{deletedRecordIds:['scenario-anilla']},{deletedRelationIds:[state.world.relations[0].id]},{deletedRecordIds:['INVALID ID']},{deletedRecordIds:['gone','gone']}])assert.throws(()=>validateCampaign({...state,world:{...state.world,...invalid}}));
  for(const timelineOrder of [['event-inconnu'],['char-david'],['event-refuge-kassy'],['event-mort-anilla','event-mort-anilla']])assert.throws(()=>validateCampaign({...state,world:{...state.world,records:state.world.records.map(r=>r.id==='scenario-anilla'?{...r,timelineOrder}:r)}}));
+});
+
+test('Le dépôt avant ou après un événement déplace directement la carte et conserve toutes ses données',()=>{
+ const source=fresh(),before=structuredClone(source),ids=eventIds(source);
+ const first=placeScenarioEvent(source,'scenario-anilla',ids[3],ids[0]);
+ assert.deepEqual(eventIds(restore(first)),[ids[3],ids[0],ids[1],ids[2]]);
+ const last=placeScenarioEvent(first,'scenario-anilla',ids[3],ids[2],'after');
+ assert.deepEqual(eventIds(last),ids);assert.deepEqual(source,before);
+ for(const event of source.world.records.filter(r=>r.kind==='event'))assert.deepEqual(last.world.records.find(r=>r.id===event.id),event);
+ assert.deepEqual(last.world.relations,source.world.relations);
+});
+
+test('Un clic-glissé visible conserve les emplacements secrets et refuse les cibles masquées ou hors scénario',()=>{
+ let state=fresh();state=upsertWorldRecord(state,makeWorldRecord('event','event-drag-secret','Secret',{isSecret:true}));state=attachScenarioRecord(state,'scenario-anilla','event-drag-secret');
+ const ids=eventIds(state).filter(id=>id!=='event-drag-secret');state=upsertWorldRecord(state,{...state.world.records.find(r=>r.id==='scenario-anilla'),timelineOrder:[ids[0],'event-drag-secret',...ids.slice(1)]});
+ const moved=placeScenarioEvent(state,'scenario-anilla',ids[3],ids[0]);
+ assert.deepEqual(eventIds(moved),[ids[3],'event-drag-secret',ids[0],ids[1],ids[2]]);
+ assert.deepEqual(placeScenarioEvent(moved,'scenario-anilla',ids[3],ids[3]),moved);
+ assert.throws(()=>placeScenarioEvent(state,'scenario-anilla',ids[0],'event-drag-secret'));
+ assert.throws(()=>placeScenarioEvent(state,'scenario-anilla',ids[0],'event-refuge-kassy'));
+ assert.throws(()=>placeScenarioEvent(state,'scenario-anilla',ids[0],ids[1],'bad'));
 });

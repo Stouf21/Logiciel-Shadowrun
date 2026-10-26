@@ -22,369 +22,422 @@ export const baseAssets = [
     "name": "Jumelles Evo Night Hawk 500",
     "category": "Équipement",
     "level": 3,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 136 (P3-1, PDF 5)"
+    "essence": 0.0,
+    "description": "Zoom ; vision nocturne ; RR 1 aux tests de Perception (physique).",
+    "source": "Anarchy V2, p. 136 (P3-1, PDF 5)",
+    "price": "17 500 ¥"
   },
   {
     "id": "asset-2",
     "name": "Jumelles thermiques",
     "category": "Équipement",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 136 (P3-1, PDF 5)"
+    "essence": 0.0,
+    "description": "Zoom ; vision thermographique.",
+    "source": "Anarchy V2, p. 136 (P3-1, PDF 5)",
+    "price": "7 500 ¥"
   },
   {
     "id": "asset-3",
     "name": "Kit d’effraction",
     "category": "Équipement",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 136 (P3-1, PDF 5)"
+    "essence": 0.0,
+    "description": "Autocrocheteur, passe maglock et copieur de cartes magnétiques ; RR 2 aux tests de Furtivité (crochetage).",
+    "source": "Anarchy V2, p. 136 (P3-1, PDF 5)",
+    "price": "22 500 ¥"
   },
   {
     "id": "asset-4",
     "name": "Marqueurs senseurs",
     "category": "Équipement",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 136 (P3-1, PDF 5)"
+    "essence": 0.0,
+    "description": "Rapporte sa position au propriétaire et transmet le son et la vidéo.",
+    "source": "Anarchy V2, p. 136 (P3-1, PDF 5)",
+    "price": "7 500 ¥"
   },
   {
     "id": "asset-5",
     "name": "Matériel d’escalade",
     "category": "Équipement",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 136 (P3-1, PDF 5)"
+    "essence": 0.0,
+    "description": "Gants adhésifs, lance-grappin et cordes dégradables ; RR 2 aux tests d’Athlétisme (escalade).",
+    "source": "Anarchy V2, p. 136 (P3-1, PDF 5)",
+    "price": "22 500 ¥"
   },
   {
     "id": "asset-6",
     "name": "Microphone laser",
     "category": "Équipement",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 136 (P3-1, PDF 5)"
+    "essence": 0.0,
+    "description": "Écoute à travers les vitres ; RR 1 aux tests de Perception (physique).",
+    "source": "Anarchy V2, p. 136 (P3-1, PDF 5)",
+    "price": "12 500 ¥"
   },
   {
     "id": "asset-7",
     "name": "Garde robe fournie",
     "category": "Équipement",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 139 (P3-1, PDF 8)"
+    "essence": 0.0,
+    "description": "Tenue adaptée à toutes les situations ; RR 1 aux tests d’Influence (étiquette).",
+    "source": "Anarchy V2, p. 139 (P3-1, PDF 8)",
+    "price": "12 500 ¥"
   },
   {
     "id": "asset-8",
     "name": "Kit de maquillage",
     "category": "Équipement",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 139 (P3-1, PDF 8)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests d’Influence (imposture).",
+    "source": "Anarchy V2, p. 139 (P3-1, PDF 8)",
+    "price": "12 500 ¥"
   },
   {
     "id": "asset-9",
     "name": "Nanocrème de maquillage",
     "category": "Équipement",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 139 (P3-1, PDF 8)"
+    "essence": 0.0,
+    "description": "RR 2 aux tests d’Influence (imposture).",
+    "source": "Anarchy V2, p. 139 (P3-1, PDF 8)",
+    "price": "22 500 ¥"
   },
   {
     "id": "asset-10",
     "name": "Programme linguistique expert",
     "category": "Équipement",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 139 (P3-1, PDF 8)"
+    "essence": 0.0,
+    "description": "Idiomes et tournures adaptés aux interlocuteurs ; RR 1 aux tests d’Influence (étiquette).",
+    "source": "Anarchy V2, p. 139 (P3-1, PDF 8)",
+    "price": "12 500 ¥"
   },
   {
     "id": "asset-11",
     "name": "Jet setter",
     "category": "Trait",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 139 (P3-1, PDF 8)"
+    "essence": 0.0,
+    "description": "Armure sociale 1. S’utilise avec la règle optionnelle des tests sociaux étendus, p. 139.",
+    "source": "Anarchy V2, p. 139 (P3-1, PDF 8)",
+    "price": "5 000 ¥"
   },
   {
     "id": "asset-12",
     "name": "Fouet monofilament",
     "category": "Arme",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)"
+    "essence": 0.0,
+    "description": "Arme de contact avancée. VD 7 ; portées [OK/–/–/–]. Minimum 6 dés de risque aux tests d’attaque, ou toute la réserve si elle contient moins de 6 dés.",
+    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)",
+    "price": "7 500 ¥"
   },
   {
     "id": "asset-13",
     "name": "Yamaha Pulsar",
     "category": "Arme",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)"
+    "essence": 0.0,
+    "description": "Taser. VD 5 ; portées [OK/OK/Dés./–].",
+    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)",
+    "price": "12 500 ¥"
   },
   {
     "id": "asset-14",
     "name": "Tiffani Needler",
     "category": "Arme",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)"
+    "essence": 0.0,
+    "description": "Pistolet de poche. VD 3 ; portées [OK/OK/Dés./–] ; RR 1 aux tests de Furtivité (discrétion physique).",
+    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)",
+    "price": "12 500 ¥"
   },
   {
     "id": "asset-15",
     "name": "Shiawase Arms Puzzler",
     "category": "Arme",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)"
+    "essence": 0.0,
+    "description": "Pistolet léger. VD 4 ; portées [OK/OK/Dés./–] ; RR 2 aux tests de Furtivité (discrétion physique).",
+    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)",
+    "price": "22 500 ¥"
   },
   {
     "id": "asset-16",
     "name": "Ares Predator IV",
     "category": "Arme",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)"
+    "essence": 0.0,
+    "description": "Pistolet lourd. VD 5 ; portées [OK/OK/Dés./–] ; smartgun : RR 1 aux tests d’Armes à distance (pistolets).",
+    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)",
+    "price": "12 500 ¥"
   },
   {
     "id": "asset-17",
     "name": "Ares Predator V",
     "category": "Arme",
     "level": 3,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)"
+    "essence": 0.0,
+    "description": "Pistolet lourd. VD 5 ; portées [OK/OK/Dés./–] ; smartgun : RR 1 aux tests d’Armes à distance (pistolets) ; tir en rafales.",
+    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)",
+    "price": "17 500 ¥"
   },
   {
     "id": "asset-18",
     "name": "Ares Predator VI",
     "category": "Arme",
     "level": 5,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)"
+    "essence": 0.0,
+    "description": "Pistolet lourd. VD 5 (gel) / 6 (explosives) ; portées [OK/OK/Dés./–] ; smartgun : RR 1 aux tests d’Armes à distance (pistolets) ; tir en rafales ; sélecteur de munitions gel (dommages étourdissants) ou explosives.",
+    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)",
+    "price": "27 500 ¥"
   },
   {
     "id": "asset-19",
     "name": "Ruger Super Warhawk",
     "category": "Arme",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)"
+    "essence": 0.0,
+    "description": "Pistolet lourd. VD 6 ; portées [OK/OK/Dés./–].",
+    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)",
+    "price": "7 500 ¥"
   },
   {
     "id": "asset-20",
     "name": "Ingram Smartgun",
     "category": "Arme",
     "level": 3,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)"
+    "essence": 0.0,
+    "description": "Mitraillette. VD 5 ; portées [Dis./OK/OK/–] ; smartgun : RR 1 aux tests d’Armes à distance (mitraillettes) ; silencieux. « Dis. » est la notation imprimée dans l’exemple.",
+    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)",
+    "price": "17 500 ¥"
   },
   {
     "id": "asset-21",
     "name": "Ares Alpha Mk II",
     "category": "Arme",
     "level": 5,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)"
+    "essence": 0.0,
+    "description": "Fusil d’assaut. VD 7 ; portées [Dés./OK/OK/Dés.] ; RR 1 aux tests d’Armes à distance (fusils et lance-grenades). Lance-grenades sous le canon : VD 7 ; portées [–/Dés./OK/OK].",
+    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)",
+    "price": "32 500 ¥"
   },
   {
     "id": "asset-22",
     "name": "Barret Model 122",
     "category": "Arme",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)"
+    "essence": 0.0,
+    "description": "Fusil de précision. VD 12 ; portées [–/Dés./Dés./OK].",
+    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)",
+    "price": "15 000 ¥"
   },
   {
     "id": "asset-23",
     "name": "Ranger Arms SM−6",
     "category": "Arme",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)"
+    "essence": 0.0,
+    "description": "Fusil de précision. VD 10 ; portées [–/Dés./Dés./OK] ; smartgun : RR 1 aux tests d’Armes à distance (fusils) ; silencieux ; démontable.",
+    "source": "Anarchy V2, p. 144 (P3-1, PDF 13)",
+    "price": "25 000 ¥"
   },
   {
     "id": "asset-24",
     "name": "Combinaison caméléon",
     "category": "Armure",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 149 (P3-1, PDF 18)"
+    "essence": 0.0,
+    "description": "Armure 3 ; RR 2 aux tests de Furtivité (discrétion physique).",
+    "source": "Anarchy V2, p. 149 (P3-1, PDF 18)",
+    "price": "27 500 ¥"
   },
   {
     "id": "asset-25",
     "name": "Costume Actioneer",
     "category": "Armure",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 149 (P3-1, PDF 18)"
+    "essence": 0.0,
+    "description": "Armure 1 ; RR 1 aux tests d’Influence (étiquette).",
+    "source": "Anarchy V2, p. 149 (P3-1, PDF 18)",
+    "price": "12 500 ¥"
   },
   {
     "id": "asset-26",
     "name": "Costume ou robe Armanté",
     "category": "Armure",
     "level": 7,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 149 (P3-1, PDF 18)"
+    "essence": 0.0,
+    "description": "Armure 1 ; RR 1 aux tests d’Influence ; RR 1 aux tests d’Influence (étiquette).",
+    "source": "Anarchy V2, p. 149 (P3-1, PDF 18)",
+    "price": "37 500 ¥"
   },
   {
     "id": "asset-27",
     "name": "SecureTech Invisi-shield",
     "category": "Armure",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 149 (P3-1, PDF 18)"
+    "essence": 0.0,
+    "description": "Armure +1.",
+    "source": "Anarchy V2, p. 149 (P3-1, PDF 18)",
+    "price": "7 500 ¥"
   },
   {
     "id": "asset-28",
     "name": "Berserker",
     "category": "Drogue",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)"
+    "essence": 0.0,
+    "description": "VD +1 en mêlée ; RR 1 aux tests de Combat rapproché. Doit prendre un risque fort ou extrême sur toutes ses actions. Durée : un combat. BTL : nécessite la RV hot-sim, éventuellement limitée aux BTL.",
+    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)",
+    "price": "22 500 ¥",
+    "conditions": "L’addiction est représentée par un comportement dédié. Les effets de descente s’appliquent après la fin des effets bénéfiques."
   },
   {
     "id": "asset-29",
     "name": "Bliss",
     "category": "Drogue",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)"
+    "essence": 0.0,
+    "description": "Ignore les modificateurs de blessure ; désavantage aux tests impliquant la Volonté. Durée : une scène.",
+    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)",
+    "price": "7 500 ¥",
+    "conditions": "L’addiction est représentée par un comportement dédié. Les effets de descente s’appliquent après la fin des effets bénéfiques."
   },
   {
     "id": "asset-30",
     "name": "Casanova",
     "category": "Drogue",
     "level": 10,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Charisme. Durée : au choix. BTL : nécessite la RV hot-sim, éventuellement limitée aux BTL.",
+    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)",
+    "price": "52 500 ¥",
+    "conditions": "L’addiction est représentée par un comportement dédié. Les effets de descente s’appliquent après la fin des effets bénéfiques."
   },
   {
     "id": "asset-31",
     "name": "Céréprax",
     "category": "Drogue",
     "level": 7,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Logique. Descente : désavantage aux tests impliquant la Logique pendant une scène et une blessure grave. Durée : une scène.",
+    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)",
+    "price": "37 500 ¥",
+    "conditions": "L’addiction est représentée par un comportement dédié. Les effets de descente s’appliquent après la fin des effets bénéfiques."
   },
   {
     "id": "asset-32",
     "name": "Cram",
     "category": "Drogue",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)"
+    "essence": 0.0,
+    "description": "+1 point d’Anarchy par scène d’action ; aucune limite au nombre d’actions supplémentaires par tour. Descente : une blessure grave. Durée : un combat.",
+    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)",
+    "price": "7 500 ¥",
+    "conditions": "L’addiction est représentée par un comportement dédié. Les effets de descente s’appliquent après la fin des effets bénéfiques."
   },
   {
     "id": "asset-33",
     "name": "Deepweed",
     "category": "Drogue",
     "level": 7,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Volonté ; force la perception astrale des Éveillés. Descente : désavantage pendant la scène suivante. Durée : une scène.",
+    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)",
+    "price": "37 500 ¥",
+    "conditions": "L’addiction est représentée par un comportement dédié. Les effets de descente s’appliquent après la fin des effets bénéfiques."
   },
   {
     "id": "asset-34",
     "name": "Jazz",
     "category": "Drogue",
     "level": 3,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)"
+    "essence": 0.0,
+    "description": "+1 point d’Anarchy par scène d’action ; +1 action par narration ; aucune limite au nombre d’actions supplémentaires par tour. Descente : désavantage pendant la scène suivante. Durée : une scène.",
+    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)",
+    "price": "17 500 ¥",
+    "conditions": "L’addiction est représentée par un comportement dédié. Les effets de descente s’appliquent après la fin des effets bénéfiques."
   },
   {
     "id": "asset-35",
     "name": "Kamikaze",
     "category": "Drogue",
     "level": 14,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests d’Agilité ; VD +1 en mêlée ; +1 point d’Anarchy par scène d’action ; +1 action par narration ; aucune limite au nombre d’actions supplémentaires par tour. Descente : une blessure grave. Durée : un combat.",
+    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)",
+    "price": "72 500 ¥",
+    "conditions": "L’addiction est représentée par un comportement dédié. Les effets de descente s’appliquent après la fin des effets bénéfiques."
   },
   {
     "id": "asset-36",
     "name": "Nitro",
     "category": "Drogue",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)"
+    "essence": 0.0,
+    "description": "VD +1 en mêlée ; +1 point d’Anarchy par scène d’action ; aucune limite au nombre d’actions supplémentaires par tour ; ignore les modificateurs de blessure. Descente : une blessure grave. Durée : un combat.",
+    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)",
+    "price": "12 500 ¥",
+    "conditions": "L’addiction est représentée par un comportement dédié. Les effets de descente s’appliquent après la fin des effets bénéfiques."
   },
   {
     "id": "asset-37",
     "name": "Novacoke",
     "category": "Drogue",
     "level": 10,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Charisme ; RR 1 aux tests de Perception (sociale). Descente : désavantage aux tests impliquant le Charisme ou la Volonté pendant une scène. Durée : une scène.",
+    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)",
+    "price": "52 500 ¥",
+    "conditions": "L’addiction est représentée par un comportement dédié. Les effets de descente s’appliquent après la fin des effets bénéfiques."
   },
   {
     "id": "asset-38",
     "name": "Psyché",
     "category": "Drogue",
     "level": 12,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Volonté ; permet de maintenir un sort supplémentaire. Durée : une scène. Pour un personnage incapable de lancer des sorts : niveau 10, 52 500 ¥.",
+    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)",
+    "price": "62 500 ¥",
+    "conditions": "L’addiction est représentée par un comportement dédié. Les effets de descente s’appliquent après la fin des effets bénéfiques."
   },
   {
     "id": "asset-39",
     "name": "Zen",
     "category": "Drogue",
     "level": 8,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Volonté ; désavantage aux tests impliquant la Force ou l’Agilité. Durée : une scène.",
+    "source": "Anarchy V2, p. 150 (P3-1, PDF 19)",
+    "price": "42 500 ¥",
+    "conditions": "L’addiction est représentée par un comportement dédié. Les effets de descente s’appliquent après la fin des effets bénéfiques."
   },
   {
     "id": "asset-40",
     "name": "Couteau de combat avec toxine létale",
     "category": "Équipement",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 152 (P3-1, PDF 21)"
+    "essence": 0.0,
+    "description": "Arme courte. VD (FOR+3) ; portées [OK/–/–/–].",
+    "source": "Anarchy V2, p. 152 (P3-1, PDF 21)",
+    "price": "12 500 ¥"
   },
   {
     "id": "asset-41",
     "name": "Couteau de combat avec toxine débilitante",
     "category": "Équipement",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 152 (P3-1, PDF 21)"
+    "essence": 0.0,
+    "description": "Arme courte. VD (FOR+1) ; portées [OK/–/–/–]. Après avoir touché la cible, dépenser 1 point d’Anarchy lui inflige un désavantage à toutes ses actions jusqu’à la fin de la prochaine narration.",
+    "source": "Anarchy V2, p. 152 (P3-1, PDF 21)",
+    "price": "7 500 ¥"
   },
   {
     "id": "asset-42",
@@ -392,8 +445,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 2,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 155 (P3-1, PDF 24)"
+    "description": "Interface neurale directe ; RV cold-sim.",
+    "source": "Anarchy V2, p. 155 (P3-1, PDF 24)",
+    "price": "10 000 ¥"
   },
   {
     "id": "asset-43",
@@ -401,8 +455,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 4,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 155 (P3-1, PDF 24)"
+    "description": "Interface neurale directe ; RV cold-sim ou hot-sim.",
+    "source": "Anarchy V2, p. 155 (P3-1, PDF 24)",
+    "price": "20 000 ¥"
   },
   {
     "id": "asset-44",
@@ -410,8 +465,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 7,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 155 (P3-1, PDF 24)"
+    "description": "Interface neurale directe ; RV cold-sim ou hot-sim ; +1 point d’Anarchy par scène de piratage en RV ; +1 action par narration en RV ; aucune limite au nombre d’actions supplémentaires par tour en RV.",
+    "source": "Anarchy V2, p. 155 (P3-1, PDF 24)",
+    "price": "35 000 ¥"
   },
   {
     "id": "asset-45",
@@ -419,8 +475,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 4,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 155 (P3-1, PDF 24)"
+    "description": "Interface neurale directe ; RV cold-sim ; permet de plonger dans les véhicules.",
+    "source": "Anarchy V2, p. 155 (P3-1, PDF 24)",
+    "price": "20 000 ¥"
   },
   {
     "id": "asset-46",
@@ -428,8 +485,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 6,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 155 (P3-1, PDF 24)"
+    "description": "Interface neurale directe ; RV cold-sim ou hot-sim ; permet de plonger dans les véhicules.",
+    "source": "Anarchy V2, p. 155 (P3-1, PDF 24)",
+    "price": "30 000 ¥"
   },
   {
     "id": "asset-47",
@@ -437,8 +495,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 9,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 155 (P3-1, PDF 24)"
+    "description": "Interface neurale directe ; RV cold-sim ou hot-sim ; permet de plonger dans les véhicules ; +1 point d’Anarchy par scène en plongée ; +1 action par narration en plongée ; aucune limite au nombre d’actions supplémentaires par tour en plongée.",
+    "source": "Anarchy V2, p. 155 (P3-1, PDF 24)",
+    "price": "45 000 ¥"
   },
   {
     "id": "asset-48",
@@ -446,8 +505,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 3,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 155 (P3-1, PDF 24)"
+    "description": "Interface neurale directe ; RV cold-sim ; commlink implanté.",
+    "source": "Anarchy V2, p. 155 (P3-1, PDF 24)",
+    "price": "17 500 ¥"
   },
   {
     "id": "asset-49",
@@ -455,8 +515,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 11,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 155 (P3-1, PDF 24)"
+    "description": "RR 1 aux tests liés à la Logique.",
+    "source": "Anarchy V2, p. 155 (P3-1, PDF 24)",
+    "price": "55 000 ¥"
   },
   {
     "id": "asset-50",
@@ -464,8 +525,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 1,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 156 (P3-1, PDF 25)"
+    "description": "Interface visuelle ; caméra.",
+    "source": "Anarchy V2, p. 156 (P3-1, PDF 25)",
+    "price": "5 000 ¥"
   },
   {
     "id": "asset-51",
@@ -473,8 +535,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 2,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 156 (P3-1, PDF 25)"
+    "description": "Interface visuelle ; caméra ; iris et couleur personnalisables.",
+    "source": "Anarchy V2, p. 156 (P3-1, PDF 25)",
+    "price": "10 000 ¥"
   },
   {
     "id": "asset-52",
@@ -482,8 +545,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 4,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 156 (P3-1, PDF 25)"
+    "description": "Interface visuelle ; caméra ; RR 1 aux tests de Perception (physique) ; vision nocturne.",
+    "source": "Anarchy V2, p. 156 (P3-1, PDF 25)",
+    "price": "20 000 ¥"
   },
   {
     "id": "asset-53",
@@ -491,8 +555,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 6,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 156 (P3-1, PDF 25)"
+    "description": "Interface visuelle ; caméra ; RR 2 aux tests de Perception (physique) ; vision thermographique.",
+    "source": "Anarchy V2, p. 156 (P3-1, PDF 25)",
+    "price": "30 000 ¥"
   },
   {
     "id": "asset-54",
@@ -500,8 +565,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 5,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 156 (P3-1, PDF 25)"
+    "description": "Interface visuelle ; caméra ; RR 2 aux tests d’Armes à distance (pistolets).",
+    "source": "Anarchy V2, p. 156 (P3-1, PDF 25)",
+    "price": "25 000 ¥"
   },
   {
     "id": "asset-55",
@@ -509,8 +575,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 9,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 156 (P3-1, PDF 25)"
+    "description": "Interface visuelle ; caméra ; RR 1 aux tests d’Armes à distance ; RR 1 aux tests d’Armes à distance (fusils) ; zoom.",
+    "source": "Anarchy V2, p. 156 (P3-1, PDF 25)",
+    "price": "45 000 ¥"
   },
   {
     "id": "asset-56",
@@ -518,8 +585,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 5,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 156 (P3-1, PDF 25)"
+    "description": "Interface visuelle ; caméra ; RR 1 aux tests de Perception (physique). Micro-drone oculaire : Autopilote 6, Structure 0, Maniabilité 10, Vitesse 0, Blindage 0 ; avantage en Furtivité (discrétion physique) ; aucune monture d’arme.",
+    "source": "Anarchy V2, p. 156 (P3-1, PDF 25)",
+    "price": "25 000 ¥"
   },
   {
     "id": "asset-57",
@@ -527,8 +595,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 1,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 157 (P3-1, PDF 26)"
+    "description": "Interface auditive ; micro ; apparence au choix.",
+    "source": "Anarchy V2, p. 157 (P3-1, PDF 26)",
+    "price": "5 000 ¥"
   },
   {
     "id": "asset-58",
@@ -536,8 +605,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 3,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 157 (P3-1, PDF 26)"
+    "description": "Interface auditive ; micro ; RR 1 aux tests de Perception (physique).",
+    "source": "Anarchy V2, p. 157 (P3-1, PDF 26)",
+    "price": "15 000 ¥"
   },
   {
     "id": "asset-59",
@@ -545,17 +615,19 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 4,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 157 (P3-1, PDF 26)"
+    "description": "Interface auditive ; micro ; RR 1 aux tests de Perception (physique) ; spectre auditif élargi.",
+    "source": "Anarchy V2, p. 157 (P3-1, PDF 26)",
+    "price": "20 000 ¥"
   },
   {
     "id": "asset-60",
     "name": "Amplificateur de réaction",
     "category": "Cyberware",
     "level": 3,
-    "essence": 1.15,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)"
+    "essence": 1.0,
+    "description": "+1 point d’Anarchy par scène d’action ; aucune limite au nombre d’actions supplémentaires par tour.",
+    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)",
+    "price": "15 000 ¥"
   },
   {
     "id": "asset-61",
@@ -563,8 +635,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 6,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)"
+    "description": "+1 point d’Anarchy par scène d’action ; +1 action par narration ; aucune limite au nombre d’actions supplémentaires par tour.",
+    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)",
+    "price": "30 000 ¥"
   },
   {
     "id": "asset-62",
@@ -572,8 +645,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 8,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)"
+    "description": "+2 points d’Anarchy par scène d’action ; +1 action par narration ; aucune limite au nombre d’actions supplémentaires par tour.",
+    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)",
+    "price": "40 000 ¥"
   },
   {
     "id": "asset-63",
@@ -581,8 +655,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 15,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)"
+    "description": "+2 points d’Anarchy par scène d’action ; +1 action par narration ; aucune limite au nombre d’actions supplémentaires par tour ; RR 1 aux tests d’Athlétisme (défense à distance) et de Combat rapproché.",
+    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)",
+    "price": "75 000 ¥"
   },
   {
     "id": "asset-64",
@@ -590,8 +665,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 2,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)"
+    "description": "Armure +1.",
+    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)",
+    "price": "10 000 ¥"
   },
   {
     "id": "asset-65",
@@ -599,8 +675,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 1,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)"
+    "description": "Injecte la drogue choisie sur une simple commande mentale.",
+    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)",
+    "price": "5 000 ¥ + coût de la drogue"
   },
   {
     "id": "asset-66",
@@ -608,8 +685,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 3,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)"
+    "description": "Biomoniteur ; injecte automatiquement un stim patch en cas de blessure grave et un trauma patch en cas de blessure incapacitante.",
+    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)",
+    "price": "20 000 ¥"
   },
   {
     "id": "asset-67",
@@ -617,8 +695,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 4,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)"
+    "description": "Lame courte implantée dans l’avant-bras ; RR 1 aux tests de Combat rapproché (lames).",
+    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)",
+    "price": "22 500 ¥"
   },
   {
     "id": "asset-68",
@@ -626,8 +705,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 4,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)"
+    "description": "Pistolet lourd implanté dans l’avant-bras ; RR 1 aux tests d’Armes à distance (pistolets).",
+    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)",
+    "price": "22 500 ¥"
   },
   {
     "id": "asset-69",
@@ -635,8 +715,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 3,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)"
+    "description": "Griffes d’escalade rétractables ; RR 1 aux tests d’Athlétisme (escalade).",
+    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)",
+    "price": "15 000 ¥"
   },
   {
     "id": "asset-70",
@@ -644,8 +725,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 6,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)"
+    "description": "RR 1 aux tests d’Athlétisme.",
+    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)",
+    "price": "30 000 ¥"
   },
   {
     "id": "asset-71",
@@ -653,8 +735,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 8,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)"
+    "description": "RR 1 aux tests d’Athlétisme ; RR 1 aux tests d’Athlétisme (course).",
+    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)",
+    "price": "40 000 ¥"
   },
   {
     "id": "asset-72",
@@ -662,8 +745,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 4,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)"
+    "description": "+1 case de blessure légère.",
+    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)",
+    "price": "20 000 ¥"
   },
   {
     "id": "asset-73",
@@ -671,8 +755,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 5,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)"
+    "description": "VD à mains nues +1 ; +1 case de blessure légère.",
+    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)",
+    "price": "25 000 ¥"
   },
   {
     "id": "asset-74",
@@ -680,8 +765,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 8,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)"
+    "description": "VD à mains nues +1 ; +1 case de blessure grave.",
+    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)",
+    "price": "40 000 ¥"
   },
   {
     "id": "asset-75",
@@ -689,8 +775,9 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 6,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)"
+    "description": "RR 1 aux tests d’Athlétisme.",
+    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)",
+    "price": "30 000 ¥"
   },
   {
     "id": "asset-76",
@@ -698,8 +785,9 @@ export const baseAssets = [
     "category": "Bioware",
     "level": 7,
     "essence": 0.5,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)"
+    "description": "+1 point d’Anarchy par scène d’action ; +1 action par narration ; aucune limite au nombre d’actions supplémentaires par tour.",
+    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)",
+    "price": "35 000 ¥"
   },
   {
     "id": "asset-77",
@@ -707,8 +795,9 @@ export const baseAssets = [
     "category": "Bioware",
     "level": 12,
     "essence": 0.5,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)"
+    "description": "RR 1 aux tests de Logique.",
+    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)",
+    "price": "60 000 ¥"
   },
   {
     "id": "asset-78",
@@ -716,8 +805,9 @@ export const baseAssets = [
     "category": "Bioware",
     "level": 6,
     "essence": 0.5,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)"
+    "description": "VD +1 à mains nues ; +1 case de blessure légère.",
+    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)",
+    "price": "30 000 ¥"
   },
   {
     "id": "asset-79",
@@ -725,8 +815,9 @@ export const baseAssets = [
     "category": "Bioware",
     "level": 2,
     "essence": 0.5,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)"
+    "description": "Immunité aux toxines injectées et respirées.",
+    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)",
+    "price": "10 000 ¥"
   },
   {
     "id": "asset-80",
@@ -734,8 +825,9 @@ export const baseAssets = [
     "category": "Bioware",
     "level": 4,
     "essence": 0.5,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)"
+    "description": "RR 1 aux tests d’une spécialisation de compétence physique, choisie lors de l’achat de l’atout.",
+    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)",
+    "price": "20 000 ¥"
   },
   {
     "id": "asset-81",
@@ -743,8 +835,9 @@ export const baseAssets = [
     "category": "Bioware",
     "level": 6,
     "essence": 0.5,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)"
+    "description": "RR 2 aux tests d’une spécialisation de compétence physique, choisie lors de l’achat de l’atout.",
+    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)",
+    "price": "30 000 ¥"
   },
   {
     "id": "asset-82",
@@ -752,8 +845,9 @@ export const baseAssets = [
     "category": "Bioware",
     "level": 8,
     "essence": 0.5,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)"
+    "description": "RR 3 aux tests d’une spécialisation de compétence physique, choisie lors de l’achat de l’atout.",
+    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)",
+    "price": "40 000 ¥"
   },
   {
     "id": "asset-83",
@@ -761,8 +855,9 @@ export const baseAssets = [
     "category": "Bioware",
     "level": 3,
     "essence": 0.5,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)"
+    "description": "Armure +1.",
+    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)",
+    "price": "15 000 ¥"
   },
   {
     "id": "asset-84",
@@ -770,8 +865,9 @@ export const baseAssets = [
     "category": "Bioware",
     "level": 12,
     "essence": 0.5,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)"
+    "description": "RR 1 aux tests de Charisme.",
+    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)",
+    "price": "60 000 ¥"
   },
   {
     "id": "asset-85",
@@ -779,8 +875,9 @@ export const baseAssets = [
     "category": "Bioware",
     "level": 7,
     "essence": 0.5,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)"
+    "description": "RR 1 aux tests d’Influence.",
+    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)",
+    "price": "35 000 ¥"
   },
   {
     "id": "asset-86",
@@ -788,8 +885,9 @@ export const baseAssets = [
     "category": "Bioware",
     "level": 8,
     "essence": 0.5,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)"
+    "description": "+1 case de blessure grave.",
+    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)",
+    "price": "40 000 ¥"
   },
   {
     "id": "asset-87",
@@ -797,8 +895,9 @@ export const baseAssets = [
     "category": "Bioware",
     "level": 12,
     "essence": 0.5,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)"
+    "description": "RR 1 aux tests de Force.",
+    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)",
+    "price": "60 000 ¥"
   },
   {
     "id": "asset-88",
@@ -806,944 +905,1100 @@ export const baseAssets = [
     "category": "Bioware",
     "level": 12,
     "essence": 0.5,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)"
+    "description": "RR 1 aux tests d’Agilité.",
+    "source": "Anarchy V2, p. 159 (P3-1, PDF 28)",
+    "price": "60 000 ¥"
   },
   {
     "id": "asset-89",
     "name": "Médikit autonome CrashCart Essential",
     "category": "Drone",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 160 (P3-1, PDF 29)"
+    "essence": 0.0,
+    "description": "Petit drone fixe ; Autopilote 6. Médikit autonome : utilise son Autopilote pour les tests de premiers soins ; 1 point d’Anarchy permet d’obtenir un avantage sur le test.",
+    "source": "Anarchy V2, p. 160 (P3-1, PDF 29)",
+    "price": "5 000 ¥"
   },
   {
     "id": "asset-90",
     "name": "Médikit autonome DocWagon Pro+",
     "category": "Drone",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 160 (P3-1, PDF 29)"
+    "essence": 0.0,
+    "description": "Petit drone fixe ; Autopilote 9. Médikit autonome : utilise son Autopilote pour les tests de premiers soins ; 1 point d’Anarchy permet d’obtenir un avantage sur le test.",
+    "source": "Anarchy V2, p. 160 (P3-1, PDF 29)",
+    "price": "20 000 ¥"
   },
   {
     "id": "asset-91",
     "name": "Armurier",
     "category": "Contact",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Réseau (la rue et ingénierie).",
+    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)",
+    "price": "20 000 ¥"
   },
   {
     "id": "asset-92",
     "name": "Avocat",
     "category": "Contact",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)"
+    "essence": 0.0,
+    "description": "RR 2 aux tests de Réseau (gouvernemental).",
+    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)",
+    "price": "20 000 ¥"
   },
   {
     "id": "asset-93",
     "name": "Cadre corporatiste",
     "category": "Contact",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Réseau (corporatiste).",
+    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)",
+    "price": "10 000 ¥"
   },
   {
     "id": "asset-94",
     "name": "Consigliere de la Mafia",
     "category": "Contact",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)"
+    "essence": 0.0,
+    "description": "RR 2 aux tests de Réseau (criminel).",
+    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)",
+    "price": "20 000 ¥"
   },
   {
     "id": "asset-95",
     "name": "Contrebandier",
     "category": "Contact",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Réseau (la rue et ingénierie).",
+    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)",
+    "price": "20 000 ¥"
   },
   {
     "id": "asset-96",
     "name": "Doc des rues",
     "category": "Contact",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Réseau (médical).",
+    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)",
+    "price": "10 000 ¥"
   },
   {
     "id": "asset-97",
     "name": "Flic sous couverture",
     "category": "Contact",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Réseau (gouvernemental).",
+    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)",
+    "price": "10 000 ¥"
   },
   {
     "id": "asset-98",
     "name": "Ganger",
     "category": "Contact",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Réseau (criminel).",
+    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)",
+    "price": "10 000 ¥"
   },
   {
     "id": "asset-99",
     "name": "Intermédiaire",
     "category": "Contact",
     "level": 5,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Réseau.",
+    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)",
+    "price": "25 000 ¥"
   },
   {
     "id": "asset-100",
     "name": "Journaliste",
     "category": "Contact",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Réseau (médiatique).",
+    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)",
+    "price": "10 000 ¥"
   },
   {
     "id": "asset-101",
     "name": "M. Dupont",
     "category": "Contact",
     "level": 6,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Réseau (la rue, criminel et corporatiste).",
+    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)",
+    "price": "30 000 ¥"
   },
   {
     "id": "asset-102",
     "name": "Marchand de talismans",
     "category": "Contact",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Réseau (magique).",
+    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)",
+    "price": "10 000 ¥"
   },
   {
     "id": "asset-103",
     "name": "Mécanicien",
     "category": "Contact",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Réseau (ingénierie).",
+    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)",
+    "price": "10 000 ¥"
   },
   {
     "id": "asset-104",
     "name": "Paradis numérique",
     "category": "Contact",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Réseau (matriciel) ; RR 1 aux tests d’Électronique (recherche matricielle).",
+    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)",
+    "price": "20 000 ¥"
   },
   {
     "id": "asset-105",
     "name": "Patron de bar",
     "category": "Contact",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Réseau (la rue).",
+    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)",
+    "price": "10 000 ¥"
   },
   {
     "id": "asset-106",
     "name": "Professeur d’université",
     "category": "Contact",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Réseau (universitaire).",
+    "source": "Anarchy V2, p. 164 (P3-1, PDF 33)",
+    "price": "10 000 ¥"
   },
   {
     "id": "asset-107",
     "name": "Chat",
     "category": "Esprit mentor",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 174 (P3-2, PDF 7)"
+    "essence": 0.0,
+    "description": "Choisir 2 domaines sur 3 : RR 1 aux tests d’Athlétisme (parkour), de Furtivité (discrétion physique) ou de Sorcellerie (sorts d’illusion). Comportement Cruel : affaiblit ses cibles et joue avec elles tant qu’il n’est pas blessé. Mentors proches : Mystère, Secret.",
+    "source": "Anarchy V2, p. 174 (P3-2, PDF 7)",
+    "price": "20 000 ¥",
+    "conditions": "Personnage Éveillé suivant ce mentor. Ces valeurs supposent le premier trait du personnage ; sinon niveau +3 et coût +15 000 ¥. Le comportement du mentor doit faire partie de ceux du personnage."
   },
   {
     "id": "asset-108",
     "name": "Chien",
     "category": "Esprit mentor",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 174 (P3-2, PDF 7)"
+    "essence": 0.0,
+    "description": "Choisir 2 domaines sur 3 : RR 1 aux tests de Perception (physique), de Survie (orientation) ou de Sorcellerie (sorts de détection). Comportement Loyal : ne trahit pas ses compagnons et ne laisse personne se sacrifier pour lui. Mentors proches : Amitié, Loyauté.",
+    "source": "Anarchy V2, p. 174 (P3-2, PDF 7)",
+    "price": "20 000 ¥",
+    "conditions": "Personnage Éveillé suivant ce mentor. Ces valeurs supposent le premier trait du personnage ; sinon niveau +3 et coût +15 000 ¥. Le comportement du mentor doit faire partie de ceux du personnage."
   },
   {
     "id": "asset-109",
     "name": "Coyote",
     "category": "Esprit mentor",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 174 (P3-2, PDF 7)"
+    "essence": 0.0,
+    "description": "Choisir 2 domaines sur 3 : RR 1 aux tests d’Influence (imposture), d’Influence (étiquette) ou de Sorcellerie (sorts de manipulation). Comportement Malicieux : ne manque pas un mauvais tour, même préjudiciable à l’équipe. Mentors proches : Tromperie, Espièglerie.",
+    "source": "Anarchy V2, p. 174 (P3-2, PDF 7)",
+    "price": "20 000 ¥",
+    "conditions": "Personnage Éveillé suivant ce mentor. Ces valeurs supposent le premier trait du personnage ; sinon niveau +3 et coût +15 000 ¥. Le comportement du mentor doit faire partie de ceux du personnage."
   },
   {
     "id": "asset-110",
     "name": "Loup",
     "category": "Esprit mentor",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 174 (P3-2, PDF 7)"
+    "essence": 0.0,
+    "description": "Choisir 2 domaines sur 4 : RR 1 aux tests de Survie (orientation), de Combat rapproché (mains nues), de Combat rapproché (lames) ou de Sorcellerie (sorts de combat). Comportement Acharné : ne fuit pas un combat engagé. Mentors proches : Communauté, Chasse.",
+    "source": "Anarchy V2, p. 174 (P3-2, PDF 7)",
+    "price": "20 000 ¥",
+    "conditions": "Personnage Éveillé suivant ce mentor. Ces valeurs supposent le premier trait du personnage ; sinon niveau +3 et coût +15 000 ¥. Le comportement du mentor doit faire partie de ceux du personnage."
   },
   {
     "id": "asset-111",
     "name": "Oiseau-tonnerre",
     "category": "Esprit mentor",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 174 (P3-2, PDF 7)"
+    "essence": 0.0,
+    "description": "Choisir 2 domaines sur 3 : RR 1 aux tests d’Influence (intimidation), de Combat rapproché (mains nues) ou de Conjuration (esprits de l’air). Comportement Susceptible : ne laisse pas passer une insulte. Mentors proches : Colère, Guerre.",
+    "source": "Anarchy V2, p. 174 (P3-2, PDF 7)",
+    "price": "20 000 ¥",
+    "conditions": "Personnage Éveillé suivant ce mentor. Ces valeurs supposent le premier trait du personnage ; sinon niveau +3 et coût +15 000 ¥. Le comportement du mentor doit faire partie de ceux du personnage."
   },
   {
     "id": "asset-112",
     "name": "Ours",
     "category": "Esprit mentor",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 174 (P3-2, PDF 7)"
+    "essence": 0.0,
+    "description": "Choisir 2 domaines sur 3 : RR 1 aux tests de Survie (premiers soins), de Combat rapproché (mains nues) ou de Sorcellerie (sorts de santé). Comportement Rage : se jette dans le combat sans se soucier de sa sécurité lorsqu’il est blessé. Mentors proches : Force, Protection.",
+    "source": "Anarchy V2, p. 174 (P3-2, PDF 7)",
+    "price": "20 000 ¥",
+    "conditions": "Personnage Éveillé suivant ce mentor. Ces valeurs supposent le premier trait du personnage ; sinon niveau +3 et coût +15 000 ¥. Le comportement du mentor doit faire partie de ceux du personnage."
   },
   {
     "id": "asset-113",
     "name": "Raton laveur",
     "category": "Esprit mentor",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 174 (P3-2, PDF 7)"
+    "essence": 0.0,
+    "description": "Choisir 2 domaines sur 3 : RR 1 aux tests de Furtivité (escamotage), d’Influence (bluff) ou de Sorcellerie (sorts de manipulation). Comportement Curieux : brave le danger pour apprendre des secrets. Mentor proche : Monte-en-l’air.",
+    "source": "Anarchy V2, p. 174 (P3-2, PDF 7)",
+    "price": "20 000 ¥",
+    "conditions": "Personnage Éveillé suivant ce mentor. Ces valeurs supposent le premier trait du personnage ; sinon niveau +3 et coût +15 000 ¥. Le comportement du mentor doit faire partie de ceux du personnage."
   },
   {
     "id": "asset-114",
     "name": "Tueur de dragons",
     "category": "Esprit mentor",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 174 (P3-2, PDF 7)"
+    "essence": 0.0,
+    "description": "Choisir 2 domaines sur 3 : RR 1 aux tests d’Influence (intimidation), de Combat rapproché (spécialisation au choix) ou de Sorcellerie (sorts de combat). Comportement Honneur : fait tout pour tenir ses promesses. Mentors proches : Héroïsme, Aventure.",
+    "source": "Anarchy V2, p. 174 (P3-2, PDF 7)",
+    "price": "20 000 ¥",
+    "conditions": "Personnage Éveillé suivant ce mentor. Ces valeurs supposent le premier trait du personnage ; sinon niveau +3 et coût +15 000 ¥. Le comportement du mentor doit faire partie de ceux du personnage."
   },
   {
     "id": "asset-115",
     "name": "Focus sorcier",
     "category": "Focus",
     "level": 5,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Sorcellerie.",
+    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)",
+    "price": "27 500 ¥",
+    "conditions": "Réservé aux Éveillés. Le focus doit être lié et porté en contact direct et permanent pour être activé ; un focus actif est dual."
   },
   {
     "id": "asset-116",
     "name": "Focus de détection mineur",
     "category": "Focus",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Sorcellerie (sorts de détection).",
+    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)",
+    "price": "12 500 ¥",
+    "conditions": "Réservé aux Éveillés. Le focus doit être lié et porté en contact direct et permanent pour être activé ; un focus actif est dual."
   },
   {
     "id": "asset-117",
     "name": "Focus d’illusion majeur",
     "category": "Focus",
     "level": 6,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)"
+    "essence": 0.0,
+    "description": "RR 3 aux tests de Sorcellerie (sorts d’illusion).",
+    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)",
+    "price": "32 500 ¥",
+    "conditions": "Réservé aux Éveillés. Le focus doit être lié et porté en contact direct et permanent pour être activé ; un focus actif est dual."
   },
   {
     "id": "asset-118",
     "name": "Focus de contresort",
     "category": "Focus",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)"
+    "essence": 0.0,
+    "description": "RR 2 aux tests de Sorcellerie (contresort).",
+    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)",
+    "price": "22 500 ¥",
+    "conditions": "Réservé aux Éveillés. Le focus doit être lié et porté en contact direct et permanent pour être activé ; un focus actif est dual."
   },
   {
     "id": "asset-119",
     "name": "Focus de maintien",
     "category": "Focus",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)"
+    "essence": 0.0,
+    "description": "Maintient un sort supplémentaire sans malus.",
+    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)",
+    "price": "12 500 ¥",
+    "conditions": "Réservé aux Éveillés. Le focus doit être lié et porté en contact direct et permanent pour être activé ; un focus actif est dual."
   },
   {
     "id": "asset-120",
     "name": "Focus de conjuration",
     "category": "Focus",
     "level": 5,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Conjuration.",
+    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)",
+    "price": "27 500 ¥",
+    "conditions": "Réservé aux Éveillés. Le focus doit être lié et porté en contact direct et permanent pour être activé ; un focus actif est dual."
   },
   {
     "id": "asset-121",
     "name": "Focus de l’air mineur",
     "category": "Focus",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Conjuration (esprits de l’air).",
+    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)",
+    "price": "12 500 ¥",
+    "conditions": "Réservé aux Éveillés. Le focus doit être lié et porté en contact direct et permanent pour être activé ; un focus actif est dual."
   },
   {
     "id": "asset-122",
     "name": "Focus des bêtes",
     "category": "Focus",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)"
+    "essence": 0.0,
+    "description": "RR 2 aux tests de Conjuration (esprits des bêtes).",
+    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)",
+    "price": "22 500 ¥",
+    "conditions": "Réservé aux Éveillés. Le focus doit être lié et porté en contact direct et permanent pour être activé ; un focus actif est dual."
   },
   {
     "id": "asset-123",
     "name": "Focus du feu majeur",
     "category": "Focus",
     "level": 6,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)"
+    "essence": 0.0,
+    "description": "RR 3 aux tests de Conjuration (esprits du feu).",
+    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)",
+    "price": "32 500 ¥",
+    "conditions": "Réservé aux Éveillés. Le focus doit être lié et porté en contact direct et permanent pour être activé ; un focus actif est dual."
   },
   {
     "id": "asset-124",
     "name": "Focus de bannissement",
     "category": "Focus",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)"
+    "essence": 0.0,
+    "description": "RR 2 aux tests de Conjuration (bannissement).",
+    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)",
+    "price": "22 500 ¥",
+    "conditions": "Réservé aux Éveillés. Le focus doit être lié et porté en contact direct et permanent pour être activé ; un focus actif est dual."
   },
   {
     "id": "asset-125",
     "name": "Focus de contrôle",
     "category": "Focus",
     "level": 3,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)"
+    "essence": 0.0,
+    "description": "Contrôle 2 esprits simultanément.",
+    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)",
+    "price": "17 500 ¥",
+    "conditions": "Réservé aux Éveillés. Le focus doit être lié et porté en contact direct et permanent pour être activé ; un focus actif est dual."
   },
   {
     "id": "asset-126",
     "name": "Focus d’arme (couteau)",
     "category": "Focus",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)"
+    "essence": 0.0,
+    "description": "Arme courte. VD (FOR+1) / (CHA+1) ; portées [OK/–/–/–]. Arme de mêlée duale, utilisable en projection astrale ; ignore l’immunité aux armes normales.",
+    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)",
+    "price": "7 500 ¥",
+    "conditions": "Réservé aux Éveillés. Le focus doit être lié et porté en contact direct et permanent pour être activé ; un focus actif est dual."
   },
   {
     "id": "asset-127",
     "name": "Focus d’arme (épée)",
     "category": "Focus",
     "level": 5,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)"
+    "essence": 0.0,
+    "description": "Arme longue. VD (FOR+2) / (CHA+2) ; portées [OK/–/–/–] ; RR 2 aux tests de Combat rapproché (lames). Arme de mêlée duale, utilisable en projection astrale ; ignore l’immunité aux armes normales.",
+    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)",
+    "price": "27 500 ¥",
+    "conditions": "Réservé aux Éveillés. Le focus doit être lié et porté en contact direct et permanent pour être activé ; un focus actif est dual."
   },
   {
     "id": "asset-128",
     "name": "Arme élémentaire",
     "category": "Pouvoir d’adepte",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)"
+    "essence": 0.0,
+    "description": "VD avec une arme de mêlée +1 ; effet élémentaire (feu, glace, acide, etc.) choisi lors de l’acquisition de l’atout.",
+    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)",
+    "price": "10 000 ¥",
+    "conditions": "Nécessite Éveillé avec l’option Adepte. Pouvoir actif par défaut, sans drain ; désactivable. Les tests bénéficiant d’un pouvoir actif sont affectés par les champs magiques."
   },
   {
     "id": "asset-129",
     "name": "Armure",
     "category": "Pouvoir d’adepte",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)"
+    "essence": 0.0,
+    "description": "Armure physique +1.",
+    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)",
+    "price": "10 000 ¥",
+    "conditions": "Nécessite Éveillé avec l’option Adepte. Pouvoir actif par défaut, sans drain ; désactivable. Les tests bénéficiant d’un pouvoir actif sont affectés par les champs magiques."
   },
   {
     "id": "asset-130",
     "name": "Armure astrale",
     "category": "Pouvoir d’adepte",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)"
+    "essence": 0.0,
+    "description": "Armure contre les sorts et dans l’espace astral +1.",
+    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)",
+    "price": "10 000 ¥",
+    "conditions": "Nécessite Éveillé avec l’option Adepte. Pouvoir actif par défaut, sans drain ; désactivable. Les tests bénéficiant d’un pouvoir actif sont affectés par les champs magiques."
   },
   {
     "id": "asset-131",
     "name": "Armure mystique",
     "category": "Pouvoir d’adepte",
     "level": 3,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)"
+    "essence": 0.0,
+    "description": "Armure +1 contre les dommages physiques et astraux.",
+    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)",
+    "price": "15 000 ¥",
+    "conditions": "Nécessite Éveillé avec l’option Adepte. Pouvoir actif par défaut, sans drain ; désactivable. Les tests bénéficiant d’un pouvoir actif sont affectés par les champs magiques."
   },
   {
     "id": "asset-132",
     "name": "Attribut amélioré",
     "category": "Pouvoir d’adepte",
     "level": 11,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests d’un attribut, choisi lors de l’acquisition de l’atout.",
+    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)",
+    "price": "55 000 ¥",
+    "conditions": "Nécessite Éveillé avec l’option Adepte. Pouvoir actif par défaut, sans drain ; désactivable. Les tests bénéficiant d’un pouvoir actif sont affectés par les champs magiques."
   },
   {
     "id": "asset-133",
     "name": "Compétence améliorée",
     "category": "Pouvoir d’adepte",
     "level": 6,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests d’une compétence, choisie lors de l’acquisition de l’atout.",
+    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)",
+    "price": "30 000 ¥",
+    "conditions": "Nécessite Éveillé avec l’option Adepte. Pouvoir actif par défaut, sans drain ; désactivable. Les tests bénéficiant d’un pouvoir actif sont affectés par les champs magiques."
   },
   {
     "id": "asset-134",
     "name": "Contrôle vocal",
     "category": "Pouvoir d’adepte",
     "level": 8,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests d’Influence ; RR 1 aux tests d’Influence (imposture).",
+    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)",
+    "price": "40 000 ¥",
+    "conditions": "Nécessite Éveillé avec l’option Adepte. Pouvoir actif par défaut, sans drain ; désactivable. Les tests bénéficiant d’un pouvoir actif sont affectés par les champs magiques."
   },
   {
     "id": "asset-135",
     "name": "Contrôle vocal et morphologique",
     "category": "Pouvoir d’adepte",
     "level": 10,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests d’Influence ; RR 2 aux tests d’Influence (imposture).",
+    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)",
+    "price": "50 000 ¥",
+    "conditions": "Nécessite Éveillé avec l’option Adepte. Pouvoir actif par défaut, sans drain ; désactivable. Les tests bénéficiant d’un pouvoir actif sont affectés par les champs magiques."
   },
   {
     "id": "asset-136",
     "name": "Course sur les murs",
     "category": "Pouvoir d’adepte",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)"
+    "essence": 0.0,
+    "description": "Courts déplacements sur les surfaces verticales.",
+    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)",
+    "price": "5 000 ¥",
+    "conditions": "Nécessite Éveillé avec l’option Adepte. Pouvoir actif par défaut, sans drain ; désactivable. Les tests bénéficiant d’un pouvoir actif sont affectés par les champs magiques."
   },
   {
     "id": "asset-137",
     "name": "Frappe à distance",
     "category": "Pouvoir d’adepte",
     "level": 3,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)"
+    "essence": 0.0,
+    "description": "Attaque à mains nues à portée courte, avec un désavantage.",
+    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)",
+    "price": "15 000 ¥",
+    "conditions": "Nécessite Éveillé avec l’option Adepte. Pouvoir actif par défaut, sans drain ; désactivable. Les tests bénéficiant d’un pouvoir actif sont affectés par les champs magiques."
   },
   {
     "id": "asset-138",
     "name": "Frappe élémentaire",
     "category": "Pouvoir d’adepte",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)"
+    "essence": 0.0,
+    "description": "VD à mains nues +1 ; effet élémentaire (feu, glace, acide, etc.) choisi lors de l’acquisition de l’atout.",
+    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)",
+    "price": "10 000 ¥",
+    "conditions": "Nécessite Éveillé avec l’option Adepte. Pouvoir actif par défaut, sans drain ; désactivable. Les tests bénéficiant d’un pouvoir actif sont affectés par les champs magiques."
   },
   {
     "id": "asset-139",
     "name": "Mains mortelles",
     "category": "Pouvoir d’adepte",
     "level": 3,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)"
+    "essence": 0.0,
+    "description": "VD à mains nues +2.",
+    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)",
+    "price": "15 000 ¥",
+    "conditions": "Nécessite Éveillé avec l’option Adepte. Pouvoir actif par défaut, sans drain ; désactivable. Les tests bénéficiant d’un pouvoir actif sont affectés par les champs magiques."
   },
   {
     "id": "asset-140",
     "name": "Perception améliorée",
     "category": "Pouvoir d’adepte",
     "level": 3,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Perception (physique). Chaque niveau supplémentaire ajoute un effet narratif : vision nocturne, vision thermographique, spectre auditif élargi, odorat canin, écholocalisation, etc.",
+    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)",
+    "price": "15 000+ ¥",
+    "levelLabel": "3+",
+    "conditions": "Nécessite Éveillé avec l’option Adepte. Pouvoir actif par défaut, sans drain ; désactivable. Les tests bénéficiant d’un pouvoir actif sont affectés par les champs magiques."
   },
   {
     "id": "asset-141",
     "name": "Poids plume",
     "category": "Pouvoir d’adepte",
     "level": 5,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)"
+    "essence": 0.0,
+    "description": "RR 2 aux tests de Furtivité (discrétion physique).",
+    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)",
+    "price": "25 000 ¥",
+    "conditions": "Nécessite Éveillé avec l’option Adepte. Pouvoir actif par défaut, sans drain ; désactivable. Les tests bénéficiant d’un pouvoir actif sont affectés par les champs magiques."
   },
   {
     "id": "asset-142",
     "name": "Réflexes accrus",
     "category": "Pouvoir d’adepte",
     "level": 3,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)"
+    "essence": 0.0,
+    "description": "+1 point d’Anarchy par scène d’action ; aucune limite au nombre d’actions supplémentaires par tour.",
+    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)",
+    "price": "15 000 ¥",
+    "conditions": "Nécessite Éveillé avec l’option Adepte. Pouvoir actif par défaut, sans drain ; désactivable. Les tests bénéficiant d’un pouvoir actif sont affectés par les champs magiques."
   },
   {
     "id": "asset-143",
     "name": "Réflexes améliorés",
     "category": "Pouvoir d’adepte",
     "level": 6,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)"
+    "essence": 0.0,
+    "description": "+1 point d’Anarchy par scène d’action ; +1 action par narration ; aucune limite au nombre d’actions supplémentaires par tour.",
+    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)",
+    "price": "30 000 ¥",
+    "conditions": "Nécessite Éveillé avec l’option Adepte. Pouvoir actif par défaut, sans drain ; désactivable. Les tests bénéficiant d’un pouvoir actif sont affectés par les champs magiques."
   },
   {
     "id": "asset-144",
     "name": "Résistance à la douleur",
     "category": "Pouvoir d’adepte",
     "level": 7,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)"
+    "essence": 0.0,
+    "description": "+1 case de blessure grave.",
+    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)",
+    "price": "35 000 ¥",
+    "conditions": "Nécessite Éveillé avec l’option Adepte. Pouvoir actif par défaut, sans drain ; désactivable. Les tests bénéficiant d’un pouvoir actif sont affectés par les champs magiques."
   },
   {
     "id": "asset-145",
     "name": "Sens du combat",
     "category": "Pouvoir d’adepte",
     "level": 8,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Combat rapproché et d’Athlétisme (défense à distance).",
+    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)",
+    "price": "40 000 ¥",
+    "conditions": "Nécessite Éveillé avec l’option Adepte. Pouvoir actif par défaut, sans drain ; désactivable. Les tests bénéficiant d’un pouvoir actif sont affectés par les champs magiques."
   },
   {
     "id": "asset-146",
     "name": "Sens du danger",
     "category": "Pouvoir d’adepte",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)"
+    "essence": 0.0,
+    "description": "Ressent un danger imminent sans test de Perception, mais sans en connaître les détails.",
+    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)",
+    "price": "5 000 ¥",
+    "conditions": "Nécessite Éveillé avec l’option Adepte. Pouvoir actif par défaut, sans drain ; désactivable. Les tests bénéficiant d’un pouvoir actif sont affectés par les champs magiques."
   },
   {
     "id": "asset-147",
     "name": "Sens empathique",
     "category": "Pouvoir d’adepte",
     "level": 7,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)"
+    "essence": 0.0,
+    "description": "RR 3 aux tests de Perception (sociale).",
+    "source": "Anarchy V2, p. 191 (P3-2, PDF 24)",
+    "price": "35 000 ¥",
+    "conditions": "Nécessite Éveillé avec l’option Adepte. Pouvoir actif par défaut, sans drain ; désactivable. Les tests bénéficiant d’un pouvoir actif sont affectés par les champs magiques."
   },
   {
     "id": "asset-148",
     "name": "Fatalité",
     "category": "Trait (PNJ corrompu)",
     "level": "",
-    "essence": 0,
-    "description": "Atout de PNJ corrompu : aucun niveau chiffré fourni par le livre. Arbitrage du meneur nécessaire.",
-    "source": "Anarchy V2, p. 200 (P3-2, PDF 33)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests de Combat rapproché, d’Armes à distance ou d’Ingénierie (explosifs) ; RR 1 aux tests de Sorcellerie (sorts de combat) ou VD +1 à mains nues. Réservé aux PNJ toxiques ; aucun niveau ni coût associé.",
+    "source": "Anarchy V2, p. 200 (P3-2, PDF 33)",
+    "price": "Non chiffré dans le livre"
   },
   {
     "id": "asset-149",
     "name": "Mutation",
     "category": "Trait (PNJ corrompu)",
     "level": "",
-    "essence": 0,
-    "description": "Atout de PNJ corrompu : aucun niveau chiffré fourni par le livre. Arbitrage du meneur nécessaire.",
-    "source": "Anarchy V2, p. 200 (P3-2, PDF 33)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests d’Athlétisme ; RR 1 aux tests de Sorcellerie (sorts de santé). Réservé aux PNJ toxiques ; aucun niveau ni coût associé.",
+    "source": "Anarchy V2, p. 200 (P3-2, PDF 33)",
+    "price": "Non chiffré dans le livre"
   },
   {
     "id": "asset-150",
     "name": "Pestilence",
     "category": "Trait (PNJ corrompu)",
     "level": "",
-    "essence": 0,
-    "description": "Atout de PNJ corrompu : aucun niveau chiffré fourni par le livre. Arbitrage du meneur nécessaire.",
-    "source": "Anarchy V2, p. 200 (P3-2, PDF 33)"
+    "essence": 0.0,
+    "description": "Double sa Force pour résister aux toxines ; RR 1 aux tests de Conjuration (épidémies) ou pouvoir Nuage pestilentiel. Réservé aux PNJ toxiques ; aucun niveau ni coût associé.",
+    "source": "Anarchy V2, p. 200 (P3-2, PDF 33)",
+    "price": "Non chiffré dans le livre"
   },
   {
     "id": "asset-151",
     "name": "Pollution",
     "category": "Trait (PNJ corrompu)",
     "level": "",
-    "essence": 0,
-    "description": "Atout de PNJ corrompu : aucun niveau chiffré fourni par le livre. Arbitrage du meneur nécessaire.",
-    "source": "Anarchy V2, p. 200 (P3-2, PDF 33)"
+    "essence": 0.0,
+    "description": "RR 1 aux tests d’Influence ; RR 1 aux tests de Conjuration (délétères, stérilités ou fanges) ou pouvoir Frappe toxique. Réservé aux PNJ toxiques ; aucun niveau ni coût associé.",
+    "source": "Anarchy V2, p. 200 (P3-2, PDF 33)",
+    "price": "Non chiffré dans le livre"
   },
   {
     "id": "asset-152",
     "name": "Frappe toxique",
     "category": "Pouvoir d’adepte (PNJ corrompu)",
     "level": "",
-    "essence": 0,
-    "description": "Atout de PNJ corrompu : aucun niveau chiffré fourni par le livre. Arbitrage du meneur nécessaire.",
-    "source": "Anarchy V2, p. 200 (P3-2, PDF 33)"
+    "essence": 0.0,
+    "description": "Les dommages à mains nues ignorent l’armure. Réservé aux PNJ toxiques ; aucun niveau ni coût associé.",
+    "source": "Anarchy V2, p. 200 (P3-2, PDF 33)",
+    "price": "Non chiffré dans le livre"
   },
   {
     "id": "asset-153",
     "name": "Nuage pestilentiel",
     "category": "Pouvoir d’adepte (PNJ corrompu)",
     "level": "",
-    "essence": 0,
-    "description": "Atout de PNJ corrompu : aucun niveau chiffré fourni par le livre. Arbitrage du meneur nécessaire.",
-    "source": "Anarchy V2, p. 200 (P3-2, PDF 33)"
+    "essence": 0.0,
+    "description": "Inflige une blessure grave toutes les (Force) narrations aux adversaires au contact. Réservé aux PNJ toxiques ; aucun niveau ni coût associé.",
+    "source": "Anarchy V2, p. 200 (P3-2, PDF 33)",
+    "price": "Non chiffré dans le livre"
   },
   {
     "id": "asset-154",
     "name": "Biofeedback",
-    "category": "Équipement",
-    "level": "",
-    "essence": 0,
-    "description": "Atout de PNJ corrompu : aucun niveau chiffré fourni par le livre. Arbitrage du meneur nécessaire.",
-    "source": "Anarchy V2, p. 210 (P4, PDF 10)"
+    "category": "Programme de cyberdeck",
+    "level": 1,
+    "essence": 0.0,
+    "description": "Effet narratif, niveau d’atout +1 : inflige des dommages de biofeedback au lieu de dommages matriciels. Amélioration intégrée à un cyberdeck.",
+    "source": "Anarchy V2, p. 210 (P4, PDF 10)",
+    "price": "Amélioration du cyberdeck",
+    "levelLabel": "+1"
   },
   {
     "id": "asset-155",
     "name": "Filtre de biofeedback",
-    "category": "Équipement",
-    "level": "",
-    "essence": 0,
-    "description": "Atout de PNJ corrompu : aucun niveau chiffré fourni par le livre. Arbitrage du meneur nécessaire.",
-    "source": "Anarchy V2, p. 210 (P4, PDF 10)"
+    "category": "Programme de cyberdeck",
+    "level": 1,
+    "essence": 0.0,
+    "description": "Armure +1 contre les dommages de biofeedback ; niveau d’atout +1. Amélioration intégrée à un cyberdeck.",
+    "source": "Anarchy V2, p. 210 (P4, PDF 10)",
+    "price": "Amélioration du cyberdeck",
+    "levelLabel": "+1"
   },
   {
     "id": "asset-156",
     "name": "Verrouillage de connexion",
-    "category": "Équipement",
-    "level": "",
-    "essence": 0,
-    "description": "Atout de PNJ corrompu : aucun niveau chiffré fourni par le livre. Arbitrage du meneur nécessaire.",
-    "source": "Anarchy V2, p. 210 (P4, PDF 10)"
+    "category": "Programme de cyberdeck",
+    "level": 1,
+    "essence": 0.0,
+    "description": "Effet narratif, niveau d’atout +1 : empêche une cible en RV de se déconnecter pendant un tour. Amélioration intégrée à un cyberdeck.",
+    "source": "Anarchy V2, p. 210 (P4, PDF 10)",
+    "price": "Amélioration du cyberdeck",
+    "levelLabel": "+1"
   },
   {
     "id": "asset-157",
     "name": "Erika MCD−6",
     "category": "Cyberdeck",
     "level": 3,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 210 (P4, PDF 10)"
+    "essence": 0.0,
+    "description": "Firewall 2 ; Attaque 1.",
+    "source": "Anarchy V2, p. 210 (P4, PDF 10)",
+    "price": "15 000 ¥",
+    "conditions": "Une interface neurale directe est également nécessaire pour utiliser Piratage. Moniteur matriciel : 2 cases légères, 1 grave, 1 incapacitante."
   },
   {
     "id": "asset-158",
     "name": "Spinrad Falcon",
     "category": "Cyberdeck",
     "level": 6,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 210 (P4, PDF 10)"
+    "essence": 0.0,
+    "description": "Firewall 2 ; Attaque 2 ; RR 1 aux tests de Piratage (force brute).",
+    "source": "Anarchy V2, p. 210 (P4, PDF 10)",
+    "price": "30 000 ¥",
+    "conditions": "Une interface neurale directe est également nécessaire pour utiliser Piratage. Moniteur matriciel : 2 cases légères, 1 grave, 1 incapacitante."
   },
   {
     "id": "asset-159",
     "name": "MCT 360",
     "category": "Cyberdeck",
     "level": 11,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 210 (P4, PDF 10)"
+    "essence": 0.0,
+    "description": "Firewall 3 ; Attaque 3 ; RR 1 aux tests de Piratage.",
+    "source": "Anarchy V2, p. 210 (P4, PDF 10)",
+    "price": "55 000 ¥",
+    "conditions": "Une interface neurale directe est également nécessaire pour utiliser Piratage. Moniteur matriciel : 2 cases légères, 1 grave, 1 incapacitante."
   },
   {
     "id": "asset-160",
     "name": "Renraku Kitsune",
     "category": "Cyberdeck",
     "level": 14,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 210 (P4, PDF 10)"
+    "essence": 0.0,
+    "description": "Firewall 4 ; Attaque 4 ; Filtre de biofeedback (Armure +1 contre le biofeedback) ; RR 1 aux tests de Piratage.",
+    "source": "Anarchy V2, p. 210 (P4, PDF 10)",
+    "price": "70 000 ¥",
+    "conditions": "Une interface neurale directe est également nécessaire pour utiliser Piratage. Moniteur matriciel : 2 cases légères, 1 grave, 1 incapacitante."
   },
   {
     "id": "asset-161",
     "name": "Shiawase Cyber−6",
     "category": "Cyberdeck",
     "level": 20,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 210 (P4, PDF 10)"
+    "essence": 0.0,
+    "description": "Firewall 5 ; Attaque 4 ; Biofeedback ; Filtre de biofeedback ; RR 1 aux tests de Piratage ; RR 1 aux tests de Piratage (force brute et backdoor).",
+    "source": "Anarchy V2, p. 210 (P4, PDF 10)",
+    "price": "100 000 ¥",
+    "conditions": "Une interface neurale directe est également nécessaire pour utiliser Piratage. Moniteur matriciel : 2 cases légères, 1 grave, 1 incapacitante."
   },
   {
     "id": "asset-162",
     "name": "Fairlight Excalibur",
     "category": "Cyberdeck",
     "level": 30,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 210 (P4, PDF 10)"
+    "essence": 0.0,
+    "description": "Firewall 5 ; Attaque 5 ; +1 case de dommage léger ; Filtre de biofeedback ; Biofeedback ; RR 1 aux tests de Piratage ; RR 2 aux tests de Piratage (force brute et backdoor) ; RR 1 aux tests de Piratage (cybercombat).",
+    "source": "Anarchy V2, p. 210 (P4, PDF 10)",
+    "price": "150 000 ¥",
+    "conditions": "Une interface neurale directe est également nécessaire pour utiliser Piratage. Moniteur matriciel : 2 cases légères, 1 grave, 1 incapacitante."
   },
   {
     "id": "asset-163",
     "name": "Essy Motors DroneMaster",
     "category": "Équipement",
     "level": 3,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 232 (P4, PDF 32)"
+    "essence": 0.0,
+    "description": "Firewall 1 ; contrôle 3 véhicules en siège du capitaine.",
+    "source": "Anarchy V2, p. 232 (P4, PDF 32)",
+    "price": "17 500 ¥"
   },
   {
     "id": "asset-164",
     "name": "Horizon Overseer",
     "category": "Équipement",
     "level": 5,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 232 (P4, PDF 32)"
+    "essence": 0.0,
+    "description": "Firewall 1 ; contrôle 3 véhicules en siège du capitaine ; RR 1 aux tests de Pilotage (spécialisation au choix).",
+    "source": "Anarchy V2, p. 232 (P4, PDF 32)",
+    "price": "27 500 ¥"
   },
   {
     "id": "asset-165",
     "name": "Proteus Poseidon",
     "category": "Équipement",
     "level": 8,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 232 (P4, PDF 32)"
+    "essence": 0.0,
+    "description": "Firewall 2 ; contrôle 5 véhicules en siège du capitaine ; RR 1 aux tests de Pilotage (spécialisation au choix).",
+    "source": "Anarchy V2, p. 232 (P4, PDF 32)",
+    "price": "42 500 ¥"
   },
   {
     "id": "asset-166",
     "name": "Ares Red Dog Series",
     "category": "Équipement",
     "level": 12,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 232 (P4, PDF 32)"
+    "essence": 0.0,
+    "description": "Firewall 3 ; contrôle 5 véhicules en siège du capitaine ; RR 1 aux tests de Pilotage.",
+    "source": "Anarchy V2, p. 232 (P4, PDF 32)",
+    "price": "62 500 ¥"
   },
   {
     "id": "asset-167",
     "name": "Moto tout-terrain",
     "category": "Véhicule",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 238 (P4, PDF 38)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 4 ; Maniabilité 3 ; Vitesse 5 ; Blindage 0. Une monture d’arme vers l’avant.",
+    "source": "Anarchy V2, p. 238 (P4, PDF 38)",
+    "price": "5 000 ¥"
   },
   {
     "id": "asset-168",
     "name": "Moto de combat / chopper",
     "category": "Véhicule",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 238 (P4, PDF 38)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 5 ; Maniabilité 2 ; Vitesse 5 ; Blindage 0. Une monture d’arme vers l’avant.",
+    "source": "Anarchy V2, p. 238 (P4, PDF 38)",
+    "price": "5 000 ¥"
   },
   {
     "id": "asset-169",
     "name": "Berline",
     "category": "Véhicule",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 238 (P4, PDF 38)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 6 ; Maniabilité 2 ; Vitesse 4 ; Blindage 0. Une monture d’arme vers l’avant.",
+    "source": "Anarchy V2, p. 238 (P4, PDF 38)",
+    "price": "5 000 ¥"
   },
   {
     "id": "asset-170",
     "name": "SUV / pick-up",
     "category": "Véhicule",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 238 (P4, PDF 38)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 7 ; Maniabilité 1 ; Vitesse 4 ; Blindage 0. Une monture d’arme vers l’avant.",
+    "source": "Anarchy V2, p. 238 (P4, PDF 38)",
+    "price": "5 000 ¥"
   },
   {
     "id": "asset-171",
     "name": "Van",
     "category": "Véhicule",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 238 (P4, PDF 38)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 8 ; Maniabilité 1 ; Vitesse 3 ; Blindage 0. Une monture d’arme vers l’avant.",
+    "source": "Anarchy V2, p. 238 (P4, PDF 38)",
+    "price": "5 000 ¥"
   },
   {
     "id": "asset-172",
     "name": "Bus / semi-remorque",
     "category": "Véhicule",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 238 (P4, PDF 38)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 10 ; Maniabilité 0 ; Vitesse 2 ; Blindage 0. Une monture d’arme vers l’avant.",
+    "source": "Anarchy V2, p. 238 (P4, PDF 38)",
+    "price": "5 000 ¥"
   },
   {
     "id": "asset-173",
     "name": "Jet-ski",
     "category": "Véhicule",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 238 (P4, PDF 38)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 5 ; Maniabilité 5 ; Vitesse 2 ; Blindage 0. Une monture d’arme vers l’avant.",
+    "source": "Anarchy V2, p. 238 (P4, PDF 38)",
+    "price": "5 000 ¥"
   },
   {
     "id": "asset-174",
     "name": "Bateau pneumatique semi-rigide",
     "category": "Véhicule",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 238 (P4, PDF 38)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 5 ; Maniabilité 4 ; Vitesse 3 ; Blindage 0. Une monture d’arme vers l’avant.",
+    "source": "Anarchy V2, p. 238 (P4, PDF 38)",
+    "price": "5 000 ¥"
   },
   {
     "id": "asset-175",
     "name": "Moto Horizon-Doble Revolution",
     "category": "Véhicule",
     "level": 2,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 238 (P4, PDF 38)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 5 ; Maniabilité 2 ; Vitesse 6 ; Blindage 0. Une monture d’arme vers l’avant.",
+    "source": "Anarchy V2, p. 238 (P4, PDF 38)",
+    "price": "10 000 ¥"
   },
   {
     "id": "asset-176",
     "name": "Harley-Davidson Centaur",
     "category": "Véhicule",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 238 (P4, PDF 38)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 5 ; Maniabilité 2 ; Vitesse 5 ; Blindage 3. Une monture d’arme vers l’avant.",
+    "source": "Anarchy V2, p. 238 (P4, PDF 38)",
+    "price": "20 000 ¥"
   },
   {
     "id": "asset-177",
     "name": "Mitsubishi Nightsky",
     "category": "Véhicule",
     "level": 9,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 238 (P4, PDF 38)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 7 ; Maniabilité 2 ; Vitesse 4 ; Blindage 5 ; RR 1 aux tests d’Influence en présence de la voiture. Une monture d’arme vers l’avant.",
+    "source": "Anarchy V2, p. 238 (P4, PDF 38)",
+    "price": "45 000 ¥"
   },
   {
     "id": "asset-178",
     "name": "Microdrone",
     "category": "Drone",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 241 (P4, PDF 41)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 0 ; Maniabilité 10 ; Vitesse 0 (volant 1) ; Blindage 0 ; aucune monture d’arme ; avantage en Furtivité (discrétion physique).",
+    "source": "Anarchy V2, p. 241 (P4, PDF 41)",
+    "price": "5 000 ¥"
   },
   {
     "id": "asset-179",
     "name": "Petit drone",
     "category": "Drone",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 241 (P4, PDF 41)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 1 ; Maniabilité 9 ; Vitesse 2 (volant 4) ; Blindage 0 ; monture avant pour mitraillette ou plus petit. Arme achetée séparément.",
+    "source": "Anarchy V2, p. 241 (P4, PDF 41)",
+    "price": "5 000 ¥"
   },
   {
     "id": "asset-180",
     "name": "Drone moyen",
     "category": "Drone",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 241 (P4, PDF 41)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 2 ; Maniabilité 7 ; Vitesse 3 (volant 6) ; Blindage 0 ; monture avant pour fusil d’assaut ou plus petit. Arme achetée séparément.",
+    "source": "Anarchy V2, p. 241 (P4, PDF 41)",
+    "price": "5 000 ¥"
   },
   {
     "id": "asset-181",
     "name": "Grand drone",
     "category": "Drone",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 241 (P4, PDF 41)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 4 ; Maniabilité 4 ; Vitesse 4 (volant 8) ; Blindage 0 ; une monture d’arme tournée vers l’avant, arme achetée séparément.",
+    "source": "Anarchy V2, p. 241 (P4, PDF 41)",
+    "price": "5 000 ¥"
   },
   {
     "id": "asset-182",
     "name": "Shiawase Kanmushi",
     "category": "Drone",
     "level": 3,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 241 (P4, PDF 41)"
+    "essence": 0.0,
+    "description": "Autopilote 8 ; Structure 0 ; Maniabilité 10 ; Vitesse 0 ; Blindage 0 ; avantage en Furtivité (discrétion physique) ; aucune monture d’arme.",
+    "source": "Anarchy V2, p. 241 (P4, PDF 41)",
+    "price": "15 000 ¥"
   },
   {
     "id": "asset-183",
     "name": "MCT Gnat",
     "category": "Drone",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 241 (P4, PDF 41)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 0 ; Maniabilité 10 ; Vitesse 1 ; Blindage 0 ; volant ; RR 1 aux tests de Furtivité (discrétion physique) ; avantage en Furtivité (discrétion physique) ; aucune monture d’arme.",
+    "source": "Anarchy V2, p. 241 (P4, PDF 41)",
+    "price": "20 000 ¥"
   },
   {
     "id": "asset-184",
     "name": "Cyberspace Design Quadrotor",
     "category": "Drone",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 241 (P4, PDF 41)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 1 ; Maniabilité 9 ; Vitesse 4 ; Blindage 0 ; volant ; monture avant pour mitraillette ou plus petit ; RR 1 aux tests de Perception (physique). Arme achetée séparément.",
+    "source": "Anarchy V2, p. 241 (P4, PDF 41)",
+    "price": "20 000 ¥"
   },
   {
     "id": "asset-185",
     "name": "Chrysler-Nissan Pursuit V",
     "category": "Drone",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 241 (P4, PDF 41)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 1 ; Maniabilité 9 ; Vitesse 5 ; Blindage 0 ; monture avant pour mitraillette ou plus petit. Arme achetée séparément.",
+    "source": "Anarchy V2, p. 241 (P4, PDF 41)",
+    "price": "20 000 ¥"
   },
   {
     "id": "asset-186",
     "name": "GM-Nissan Doberman",
     "category": "Drone",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 241 (P4, PDF 41)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 2 ; Maniabilité 7 ; Vitesse 3 ; Blindage 2 ; tourelle pour fusil d’assaut ou plus petit. Arme achetée séparément.",
+    "source": "Anarchy V2, p. 241 (P4, PDF 41)",
+    "price": "20 000 ¥"
   },
   {
     "id": "asset-187",
     "name": "MCT-Nissan Roto-drone",
     "category": "Drone",
     "level": 5,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 241 (P4, PDF 41)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 2 ; Maniabilité 7 ; Vitesse 6 ; Blindage 2 ; volant ; 2 montures avant pour fusil d’assaut ou plus petit. Armes achetées séparément.",
+    "source": "Anarchy V2, p. 241 (P4, PDF 41)",
+    "price": "25 000 ¥"
   },
   {
     "id": "asset-188",
     "name": "Ares-DocWagon First Responder",
     "category": "Drone",
     "level": 9,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 241 (P4, PDF 41)"
+    "essence": 0.0,
+    "description": "Autopilote 10 ; Structure 2 ; Maniabilité 7 ; Vitesse 3 ; Blindage 2 ; bras articulé ; module Valkyrie (médikit autonome).",
+    "source": "Anarchy V2, p. 241 (P4, PDF 41)",
+    "price": "45 000 ¥"
   },
   {
     "id": "asset-189",
     "name": "Steel Lynx",
     "category": "Drone",
     "level": 7,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 241 (P4, PDF 41)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 4 ; Maniabilité 4 ; Vitesse 4 ; Blindage 4 ; tourelle accueillant 2 montures d’armes, armes achetées séparément.",
+    "source": "Anarchy V2, p. 241 (P4, PDF 41)",
+    "price": "35 000 ¥"
   },
   {
     "id": "asset-190",
     "name": "Trait à personnaliser",
     "category": "Modèle à personnaliser",
     "level": 0,
-    "essence": 0,
-    "description": "Modèle de construction : compléter les effets et ajuster le niveau avec le meneur. Le niveau du trait dépend notamment de sa place parmi les traits du personnage.",
-    "source": "Anarchy V2, p. 58–61 (P1, PDF 60–63)"
+    "essence": 0.0,
+    "description": "Premier trait : niveau de base 0 ; traits suivants : niveau de base 3. Le niveau initial fournit un effet narratif. Choix à la création ou après un événement majeur avec accord du meneur ; amélioration possible en cours de jeu.",
+    "source": "Anarchy V2, p. 58–63 (P1, PDF 60–65)",
+    "price": "Selon les effets choisis"
   },
   {
     "id": "asset-191",
     "name": "Éveillé",
     "category": "Modèle à personnaliser",
     "level": 0,
-    "essence": 0,
-    "description": "Modèle de construction : compléter les effets et ajuster le niveau avec le meneur. Le niveau du trait dépend notamment de sa place parmi les traits du personnage.",
-    "source": "Anarchy V2, p. 58–61 (P1, PDF 60–63)"
+    "essence": 0.0,
+    "description": "Base 0, puis additionner les capacités : perception astrale +1 ; perception et projection astrale +2 ; Sorcellerie +1 ; Conjuration +2 ; Adepte +1. Pas d’améliorations supplémentaires ; des capacités peuvent être ajoutées à la progression. La perception seule et la perception avec projection sont deux options alternatives.",
+    "source": "Anarchy V2, p. 58–63 (P1, PDF 60–65)",
+    "price": "Selon les capacités choisies"
   },
   {
     "id": "asset-192",
     "name": "Cyberware à personnaliser",
     "category": "Modèle à personnaliser",
     "level": 1,
-    "essence": 1,
-    "description": "Modèle de construction : compléter les effets et ajuster le niveau avec le meneur. Le niveau du trait dépend notamment de sa place parmi les traits du personnage.",
-    "source": "Anarchy V2, p. 58–61 (P1, PDF 60–63)"
+    "essence": 1.0,
+    "description": "Niveau de base 1 ; perte d’Essence 1 par implant ; le niveau initial fournit un effet narratif. Ajouter le coût en niveaux des améliorations choisies, p. 61–63.",
+    "source": "Anarchy V2, p. 58–63 (P1, PDF 60–65)",
+    "price": "Selon les effets choisis"
   },
   {
     "id": "asset-193",
@@ -1751,62 +2006,69 @@ export const baseAssets = [
     "category": "Modèle à personnaliser",
     "level": 2,
     "essence": 0.5,
-    "description": "Modèle de construction : compléter les effets et ajuster le niveau avec le meneur. Le niveau du trait dépend notamment de sa place parmi les traits du personnage.",
-    "source": "Anarchy V2, p. 58–61 (P1, PDF 60–63)"
+    "description": "Niveau de base 2 ; perte d’Essence 0,5 par implant ; le niveau initial fournit un effet narratif. Ajouter le coût en niveaux des améliorations choisies, p. 61–63.",
+    "source": "Anarchy V2, p. 58–63 (P1, PDF 60–65)",
+    "price": "Selon les effets choisis"
   },
   {
     "id": "asset-194",
     "name": "Pouvoir d’adepte à personnaliser",
     "category": "Modèle à personnaliser",
     "level": 1,
-    "essence": 0,
-    "description": "Modèle de construction : compléter les effets et ajuster le niveau avec le meneur. Le niveau du trait dépend notamment de sa place parmi les traits du personnage.",
-    "source": "Anarchy V2, p. 58–61 (P1, PDF 60–63)"
+    "essence": 0.0,
+    "description": "Niveau de base 1 ; effet narratif initial. Nécessite Éveillé avec l’option Adepte. Ajouter le coût en niveaux des améliorations choisies, p. 61–63.",
+    "source": "Anarchy V2, p. 58–63 (P1, PDF 60–65)",
+    "price": "Selon les effets choisis"
   },
   {
     "id": "asset-195",
     "name": "Équipement à personnaliser",
     "category": "Modèle à personnaliser",
     "level": 0,
-    "essence": 0,
-    "description": "Modèle de construction : compléter les effets et ajuster le niveau avec le meneur. Le niveau du trait dépend notamment de sa place parmi les traits du personnage.",
-    "source": "Anarchy V2, p. 58–61 (P1, PDF 60–63)"
+    "essence": 0.0,
+    "description": "Niveau de base 0 ; convertir un équipement acheté normalement en atout ne procure pas de bénéfice supplémentaire. Ajouter les effets choisis selon les coûts des p. 61–63 ; l’équipement, l’arme ou l’armure est acheté séparément.",
+    "source": "Anarchy V2, p. 58–63 (P1, PDF 60–65)",
+    "price": "Équipement acheté à part"
   },
   {
     "id": "asset-196",
     "name": "Cyberdeck à personnaliser",
     "category": "Modèle à personnaliser",
     "level": 1,
-    "essence": 0,
-    "description": "Modèle de construction : compléter les effets et ajuster le niveau avec le meneur. Le niveau du trait dépend notamment de sa place parmi les traits du personnage.",
-    "source": "Anarchy V2, p. 58–61 (P1, PDF 60–63)"
+    "essence": 0.0,
+    "description": "Niveau de base 1 ; Firewall 1 ; Attaque 0. Firewall et Attaque s’améliorent de +1 par niveau, maximum 5 chacun. Nécessite aussi une interface neurale directe pour pirater.",
+    "source": "Anarchy V2, p. 58–63 (P1, PDF 60–65)",
+    "price": "Selon les effets choisis"
   },
   {
     "id": "asset-197",
     "name": "Véhicule à personnaliser",
     "category": "Modèle à personnaliser",
     "level": 1,
-    "essence": 0,
-    "description": "Modèle de construction : compléter les effets et ajuster le niveau avec le meneur. Le niveau du trait dépend notamment de sa place parmi les traits du personnage.",
-    "source": "Anarchy V2, p. 58–61 (P1, PDF 60–63)"
+    "essence": 0.0,
+    "description": "Niveau de base 1 ; Autopilote 6 ; Blindage 0 ; Structure + Maniabilité + Vitesse = 12. Choisir le châssis adapté, p. 238 ; une monture d’arme vers l’avant sauf exception ; vitesses de vol doublées.",
+    "source": "Anarchy V2, p. 58–63 (P1, PDF 60–65)",
+    "price": "Selon les effets choisis"
   },
   {
     "id": "asset-198",
     "name": "Drone à personnaliser",
     "category": "Modèle à personnaliser",
     "level": 1,
-    "essence": 0,
-    "description": "Modèle de construction : compléter les effets et ajuster le niveau avec le meneur. Le niveau du trait dépend notamment de sa place parmi les traits du personnage.",
-    "source": "Anarchy V2, p. 58–61 (P1, PDF 60–63)"
+    "essence": 0.0,
+    "description": "Niveau de base 1 ; Autopilote 6 ; Blindage 0 ; Structure + Maniabilité + Vitesse = 12, ou 10 pour un microdrone avec avantage en Furtivité. Choisir le châssis adapté, p. 241 ; vitesses de vol doublées ; une monture d’arme vers l’avant sauf exception.",
+    "source": "Anarchy V2, p. 58–63 (P1, PDF 60–65)",
+    "price": "Selon les effets choisis"
   },
   {
     "id": "asset-199",
     "name": "Contact à personnaliser",
     "category": "Modèle à personnaliser",
     "level": 0,
-    "essence": 0,
-    "description": "Modèle de construction : compléter les effets et ajuster le niveau avec le meneur. Le niveau du trait dépend notamment de sa place parmi les traits du personnage.",
-    "source": "Anarchy V2, p. 58–61 (P1, PDF 60–63)"
+    "essence": 0.0,
+    "description": "Niveau de base 0 : contact nommé, sans bonus mécanique. Ajouter les améliorations choisies ; RR 1 pour une spécialisation coûte +2 niveaux, RR 1 pour la compétence Réseau coûte +5 niveaux. Une RR peut représenter loyauté et influence.",
+    "source": "Anarchy V2, p. 58–63 (P1, PDF 60–65)",
+    "price": "Selon les effets choisis"
   },
   {
     "id": "asset-200",
@@ -1814,52 +2076,59 @@ export const baseAssets = [
     "category": "Cyberware",
     "level": 6,
     "essence": 1.0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)"
+    "description": "Griffes d’escalade rétractables et lance-grappin ; RR 2 aux tests d’Athlétisme (escalade).",
+    "source": "Anarchy V2, p. 158 (P3-1, PDF 27)",
+    "price": "30 000 ¥"
   },
   {
     "id": "asset-201",
     "name": "Focus de manipulation",
     "category": "Focus",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)"
+    "essence": 0.0,
+    "description": "RR 2 aux tests de Sorcellerie (sorts de manipulation).",
+    "source": "Anarchy V2, p. 189 (P3-2, PDF 22)",
+    "price": "22 500 ¥",
+    "conditions": "Réservé aux Éveillés. Le focus doit être lié et porté en contact direct et permanent pour être activé ; un focus actif est dual."
   },
   {
     "id": "asset-202",
     "name": "Moto de course",
     "category": "Véhicule",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 238 (P4, PDF 38)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 4 ; Maniabilité 2 ; Vitesse 6 ; Blindage 0. Une monture d’arme vers l’avant.",
+    "source": "Anarchy V2, p. 238 (P4, PDF 38)",
+    "price": "5 000 ¥"
   },
   {
     "id": "asset-203",
     "name": "Voiture de sport",
     "category": "Véhicule",
     "level": 1,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 238 (P4, PDF 38)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 5 ; Maniabilité 2 ; Vitesse 5 ; Blindage 0. Une monture d’arme vers l’avant.",
+    "source": "Anarchy V2, p. 238 (P4, PDF 38)",
+    "price": "5 000 ¥"
   },
   {
     "id": "asset-204",
     "name": "Artemis Industries Nightwing",
     "category": "Véhicule",
     "level": 4,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 238 (P4, PDF 38)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 3 ; Maniabilité 7 ; Vitesse 4 ; Blindage 0 ; volant ; RR 1 aux tests de Furtivité (discrétion physique). Une monture d’arme vers l’avant.",
+    "source": "Anarchy V2, p. 238 (P4, PDF 38)",
+    "price": "20 000 ¥"
   },
   {
     "id": "asset-205",
     "name": "Lockheed Optic-X2",
     "category": "Drone",
     "level": 6,
-    "essence": 0,
-    "description": "Valeurs de référence à adapter aux améliorations choisies. Consulter la page source pour les effets et conditions.",
-    "source": "Anarchy V2, p. 241 (P4, PDF 41)"
+    "essence": 0.0,
+    "description": "Autopilote 6 ; Structure 1 ; Maniabilité 9 ; Vitesse 4 ; Blindage 0 ; volant ; monture avant pour mitraillette ; RR 1 aux tests de Furtivité (discrétion physique) et de Perception (physique). Arme achetée séparément.",
+    "source": "Anarchy V2, p. 241 (P4, PDF 41)",
+    "price": "30 000 ¥"
   }
 ];

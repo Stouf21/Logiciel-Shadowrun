@@ -1,6 +1,6 @@
-import {validateWorld,UNKNOWN} from './world-schema.js?v=0.12.0';
-import {seedRecords} from './world-data.js?v=0.12.0';
-import {normalize,relationIsSecret} from './world.js?v=0.12.0';
+import {validateWorld,UNKNOWN} from './world-schema.js?v=0.13.0';
+import {seedRecords} from './world-data.js?v=0.13.0';
+import {normalize,relationIsSecret} from './world.js?v=0.13.0';
 
 const scenarioFor=(state,id)=>{const r=state.world.records.find(r=>r.id===id&&r.kind==='scenario');if(!r)throw Error('Scénario introuvable.');return r;};
 const connects=(r,a,b)=>(r.from===a&&r.to===b)||(r.from===b&&r.to===a);
@@ -45,6 +45,20 @@ export function moveScenarioEvent(state,scenarioId,eventId,direction,{includeSec
  const neighbor=visible[index+direction];if(!neighbor)return state;
  const order=scenarioMembers(state.world,scenarioId,'event',{includeSecrets:true}).map(r=>r.id),a=order.indexOf(eventId),b=order.indexOf(neighbor.id);
  [order[a],order[b]]=[order[b],order[a]];
+ return withWorld(state,{records:state.world.records.map(r=>r.id===scenarioId?{...r,timelineOrder:order}:r)});
+}
+
+export function placeScenarioEvent(state,scenarioId,eventId,targetId,edge='before',{includeSecrets=false}={}){
+ scenarioFor(state,scenarioId);if(!['before','after'].includes(edge))throw Error('Position de dépôt invalide.');
+ const visible=scenarioMembers(state.world,scenarioId,'event',{includeSecrets}).map(r=>r.id);
+ if(!visible.includes(eventId)||!visible.includes(targetId))throw Error('Choisissez deux événements visibles de cette frise.');
+ if(eventId===targetId)return state;
+ const reordered=visible.filter(id=>id!==eventId),index=reordered.indexOf(targetId)+(edge==='after'?1:0);
+ reordered.splice(index,0,eventId);
+ if(reordered.every((id,i)=>id===visible[i]))return state;
+ const visibleIds=new Set(visible);let cursor=0;
+ // Les événements masqués gardent leurs emplacements ; seul l’ordre visible change.
+ const order=scenarioMembers(state.world,scenarioId,'event',{includeSecrets:true}).map(r=>visibleIds.has(r.id)?reordered[cursor++]:r.id);
  return withWorld(state,{records:state.world.records.map(r=>r.id===scenarioId?{...r,timelineOrder:order}:r)});
 }
 
