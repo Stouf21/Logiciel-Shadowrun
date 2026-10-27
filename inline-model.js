@@ -1,13 +1,14 @@
-import {unclassifiedCharacter,metatypeOptions} from './character-options.js?v=0.16.0';
-import {numberFields,textFields,structuredTextFields,woundLabels,attributeFields} from './sheet.js?v=0.16.0';
-import {getCharacterCatalogs,assetReferenceText} from './catalog.js?v=0.16.0';
-import {characterEntryForRecord,upsertWorldRecord} from './world.js?v=0.16.0';
-import {worldFields,discoveryStates,authorities} from './world-schema.js?v=0.16.0';
-import {groups,validateCampaign} from './campaign.js?v=0.16.0';
+import {sheetSlots} from './sheet-layout.js?v=0.17.0';
+import {unclassifiedCharacter,metatypeOptions} from './character-options.js?v=0.17.0';
+import {numberFields,textFields,structuredTextFields,woundLabels,attributeFields} from './sheet.js?v=0.17.0';
+import {getCharacterCatalogs,assetReferenceText} from './catalog.js?v=0.17.0';
+import {characterEntryForRecord,upsertWorldRecord} from './world.js?v=0.17.0';
+import {worldFields,discoveryStates,authorities} from './world-schema.js?v=0.17.0';
+import {groups,validateCampaign} from './campaign.js?v=0.17.0';
 const rowKeys={skillRows:['catalogId','rating','attribute','rr','specialization','specialized'],assetRows:['catalogId','name','category','notes','source','level','essence'],weaponRows:['name','type'],woundRows:['label','light','serious','incap','rr','status'],vehicleRows:['name','type','auto','structure','handling','speed','armor','light','serious','incap','notes']};
 export const deckKeys=['name','attack','firewall','light','serious','incap','minRisk','penalty','notes'];
 export const readPath=(record,path)=>path.split('.').reduce((value,key)=>value?.[key],record);
-function blankRows(key){return key==='woundRows'?woundLabels.map(label=>({label,light:'',serious:'',incap:'',rr:'',status:''})):Array.from({length:key==='vehicleRows'?3:7},()=>Object.fromEntries(rowKeys[key].map(k=>[k,''])));}
+function blankRows(key){return key==='woundRows'?woundLabels.map(label=>({label,light:'',serious:'',incap:'',rr:'',status:''})):Array.from({length:key==='vehicleRows'?sheetSlots.vehicles:sheetSlots.weapons},()=>Object.fromEntries(rowKeys[key].map(k=>[k,''])));}
 export function characterForInline(state,{entryId,worldId}){
  const record=state.world.records.find(r=>r.id===worldId&&r.kind==='character');const existing=state.entries.find(e=>e.id===(record?.gameEntryId??entryId));
  if(existing&&!groups.characters.includes(existing.category))throw Error('Cette entrée n’est pas un personnage.');
@@ -27,7 +28,7 @@ export function updateCharacterInline(state,target,path,value,category){
  if(unbound){next.id='runner-'+crypto.randomUUID();next.category=path==='category'?value:category??unclassifiedCharacter;if(!groups.characters.includes(next.category))throw Error('Catégorie de personnage invalide.');}
  next.profile??={};const parts=path.split('.');
  if(parts[1]==='deck')next.profile.deck??=Object.fromEntries(deckKeys.map(k=>[k,'']));
- if(rowKeys[parts[1]]){const key=parts[1],i=Number(parts[2]);if(!next.profile[key]){if(['skillRows','assetRows'].includes(key))throw Error('Ajoutez d’abord cette ligne à la fiche.');next.profile[key]=blankRows(key);}if(!next.profile[key][i])throw Error('Ligne de fiche introuvable.');}
+ if(rowKeys[parts[1]]){const key=parts[1],i=Number(parts[2]);if(!next.profile[key]){if(['skillRows','assetRows'].includes(key))throw Error('Ajoutez d’abord cette ligne à la fiche.');next.profile[key]=blankRows(key);}if(!next.profile[key][i]&&['weaponRows','vehicleRows','woundRows'].includes(key)&&i<({weaponRows:sheetSlots.weapons,vehicleRows:sheetSlots.vehicles,woundRows:sheetSlots.wounds}[key])){const empty=blankRows(key);while(next.profile[key].length<=i)next.profile[key].push(empty[next.profile[key].length]);}if(!next.profile[key][i])throw Error('Ligne de fiche introuvable.');}
  let parent=next;for(const key of parts.slice(0,-1))parent=parent[key];parent[parts.at(-1)]=value;
  if(parts.at(-1)==='catalogId'){
   const kind=parts[1]==='skillRows'?'skills':'assets',item=getCharacterCatalogs(state)[kind].find(x=>x.id===value);if(!item)throw Error('Référence applicable au personnage introuvable.');parent.name=item.name;

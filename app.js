@@ -1,24 +1,25 @@
-import {renderGlobalSearch} from './global-search-ui.js?v=0.16.0';
-import {unclassifiedCharacter} from './character-options.js?v=0.16.0';
-import {entryField,mountEntryInline} from './entry-inline.js?v=0.16.0';
-import {mountCharacterInline} from './character-inline.js?v=0.16.0';
-import {deleteScenario} from './scenarios.js?v=0.16.0';
-import {mergeWorld,characterEntryForRecord} from './world.js?v=0.16.0';
-import {worldKinds,makeWorldRecord} from './world-schema.js?v=0.16.0';
-import {renderDashboard,renderWorldList,renderWorldRecord,openWorldEditor} from './world-ui.js?v=0.16.0';
-import {secretSection,toggleSecret} from './secrets-ui.js?v=0.16.0';
-import {renderCorporations} from './corporations-ui.js?v=0.16.0';
-import {renderDijonMap} from './dijon-map.js?v=0.16.0';
-import {renderRules} from './rules-ui.js?v=0.16.0';
-import {validateProfile} from './sheet.js?v=0.16.0';
-import {references} from './references.js?v=0.16.0';
-import {mountQuickDice,renderDiceSettings} from './dice-ui.js?v=0.16.0';
-import {escape,toggleSearchDisclosure} from './ui.js?v=0.16.0';
-import {groups,validateCampaign} from './campaign.js?v=0.16.0';
-import {getCatalogs,getCharacterCatalogs} from './catalog.js?v=0.16.0';
-import {renderCatalogLibrary,showCustomEditor} from './catalog-ui.js?v=0.16.0';
-import {mountCharacterEditor} from './character-editor.js?v=0.16.0';
-import {characterSheet} from './character-sheet.js?v=0.16.0';
+import {mountSheetView} from './sheet-view.js?v=0.17.0';
+import {renderGlobalSearch} from './global-search-ui.js?v=0.17.0';
+import {unclassifiedCharacter} from './character-options.js?v=0.17.0';
+import {entryField,mountEntryInline} from './entry-inline.js?v=0.17.0';
+import {mountCharacterInline} from './character-inline.js?v=0.17.0';
+import {deleteScenario} from './scenarios.js?v=0.17.0';
+import {mergeWorld,characterEntryForRecord} from './world.js?v=0.17.0';
+import {worldKinds,makeWorldRecord} from './world-schema.js?v=0.17.0';
+import {renderDashboard,renderWorldList,renderWorldRecord,openWorldEditor} from './world-ui.js?v=0.17.0';
+import {secretSection,toggleSecret} from './secrets-ui.js?v=0.17.0';
+import {renderCorporations} from './corporations-ui.js?v=0.17.0';
+import {renderDijonMap} from './dijon-map.js?v=0.17.0';
+import {renderRules} from './rules-ui.js?v=0.17.0';
+import {validateProfile} from './sheet.js?v=0.17.0';
+import {references} from './references.js?v=0.17.0';
+import {mountQuickDice,renderDiceSettings} from './dice-ui.js?v=0.17.0';
+import {escape,toggleSearchDisclosure} from './ui.js?v=0.17.0';
+import {groups,validateCampaign} from './campaign.js?v=0.17.0';
+import {getCatalogs,getCharacterCatalogs} from './catalog.js?v=0.17.0';
+import {renderCatalogLibrary,showCustomEditor} from './catalog-ui.js?v=0.17.0';
+import {mountCharacterEditor} from './character-editor.js?v=0.17.0';
+import {characterSheet} from './character-sheet.js?v=0.17.0';
 const $=s=>document.querySelector(s),key='shadowrun-table-v1';
 const icons={characters:'<circle cx="9" cy="8" r="3"/><path d="M3 20v-3a6 6 0 0 1 12 0v3M16 5a3 3 0 0 1 0 6M18 14a5 5 0 0 1 3 4v2"/>',catalog:'<path d="m12 3 9 5-9 5-9-5 9-5ZM3 8v9l9 5 9-5V8M12 13v9"/>',rules:'<path d="M12 5c-3-2-6-2-10-1v15c4-1 7-1 10 1 3-2 6-2 10-1V4c-4-1-7-1-10 1Zm0 0v15"/>',dice:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h.01M17 7h.01M12 12h.01M7 17h.01M17 17h.01" stroke-width="3" stroke-linecap="round"/>',map:'<path d="m3 5 6-2 6 3 6-2v15l-6 2-6-3-6 2V5ZM9 3v15M15 6v15"/>',references:'<path d="M4 4h5v17H4zM10 4h4v17h-4zM15 5l4-1 4 16-4 1z"/>'};
 icons.library=icons.rules;icons.settings='<circle cx="12" cy="12" r="4"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/>';
@@ -27,6 +28,7 @@ icons.dashboard=icons.catalog;icons.organizations=icons.corporations;icons.place
 const worldTabs={scenarios:'scenario'};
 const recordTabs={character:'characters',corporation:'organizations',faction:'organizations',zone:'map',place:'map',scenario:'scenarios',event:'world-search',clue:'world-search',secret:'world-search'};
 const tabs={dashboard:'Tableau de bord',characters:'Personnages',organizations:'Corporations & factions',scenarios:'Scénarios',map:'Carte','world-search':'Recherche globale',library:'Compétences & atouts',catalog:'Catalogue',rules:'Règles & références',references:'Bibliothèque & sources',settings:'Paramètres'};
+const sheetViewPrefs={zoom:100};
 const globalSearchPrefs={tab:'all',query:'',includeSecrets:false};
 let organizationSection='corporation',mapCity=null,mapSection='map',disposeMap=null,disposeWorld=null,disposeCharacter=null,disposeCorp=null,disposeEntries=null;
 let state={entries:[],tokens:[],customSkills:[],customAssets:[]},tab='dashboard',editing=null,selected=null,viewing=null,readProfile=null,unreadableBackup=null,corporationViewing=null,worldViewing=null,worldReveal=false,gameForWorld=null;
@@ -52,7 +54,7 @@ function render(){
  const savedEntry=state.entries.find(e=>e.id===viewing&&groups.characters.includes(e.category));
  const entry=savedEntry??(dossier?characterEntryForRecord(state,dossier):null);
  document.body.classList.toggle('viewing-character',!!entry);$('#title').textContent=entry?'Fiche de personnage':tabs[tab];
- if(entry){$('#content').innerHTML=characterSheet(entry,{worldId:dossier?.id,unbound:!savedEntry});disposeCharacter=mountCharacterInline($('#content'),{getState:()=>state,target:{entryId:entry.id,worldId:dossier?.id},onSave:persist,onEntry:id=>viewing=id,onRefresh:render});return;}
+ if(entry){$('#content').innerHTML=characterSheet(entry,{worldId:dossier?.id,unbound:!savedEntry,portraitUrl:dossier?.portraitUrl??''});mountSheetView($('#content'),sheetViewPrefs,dossier?.id??entry.id);disposeCharacter=mountCharacterInline($('#content'),{getState:()=>state,target:{entryId:entry.id,worldId:dossier?.id},onSave:persist,onEntry:id=>viewing=id,onRefresh:render});return;}
  const q=$('#search').value.trim();
  if(tab==='world-search'||q){
   $('#title').textContent='Recherche globale';if(q)globalSearchPrefs.query=$('#search').value;

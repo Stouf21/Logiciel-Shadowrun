@@ -1,12 +1,12 @@
-import {metatypeOptions} from './character-options.js?v=0.16.0';
-import {inlineField,mountInlineEditing} from './inline-edit.js?v=0.16.0';
-import {updateWorldInline,worldInlineSpec} from './inline-model.js?v=0.16.0';
-import {renderBuildingPanel} from './buildings-ui.js?v=0.16.0';
-import {escape,searchDisclosure} from './ui.js?v=0.16.0';
-import {secretSection} from './secrets-ui.js?v=0.16.0';
-import {renderScenarioWorkspace} from './scenarios-ui.js?v=0.16.0';
-import {worldKinds,worldFields,UNKNOWN,discoveryStates,visibilities,visibilityLabels,authorities,makeWorldRecord,validateWorld} from './world-schema.js?v=0.16.0';
-import {worldSearch,relatedRecords,relationIsSecret,worldDiagnostics,upsertWorldRecord} from './world.js?v=0.16.0';
+import {metatypeOptions} from './character-options.js?v=0.17.0';
+import {inlineField,mountInlineEditing} from './inline-edit.js?v=0.17.0';
+import {updateWorldInline,worldInlineSpec} from './inline-model.js?v=0.17.0';
+import {renderBuildingPanel} from './buildings-ui.js?v=0.17.0';
+import {escape,searchDisclosure} from './ui.js?v=0.17.0';
+import {secretSection} from './secrets-ui.js?v=0.17.0';
+import {renderScenarioWorkspace} from './scenarios-ui.js?v=0.17.0';
+import {worldKinds,worldFields,UNKNOWN,discoveryStates,visibilities,visibilityLabels,authorities,makeWorldRecord,validateWorld} from './world-schema.js?v=0.17.0';
+import {worldSearch,relatedRecords,relationIsSecret,worldDiagnostics,upsertWorldRecord} from './world.js?v=0.17.0';
 const text=value=>escape(value===undefined||value===''?UNKNOWN:value);
 export const worldLink=(r,label)=>`<button class="world-link" ${r.kind==='character'?'data-open-character':'data-open-world'}="${escape(r.id)}">${escape(label??r.name)}</button>`;
 export function worldCard(hit){

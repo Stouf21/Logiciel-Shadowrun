@@ -1,8 +1,8 @@
-import {globalSearch,searchTabs} from './global-search.js?v=0.16.0';
-import {escape,searchDisclosure} from './ui.js?v=0.16.0';
-import {worldCard,renderWorldList} from './world-ui.js?v=0.16.0';
-import {corporationCard} from './corporations-ui.js?v=0.16.0';
-import {ruleSource} from './rules-data.js?v=0.16.0';
+import {globalSearch,searchTabs} from './global-search.js?v=0.17.0';
+import {escape,searchDisclosure} from './ui.js?v=0.17.0';
+import {worldCard,renderWorldList} from './world-ui.js?v=0.17.0';
+import {corporationCard} from './corporations-ui.js?v=0.17.0';
+import {ruleSource} from './rules-data.js?v=0.17.0';
 export function renderGlobalSearch(container,state,prefs,{entryCard,onResultsChanged,onQuery,getState}={}){
  if(!searchTabs.some(([id])=>id===prefs.tab))prefs.tab='all';prefs.query??='';prefs.includeSecrets??=false;
  const $=selector=>container.querySelector(selector);let worldPanel=false;

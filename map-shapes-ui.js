@@ -1,9 +1,9 @@
-import {escape} from './ui.js?v=0.16.0';
-import {buildingTypes} from './building-schema.js?v=0.16.0';
-import {getMapShapes,initializeMapShapes,saveMapShape,updateMapShape,removeMapShape,shapeCenter} from './map-shapes.js?v=0.16.0';
-import {validPolygon} from './map-shape-schema.js?v=0.16.0';
-import {validMapPoint} from './map-model.js?v=0.16.0';
-import {openBuildingDialog} from './buildings-ui.js?v=0.16.0';
+import {escape} from './ui.js?v=0.17.0';
+import {buildingTypes} from './building-schema.js?v=0.17.0';
+import {getMapShapes,initializeMapShapes,saveMapShape,updateMapShape,removeMapShape,shapeCenter} from './map-shapes.js?v=0.17.0';
+import {validPolygon} from './map-shape-schema.js?v=0.17.0';
+import {validMapPoint} from './map-model.js?v=0.17.0';
+import {openBuildingDialog} from './buildings-ui.js?v=0.17.0';
 
 export function mountMapShapes({container,L,getMap,getState,getMode,getAction,setAction,visibleRecords,onSave,onRefresh,onInspect,onOpenRecord,getRecordPoint,scaleLabels,status}){
  const $=s=>container.querySelector(s);let layer=null,draftLayer=null,draft=null,editing=null,dialog=null,buildingDialog=null;
