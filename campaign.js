@@ -1,9 +1,10 @@
-import {characterCategories} from './character-options.js?v=0.18.0';
-import {validateMapState} from './map-model.js?v=0.18.0';
-import {validateWorld} from './world-schema.js?v=0.18.0';
-import {validateCorporations} from './corporations.js?v=0.18.0';
-import {validateProfile} from './sheet.js?v=0.18.0';
-import {validateCustomCatalog} from './catalog.js?v=0.18.0';
+import {characterCategories} from './character-options.js?v=0.19.0';
+import {validateMapState} from './map-model.js?v=0.19.0';
+import {validateWorld} from './world-schema.js?v=0.19.0';
+import {validateCorporations} from './corporations.js?v=0.19.0';
+import {validateProfile} from './sheet.js?v=0.19.0';
+import {validateCustomCatalog} from './catalog.js?v=0.19.0';
+import {validateResourceImages} from './resource-art.js?v=0.19.0';
 export const groups={characters:characterCategories,catalog:['Objet','Accessoire','Arme','Armure','Sort','Programme','Véhicule','Drone','Esprit','Drogue','Autre'],rules:['Règle','Aide-mémoire']};
 export function validateCampaign(data){
  if(!data||!Array.isArray(data.entries)||!Array.isArray(data.tokens))throw Error('Format de sauvegarde invalide.');
@@ -15,5 +16,6 @@ export function validateCampaign(data){
  validateMapState(data.mapState,positionIds,new Map((data.world?.records??[]).map(r=>[r.id,r.kind])));
  validateCorporations(data.corporations);
  validateCustomCatalog(data.customSkills,'skills');validateCustomCatalog(data.customAssets,'assets');
+ validateResourceImages(data.resourceImages);
  return {...data,customSkills:data.customSkills??[],customAssets:data.customAssets??[]};
 }

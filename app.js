@@ -1,26 +1,28 @@
-import {renderSpellLibrary} from './spells-ui.js?v=0.18.0';
-import {mountSheetView} from './sheet-view.js?v=0.18.0';
-import {renderGlobalSearch} from './global-search-ui.js?v=0.18.0';
-import {unclassifiedCharacter} from './character-options.js?v=0.18.0';
-import {entryField,mountEntryInline} from './entry-inline.js?v=0.18.0';
-import {mountCharacterInline} from './character-inline.js?v=0.18.0';
-import {deleteScenario} from './scenarios.js?v=0.18.0';
-import {mergeWorld,characterEntryForRecord} from './world.js?v=0.18.0';
-import {worldKinds,makeWorldRecord} from './world-schema.js?v=0.18.0';
-import {renderDashboard,renderWorldList,renderWorldRecord,openWorldEditor} from './world-ui.js?v=0.18.0';
-import {secretSection,toggleSecret} from './secrets-ui.js?v=0.18.0';
-import {renderCorporations} from './corporations-ui.js?v=0.18.0';
-import {renderDijonMap} from './dijon-map.js?v=0.18.0';
-import {renderRules} from './rules-ui.js?v=0.18.0';
-import {validateProfile} from './sheet.js?v=0.18.0';
-import {references} from './references.js?v=0.18.0';
-import {mountQuickDice,renderDiceSettings} from './dice-ui.js?v=0.18.0';
-import {escape,toggleSearchDisclosure} from './ui.js?v=0.18.0';
-import {groups,validateCampaign} from './campaign.js?v=0.18.0';
-import {getCatalogs,getCharacterCatalogs} from './catalog.js?v=0.18.0';
-import {renderCatalogLibrary,showCustomEditor} from './catalog-ui.js?v=0.18.0';
-import {mountCharacterEditor} from './character-editor.js?v=0.18.0';
-import {characterSheet} from './character-sheet.js?v=0.18.0';
+import {renderSpellLibrary} from './spells-ui.js?v=0.19.0';
+import {resourceArtwork,resourceImageKey} from './resource-art.js?v=0.19.0';
+import {mountResourceArt} from './resource-art-ui.js?v=0.19.0';
+import {mountSheetView} from './sheet-view.js?v=0.19.0';
+import {renderGlobalSearch} from './global-search-ui.js?v=0.19.0';
+import {unclassifiedCharacter} from './character-options.js?v=0.19.0';
+import {entryField,mountEntryInline} from './entry-inline.js?v=0.19.0';
+import {mountCharacterInline} from './character-inline.js?v=0.19.0';
+import {deleteScenario} from './scenarios.js?v=0.19.0';
+import {mergeWorld,characterEntryForRecord} from './world.js?v=0.19.0';
+import {worldKinds,makeWorldRecord} from './world-schema.js?v=0.19.0';
+import {renderDashboard,renderWorldList,renderWorldRecord,openWorldEditor} from './world-ui.js?v=0.19.0';
+import {secretSection,toggleSecret} from './secrets-ui.js?v=0.19.0';
+import {renderCorporations} from './corporations-ui.js?v=0.19.0';
+import {renderDijonMap} from './dijon-map.js?v=0.19.0';
+import {renderRules} from './rules-ui.js?v=0.19.0';
+import {validateProfile} from './sheet.js?v=0.19.0';
+import {references} from './references.js?v=0.19.0';
+import {mountQuickDice,renderDiceSettings} from './dice-ui.js?v=0.19.0';
+import {escape,toggleSearchDisclosure} from './ui.js?v=0.19.0';
+import {groups,validateCampaign} from './campaign.js?v=0.19.0';
+import {getCatalogs,getCharacterCatalogs} from './catalog.js?v=0.19.0';
+import {renderCatalogLibrary,showCustomEditor} from './catalog-ui.js?v=0.19.0';
+import {mountCharacterEditor} from './character-editor.js?v=0.19.0';
+import {characterSheet} from './character-sheet.js?v=0.19.0';
 const $=s=>document.querySelector(s),key='shadowrun-table-v1';
 const icons={characters:'<circle cx="9" cy="8" r="3"/><path d="M3 20v-3a6 6 0 0 1 12 0v3M16 5a3 3 0 0 1 0 6M18 14a5 5 0 0 1 3 4v2"/>',catalog:'<path d="m12 3 9 5-9 5-9-5 9-5ZM3 8v9l9 5 9-5V8M12 13v9"/>',rules:'<path d="M12 5c-3-2-6-2-10-1v15c4-1 7-1 10 1 3-2 6-2 10-1V4c-4-1-7-1-10 1Zm0 0v15"/>',dice:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h.01M17 7h.01M12 12h.01M7 17h.01M17 17h.01" stroke-width="3" stroke-linecap="round"/>',map:'<path d="m3 5 6-2 6 3 6-2v15l-6 2-6-3-6 2V5ZM9 3v15M15 6v15"/>',references:'<path d="M4 4h5v17H4zM10 4h4v17h-4zM15 5l4-1 4 16-4 1z"/>'};
 icons.library=icons.rules;icons.settings='<circle cx="12" cy="12" r="4"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/>';
@@ -39,12 +41,12 @@ function message(s){$('#message').textContent=s;}
 function persist(next){
  if(unreadableBackup!==null)throw Error('La sauvegarde illisible est protégée : exportez-la puis importez une sauvegarde valide.');
  const validated=validateCampaign(mergeWorld(next));
- try{localStorage.setItem(key,JSON.stringify(validated));}catch{throw Error('Sauvegarde locale pleine ou inaccessible. Réduisez la taille des images de plans puis réessayez ; les données précédentes sont conservées.');}
+ try{localStorage.setItem(key,JSON.stringify(validated));}catch{throw Error('Sauvegarde locale pleine ou inaccessible. Réduisez la taille ou le nombre des images puis réessayez ; les données précédentes sont conservées.');}
  state=validated;message('Sauvegardé dans ce navigateur.');
  return state;
 }
 function referenceCards(items){return items.map(r=>`<article class="card"><span class="tag">${escape(r.status)}</span><h3>${escape(r.title)}</h3><p>${escape(r.text)}</p><small>${escape(r.source)}</small></article>`).join('');}
-function entryCard(e){const character=groups.characters.includes(e.category);return `<article class="card ${character?'character-card':''}" ${character?`data-character="${escape(e.id)}"`:''}><span class="tag">${character?escape(e.category):entryField(e,'category','Catégorie de l’entrée')}</span><h3>${character?`<button class="character-name" data-open="${escape(e.id)}">${escape(e.name)}</button>`:entryField(e,'name','Nom de l’entrée')}</h3><div>${character?escape(e.description):entryField(e,'description','Description de l’entrée')}</div>${character?`<button class="sheet-open-button" data-open="${escape(e.id)}">Consulter la fiche</button>`:secretSection('Notes du MJ',`<div>${entryField(e,'notes','Notes du MJ de l’entrée')}</div>`)}<div class="actions"><button data-edit="${escape(e.id)}">Modifier</button><button data-delete="${escape(e.id)}">Supprimer</button></div></article>`;}
+function entryCard(e){const character=groups.characters.includes(e.category);return `<article class="card ${character?'character-card':''}" ${character?`data-character="${escape(e.id)}"`:''}>${character?'':resourceArtwork(e,state.resourceImages,'entry')}<span class="tag">${character?escape(e.category):entryField(e,'category','Catégorie de l’entrée')}</span><h3>${character?`<button class="character-name" data-open="${escape(e.id)}">${escape(e.name)}</button>`:entryField(e,'name','Nom de l’entrée')}</h3><div>${character?escape(e.description):entryField(e,'description','Description de l’entrée')}</div>${character?`<button class="sheet-open-button" data-open="${escape(e.id)}">Consulter la fiche</button>`:secretSection('Notes du MJ',`<div>${entryField(e,'notes','Notes du MJ de l’entrée')}</div>`)}<div class="actions"><button data-edit="${escape(e.id)}">Modifier</button><button data-delete="${escape(e.id)}">Supprimer</button></div></article>`;}
 function render(){
  disposeMap?.();disposeMap=null;disposeWorld?.();disposeWorld=null;disposeCharacter?.();disposeCharacter=null;disposeCorp?.();disposeCorp=null;disposeEntries?.();disposeEntries=null;
  $('.global-search-tools').hidden=!worldViewing&&!viewing&&(tab==='world-search'||!!$('#search').value.trim());
@@ -74,7 +76,7 @@ function render(){
   $('#content').innerHTML=`<div class="toolbar"><span class="muted">${entries.length} entrée(s) personnelle(s)</span><button id="add" class="primary">+ Ajouter une entrée</button></div><div class="grid">${entries.map(entryCard).join('')}</div>${entries.length?'':'<p class="muted">Vos ressources personnelles apparaîtront ici. Les sorts du livre sont disponibles ci-dessous.</p>'}`;
   const spellSection=document.createElement('section');spellSection.className='catalog-spells';$('#content').append(spellSection);renderSpellLibrary(spellSection);disposeEntries=mountEntryInline($('#content'),{getState:()=>state,onSave:persist,onRefresh:render});$('#add').onclick=()=>openEditor();return;
  }
- if(tab==='library'){renderCatalogLibrary($('#content'),getCatalogs(state),(kind,onDone)=>createCatalogEntry(kind,onDone,{characterOnly:false}));return;}
+ if(tab==='library'){renderCatalogLibrary($('#content'),getCatalogs(state),(kind,onDone)=>createCatalogEntry(kind,onDone,{characterOnly:false}),'',{getImages:()=>state.resourceImages});return;}
  if(tab==='references'){$('#content').innerHTML='<div class="toolbar"><span class="muted">Références personnelles · aucun PDF publié par le serveur</span></div><div class="grid">'+referenceCards(references)+'</div>';return;}
  if(tab==='settings'){renderDiceSettings($('#content'));return;}
  renderMap();
@@ -128,7 +130,12 @@ document.addEventListener('click',e=>{
  if(b?.dataset.openRule){worldViewing=null;worldReveal=false;tab='rules';viewing=null;$('#search').value='';render();const rule=document.getElementById(b.dataset.openRule);if(rule){rule.open=true;rule.scrollIntoView({block:'center'});}return;}
  if(b?.dataset.open){worldViewing=null;worldReveal=false;viewing=b.dataset.open;tab='characters';$('#search').value='';render();window.scrollTo(0,0);return;}
  if(b?.dataset.edit){openEditor(b.dataset.edit);return;}
- if(b?.dataset.delete&&confirm('Supprimer cette fiche et son pion sur la carte ?')){try{persist({...state,entries:state.entries.filter(x=>x.id!==b.dataset.delete),tokens:state.tokens.filter(x=>x.id!==b.dataset.delete),...(state.mapState?{mapState:{...state.mapState,dijon:{...state.mapState.dijon,positions:state.mapState.dijon.positions.filter(p=>p.id!==b.dataset.delete)}}}:{})});render();}catch(err){message(err.message);}return;}
+ if(b?.dataset.delete&&confirm('Supprimer cette fiche et son pion sur la carte ?')){
+  try{
+   const resourceImages={...state.resourceImages};delete resourceImages[resourceImageKey('entry',b.dataset.delete)];
+   persist({...state,entries:state.entries.filter(x=>x.id!==b.dataset.delete),tokens:state.tokens.filter(x=>x.id!==b.dataset.delete),...(state.resourceImages?{resourceImages}:{}),...(state.mapState?{mapState:{...state.mapState,dijon:{...state.mapState.dijon,positions:state.mapState.dijon.positions.filter(p=>p.id!==b.dataset.delete)}}}:{})});render();
+  }catch(err){message(err.message);}return;
+ }
  const card=e.target.closest('[data-character]');if(card&&!e.target.closest('button,a,input,select,textarea,details')){worldViewing=null;worldReveal=false;viewing=card.dataset.character;render();window.scrollTo(0,0);}
 });
 $('#search').oninput=()=>{worldViewing=null;worldReveal=false;viewing=null;corporationViewing=null;globalSearchPrefs.query=$('#search').value;globalSearchPrefs.expanded=true;globalSearchPrefs.tab='all';tab='world-search';render();const input=$('#resource-query');if(input){input.focus();input.setSelectionRange(input.value.length,input.value.length);}};
@@ -152,5 +159,6 @@ function renderMap(){
  const target=cityShell();if(mapSection==='zones'||mapSection==='places')renderWorldList(target,state,mapSection==='zones'?'zone':'place',{});else disposeMap=renderDijonMap(target,state,next=>persist(next),{onOpenRecord:(id,reveal)=>openWorld(id,reveal)});
 }
 
+mountResourceArt({getState:()=>state,onSave:persist});
 mountQuickDice($('#quick-dice-container'));
 render();

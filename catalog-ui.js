@@ -1,6 +1,7 @@
-import {escape,searchDisclosure} from './ui.js?v=0.18.0';
-import {describeSkill} from './skill-details.js?v=0.18.0';
-import {attributeFields} from './sheet.js?v=0.18.0';
+import {escape,searchDisclosure} from './ui.js?v=0.19.0';
+import {describeSkill} from './skill-details.js?v=0.19.0';
+import {attributeFields} from './sheet.js?v=0.19.0';
+import {resourceArtwork} from './resource-art.js?v=0.19.0';
 export function showCustomEditor(kind,onSave,{characterOnly=false}={}){
  const dialog=document.createElement('dialog');
  const skills=kind==='skills';
@@ -10,7 +11,7 @@ export function showCustomEditor(kind,onSave,{characterOnly=false}={}){
  form.onsubmit=e=>{e.preventDefault();const data=Object.fromEntries(new FormData(form));try{const item={id:'custom-'+crypto.randomUUID(),name:data.name.trim(),category:data.category.trim(),description:data.description,source:'Création personnelle'};if(!item.name||!item.category)throw Error('Indiquez un nom et une famille.');if(skills){item.attribute=data.attribute;item.specializations=[...new Set(data.specializations.split('\n').map(x=>x.trim()).filter(Boolean))];}else {item.level=Number(data.level);item.essence=Number(data.essence);item.target=characterOnly?'character':data.target;}onSave(item);close();}catch(err){dialog.querySelector('.custom-error').textContent=err.message;}};
  dialog.showModal();
 }
-export function renderCatalogLibrary(container,initialCatalogs,onCreate,query=''){
+export function renderCatalogLibrary(container,initialCatalogs,onCreate,query='',{getImages=()=>({})}={}){
  let catalogs=initialCatalogs,kind='skills',opened=null,search=query,category='';
  const skillCard=x=>{const detail=describeSkill(x);return `<article class="card skill-card"><span class="tag">Compétence · ${escape(x.category)}${x.id.startsWith('custom-')?' · Personnel':''}</span><h3><button class="world-link" data-skill-open="${escape(x.id)}">${escape(x.name)}</button></h3><p>${escape(detail.summary)}</p><p class="skill-attribute">${escape(detail.attributes)} · ${detail.specializations.length} spécialisations</p><button data-skill-open="${escape(x.id)}">Comprendre cette compétence</button></article>`;};
  function render(){
@@ -26,7 +27,7 @@ export function renderCatalogLibrary(container,initialCatalogs,onCreate,query=''
   const q=search.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('fr');
   const items=catalogs[kind].filter(x=>!category||x.category===category).filter(x=>{const detail=kind==='skills'?describeSkill(x):null;return [x.name,x.category,x.description,x.conditions,x.price,x.source,detail?.summary,...(detail?.specializations??[]).map(s=>s.name+' '+s.description)].join(' ').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('fr').includes(q);});
   container.querySelector('#library-count').textContent=items.length+(kind==='skills'?' compétence(s)':' atout(s)');
-  container.querySelector('#library-results').innerHTML=items.map(x=>kind==='skills'?skillCard(x):`<article class="card asset-card"><span class="tag">Atout · ${escape(x.category)}${x.id.startsWith('custom-')?' · Personnel':''}</span><h3>${escape(x.name)}</h3><dl class="asset-book-stats"><div><dt>Niveau</dt><dd>${x.level===''?'Non chiffré':escape(x.levelLabel??x.level)}</dd></div><div><dt>Essence</dt><dd>${x.essence?'−'+escape(x.essence):'—'}</dd></div>${x.price?`<div><dt>Prix</dt><dd>${escape(x.price)}</dd></div>`:''}</dl><h4>Caractéristiques et effets</h4><p>${escape(x.description)}</p>${x.conditions?`<p class="asset-conditions"><b>Conditions</b><br>${escape(x.conditions)}</p>`:''}<small>${escape(x.source)}</small></article>`).join('')||'<p class="muted">Aucune entrée trouvée. Vous pouvez créer la vôtre.</p>';
+  container.querySelector('#library-results').innerHTML=items.map(x=>kind==='skills'?skillCard(x):`<article class="card asset-card">${resourceArtwork(x,getImages())}<span class="tag">Atout · ${escape(x.category)}${x.id.startsWith('custom-')?' · Personnel':''}</span><h3>${escape(x.name)}</h3><dl class="asset-book-stats"><div><dt>Niveau</dt><dd>${x.level===''?'Non chiffré':escape(x.levelLabel??x.level)}</dd></div><div><dt>Essence</dt><dd>${x.essence?'−'+escape(x.essence):'—'}</dd></div>${x.price?`<div><dt>Prix</dt><dd>${escape(x.price)}</dd></div>`:''}</dl><h4>Caractéristiques et effets</h4><p>${escape(x.description)}</p>${x.conditions?`<p class="asset-conditions"><b>Conditions</b><br>${escape(x.conditions)}</p>`:''}<small>${escape(x.source)}</small></article>`).join('')||'<p class="muted">Aucune entrée trouvée. Vous pouvez créer la vôtre.</p>';
   container.querySelectorAll('[data-skill-open]').forEach(b=>b.onclick=()=>{opened=b.dataset.skillOpen;render();});
  }
  function skillPage(skill){

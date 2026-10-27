@@ -382,3 +382,20 @@ button.danger{color:var(--rust);border-color:var(--rust)}
 
 .catalog-spells{margin-top:30px;border-top:2px solid var(--line);padding-top:18px}.spell-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:14px 0}.spell-facts>div{min-width:0}.spell-facts dt{font:600 13px var(--heading);color:var(--rust)}.spell-facts dd{margin:4px 0 0;font-size:13px;overflow-wrap:anywhere}.spell-effect,.spell-anarchy{white-space:pre-wrap}.spell-card>p{font-size:13px;line-height:1.6}.spell-card>small{display:block;margin-top:16px}.spell-conditions,.spell-general-rules{margin:14px 0;padding:10px 0;border-top:1px solid var(--line)}.spell-conditions summary,.spell-general-rules summary{font:600 16px var(--heading);cursor:pointer}.spell-conditions p,.spell-general-rules p{font-size:13px;line-height:1.6;white-space:pre-wrap}.spell-picker-controls{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}.spell-picker-controls>label:last-child{grid-column:1/-1}.spell-picker-controls input,.spell-picker-controls select{margin-top:6px}.sheet-spell-picker{width:min(800px,95vw)}[data-spell-preview] .spell-card{padding:18px;margin:14px 0;box-shadow:none}.sheet-spell-notes{padding:10px 0;white-space:pre-wrap}.sheet-spell-notes>small{display:block;margin-top:6px}.sheet-view-controls .sheet-row-add{margin:0}.spell-editor-picker{margin:20px 0;padding-top:16px;border-top:1px solid var(--line)}.weapon-extra-notes{margin-top:8px;font-size:12px}.weapon-extra-notes textarea{font-size:12px}
 @media(max-width:480px){.spell-picker-controls{grid-template-columns:1fr;gap:8px}.spell-picker-controls>label:last-child{grid-column:auto}.spell-facts{gap:9px}.spell-facts dd{font-size:12px}}
+.resource-art{margin:0 0 20px;min-width:0}
+.resource-art-open{display:grid;place-items:center;width:100%;padding:0;overflow:hidden;background:#f4f0e6;border:1px solid #dfd9cc;min-height:184px;cursor:zoom-in}
+.resource-art-open:hover{background:#f4f0e6;border-color:var(--violet)}
+.resource-art-sprite{display:block;width:180px;max-width:100%;aspect-ratio:1;background-image:url('./assets/resource-illustrations.png?v=0.19.0');background-size:400% 400%;background-position:var(--art-x) var(--art-y);background-repeat:no-repeat}
+.resource-art-image{display:block;width:100%;height:184px;object-fit:contain}
+.resource-art-caption,.card .resource-art-caption{font:11px/1.5 system-ui,sans-serif;color:var(--muted);margin:6px 0 0}
+.resource-art-add{font-size:13px;padding:7px 10px;min-height:34px;border-style:dashed;color:var(--muted)}
+.resource-art-dialog h2{overflow-wrap:anywhere;margin-bottom:15px}
+.resource-art-preview{display:grid;place-items:center;min-height:160px;max-width:100%;background:#f4f0e6;border:1px solid var(--line);overflow:hidden}
+.resource-art-preview .resource-art-sprite{width:min(100%,420px)}
+.resource-art-preview .resource-art-image{width:100%;height:min(48dvh,420px);object-fit:contain}
+.resource-art-controls{margin:18px 0 10px;align-items:center}
+.resource-art-controls .button{margin:0;cursor:pointer;display:inline-flex;align-items:center}
+.resource-art-controls [hidden]{display:none}
+.resource-art-dialog .muted{font-size:12px;line-height:1.6}
+.resource-art-error{color:var(--rust);font-size:13px;white-space:pre-wrap}
+@media(max-width:480px){.resource-art-dialog .actions{flex-wrap:wrap}.resource-art-dialog .actions>*{max-width:100%}.resource-art-preview .resource-art-sprite{width:min(100%,300px)}}

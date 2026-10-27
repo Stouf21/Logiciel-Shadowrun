@@ -1,9 +1,9 @@
-import {mountSpellPicker} from './spells-ui.js?v=0.18.0';
-import {spellRow} from './spells.js?v=0.18.0';
-import {metatypeOptions} from './character-options.js?v=0.18.0';
-import {isCharacterAsset,assetReferenceText} from './catalog.js?v=0.18.0';
-import {numberFields,textFields,attributeFields,woundLabels,skillReserve} from './sheet.js?v=0.18.0';
-import {escape} from './ui.js?v=0.18.0';
+import {mountSpellPicker} from './spells-ui.js?v=0.19.0';
+import {spellRow} from './spells.js?v=0.19.0';
+import {metatypeOptions} from './character-options.js?v=0.19.0';
+import {isCharacterAsset,assetReferenceText} from './catalog.js?v=0.19.0';
+import {numberFields,textFields,attributeFields,woundLabels,skillReserve} from './sheet.js?v=0.19.0';
+import {escape} from './ui.js?v=0.19.0';
 const deckFields=[['name','Nom du cyberdeck'],['attack','Attaque'],['firewall','Firewall'],['light','Seuil léger'],['serious','Seuil grave'],['incap','Seuil incapacitant'],['minRisk','Dés de risque minimum (Piratage)'],['penalty','Augmentation du seuil (Piratage)'],['notes','Notes cyberdeck']];
 const vehicleFields=[['name','Nom du véhicule'],['type','Type'],['auto','Autopilote'],['structure','Structure'],['handling','Maniabilité'],['speed','Vitesse'],['armor','Blindage'],['light','Seuil léger'],['serious','Seuil grave'],['incap','Seuil incapacitant'],['notes','Notes']];
 const numeric=v=>v===''?'':Number(v);

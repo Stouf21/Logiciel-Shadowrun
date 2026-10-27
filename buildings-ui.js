@@ -1,9 +1,9 @@
-import {inlineField,mountInlineEditing} from './inline-edit.js?v=0.18.0';
-import {buildingInlineSpec,updateBuildingInline} from './building-inline.js?v=0.18.0';
-import {escape} from './ui.js?v=0.18.0';
-import {secretSection} from './secrets-ui.js?v=0.18.0';
-import {buildingTypes,emptyBuilding} from './building-schema.js?v=0.18.0';
-import {saveBuilding,saveBuildingPlan,removeBuildingPlan,buildingOwner} from './buildings.js?v=0.18.0';
+import {inlineField,mountInlineEditing} from './inline-edit.js?v=0.19.0';
+import {buildingInlineSpec,updateBuildingInline} from './building-inline.js?v=0.19.0';
+import {escape} from './ui.js?v=0.19.0';
+import {secretSection} from './secrets-ui.js?v=0.19.0';
+import {buildingTypes,emptyBuilding} from './building-schema.js?v=0.19.0';
+import {saveBuilding,saveBuildingPlan,removeBuildingPlan,buildingOwner} from './buildings.js?v=0.19.0';
 
 const find=(state,id)=>state.world.records.find(r=>r.id===id);
 const createDialog=(className,html,register)=>{
