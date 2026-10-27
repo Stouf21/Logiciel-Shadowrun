@@ -1,8 +1,9 @@
-import {globalSearch,searchTabs} from './global-search.js?v=0.17.0';
-import {escape,searchDisclosure} from './ui.js?v=0.17.0';
-import {worldCard,renderWorldList} from './world-ui.js?v=0.17.0';
-import {corporationCard} from './corporations-ui.js?v=0.17.0';
-import {ruleSource} from './rules-data.js?v=0.17.0';
+import {spellCard} from './spells-ui.js?v=0.18.0';
+import {globalSearch,searchTabs} from './global-search.js?v=0.18.0';
+import {escape,searchDisclosure} from './ui.js?v=0.18.0';
+import {worldCard,renderWorldList} from './world-ui.js?v=0.18.0';
+import {corporationCard} from './corporations-ui.js?v=0.18.0';
+import {ruleSource} from './rules-data.js?v=0.18.0';
 export function renderGlobalSearch(container,state,prefs,{entryCard,onResultsChanged,onQuery,getState}={}){
  if(!searchTabs.some(([id])=>id===prefs.tab))prefs.tab='all';prefs.query??='';prefs.includeSecrets??=false;
  const $=selector=>container.querySelector(selector);let worldPanel=false;
@@ -13,6 +14,7 @@ export function renderGlobalSearch(container,state,prefs,{entryCard,onResultsCha
   if(row.type==='world')return worldCard(row.hit);
   if(row.protected)return '<article class="card protected-result"><span class="tag">Réservé au MJ</span><h3>Correspondance dans une information MJ</h3><p>Révélez les informations du meneur pour consulter cette correspondance.</p><button data-search-reveal>Révéler les informations MJ</button></article>';
   if(row.type==='entry')return entryCard(row.item);
+  if(row.type==='spell')return spellCard(row.item);
   if(row.type==='skills'||row.type==='assets')return referenceCard(row);
   if(row.type==='corporation')return corporationCard(row.item);
   if(row.type==='rule')return `<article class="card"><span class="tag">Règle · ${escape(row.item.category)}</span><h3>${escape(row.item.title)}</h3><p>${escape(row.item.summary)}</p><button data-open-rule="${escape(row.item.id)}">Consulter la règle</button><small>${escape(ruleSource(row.item))}</small></article>`;

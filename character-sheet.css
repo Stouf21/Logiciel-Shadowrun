@@ -21,3 +21,5 @@
  .sheet-print-appendix>summary{list-style:none;font:600 20px var(--heading);margin-bottom:12px}
  .sheet-print-appendix>.sheet-row-detail,.sheet-print-appendix>.sheet-extra-block,.sheet-print-appendix>.sheet-extra-line{break-inside:avoid}
 }
+
+.official-cell.official-spell-type{font-size:1.03cqi}

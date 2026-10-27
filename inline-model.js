@@ -1,11 +1,12 @@
-import {sheetSlots} from './sheet-layout.js?v=0.17.0';
-import {unclassifiedCharacter,metatypeOptions} from './character-options.js?v=0.17.0';
-import {numberFields,textFields,structuredTextFields,woundLabels,attributeFields} from './sheet.js?v=0.17.0';
-import {getCharacterCatalogs,assetReferenceText} from './catalog.js?v=0.17.0';
-import {characterEntryForRecord,upsertWorldRecord} from './world.js?v=0.17.0';
-import {worldFields,discoveryStates,authorities} from './world-schema.js?v=0.17.0';
-import {groups,validateCampaign} from './campaign.js?v=0.17.0';
-const rowKeys={skillRows:['catalogId','rating','attribute','rr','specialization','specialized'],assetRows:['catalogId','name','category','notes','source','level','essence'],weaponRows:['name','type'],woundRows:['label','light','serious','incap','rr','status'],vehicleRows:['name','type','auto','structure','handling','speed','armor','light','serious','incap','notes']};
+import {spellRow} from './spells.js?v=0.18.0';
+import {sheetSlots} from './sheet-layout.js?v=0.18.0';
+import {unclassifiedCharacter,metatypeOptions} from './character-options.js?v=0.18.0';
+import {numberFields,textFields,structuredTextFields,woundLabels,attributeFields} from './sheet.js?v=0.18.0';
+import {getCharacterCatalogs,assetReferenceText} from './catalog.js?v=0.18.0';
+import {characterEntryForRecord,upsertWorldRecord} from './world.js?v=0.18.0';
+import {worldFields,discoveryStates,authorities} from './world-schema.js?v=0.18.0';
+import {groups,validateCampaign} from './campaign.js?v=0.18.0';
+const rowKeys={skillRows:['catalogId','rating','attribute','rr','specialization','specialized'],assetRows:['catalogId','name','category','notes','source','level','essence'],weaponRows:['name','type','notes','source','spellId'],woundRows:['label','light','serious','incap','rr','status'],vehicleRows:['name','type','auto','structure','handling','speed','armor','light','serious','incap','notes']};
 export const deckKeys=['name','attack','firewall','light','serious','incap','minRisk','penalty','notes'];
 export const readPath=(record,path)=>path.split('.').reduce((value,key)=>value?.[key],record);
 function blankRows(key){return key==='woundRows'?woundLabels.map(label=>({label,light:'',serious:'',incap:'',rr:'',status:''})):Array.from({length:key==='vehicleRows'?sheetSlots.vehicles:sheetSlots.weapons},()=>Object.fromEntries(rowKeys[key].map(k=>[k,''])));}
@@ -38,14 +39,16 @@ export function updateCharacterInline(state,target,path,value,category){
  const updated={...state,entries,world:unbound?{...state.world,records:state.world.records.map(r=>r.id===record.id?{...r,gameEntryId:next.id}:r)}:state.world};validateCampaign(updated);return {state:updated,entryId:next.id};
 }
 export function changeCharacterRows(state,target,{kind,itemId,index,remove=false,category}){
- const keys={skills:'skillRows',assets:'assetRows',weapons:'weaponRows',vehicles:'vehicleRows'};const key=keys[kind];if(!key)throw Error('Table de personnage invalide.');
+ const keys={skills:'skillRows',assets:'assetRows',spells:'weaponRows',weapons:'weaponRows',vehicles:'vehicleRows'};const key=keys[kind];if(!key)throw Error('Table de personnage invalide.');
  const current=characterForInline(state,target);let nextState=state,entryId=current.entry.id;
  if(current.unbound){const created=updateCharacterInline(state,target,'category',category??unclassifiedCharacter);nextState=created.state;entryId=created.entryId;}
  const entry=structuredClone(nextState.entries.find(e=>e.id===entryId));entry.profile??={};const rows=entry.profile[key]??(['weaponRows','vehicleRows'].includes(key)?blankRows(key):[]);
  if(remove){if(!Number.isInteger(index)||index<0||index>=rows.length)throw Error('Ligne introuvable.');entry.profile[key]=rows.filter((_,i)=>i!==index);}
  else{
-  let row;if(['skills','assets'].includes(kind)){const item=getCharacterCatalogs(nextState)[kind].find(x=>x.id===itemId);if(!item)throw Error('Choisissez une référence applicable au personnage.');row=kind==='skills'?{catalogId:item.id,name:item.name,rating:0,attribute:item.attribute,rr:0,specialization:'',specialized:false}:{catalogId:item.id,name:item.name,category:item.category,level:item.level,essence:item.essence,source:item.source,notes:assetReferenceText(item),target:'character'};}
-  else row=Object.fromEntries(rowKeys[key].map(k=>[k,'']));entry.profile[key]=[...rows,row];
+  let row;if(kind==='spells'){const spell=getCharacterCatalogs(nextState).spells.find(s=>s.id===itemId);if(!spell)throw Error('Choisissez un sort de la liste.');row=spellRow(spell);}
+  else if(['skills','assets'].includes(kind)){const item=getCharacterCatalogs(nextState)[kind].find(x=>x.id===itemId);if(!item)throw Error('Choisissez une référence applicable au personnage.');row=kind==='skills'?{catalogId:item.id,name:item.name,rating:0,attribute:item.attribute,rr:0,specialization:'',specialized:false}:{catalogId:item.id,name:item.name,category:item.category,level:item.level,essence:item.essence,source:item.source,notes:assetReferenceText(item),target:'character'};}
+  else row=Object.fromEntries(rowKeys[key].map(k=>[k,'']));
+  const blank=kind==='spells'?rows.findIndex(r=>!r.name.trim()&&!r.type.trim()&&!r.spellId&&!r.notes?.trim()&&!r.source?.trim()):-1;entry.profile[key]=blank>=0?rows.map((r,i)=>i===blank?row:r):[...rows,row];
  }
  const updated={...nextState,entries:nextState.entries.map(e=>e.id===entryId?entry:e)};validateCampaign(updated);return {state:updated,entryId};
 }
@@ -58,6 +61,7 @@ export function updateWorldInline(state,id,path,value){
 export function characterInlineSpec(state,target,path,label){
  assertCharacterPath(path);const {entry}=characterForInline(state,target),parts=path.split('.');let value=readPath(entry,path),type='text',options,suggestions,min,max,step;
  if(path==='profile.metatype'){type='select';options=metatypeOptions(value);}else if(path==='category'){type='select';options=groups.characters;}else if(path==='name')type='text';
+ else if(parts.at(-1)==='spellId'){type='select';options=getCharacterCatalogs(state).spells.map(s=>[s.id,s.name]);}
  else if(parts.at(-1)==='catalogId'){type='select';options=getCharacterCatalogs(state)[parts[1]==='skillRows'?'skills':'assets'].map(x=>[x.id,x.name]);}
  else if(path.startsWith('profile.')&&parts.length===2&&numberFields.some(([k])=>k===parts[1])||['rating','rr','level','essence'].includes(parts.at(-1))&&parts.length===4){type='number';min=0;step=parts.at(-1)==='essence'?'any':1;max=parts.at(-1)==='rating'?8:parts.at(-1)==='rr'?3:undefined;}
  else if(parts.at(-1)==='attribute'){type='select';options=attributeFields;}

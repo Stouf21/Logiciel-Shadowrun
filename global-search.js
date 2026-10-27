@@ -1,11 +1,12 @@
-import {getCatalogs} from './catalog.js?v=0.17.0';
-import {getCorporations} from './corporations.js?v=0.17.0';
-import {groups} from './campaign.js?v=0.17.0';
-import {normalize,worldSearch} from './world.js?v=0.17.0';
-import {profileSearchText} from './sheet.js?v=0.17.0';
-import {describeSkill} from './skill-details.js?v=0.17.0';
-import {rules,ruleMatches} from './rules-data.js?v=0.17.0';
-import {references} from './references.js?v=0.17.0';
+import {spellMatches} from './spells.js?v=0.18.0';
+import {getCatalogs} from './catalog.js?v=0.18.0';
+import {getCorporations} from './corporations.js?v=0.18.0';
+import {groups} from './campaign.js?v=0.18.0';
+import {normalize,worldSearch} from './world.js?v=0.18.0';
+import {profileSearchText} from './sheet.js?v=0.18.0';
+import {describeSkill} from './skill-details.js?v=0.18.0';
+import {rules,ruleMatches} from './rules-data.js?v=0.18.0';
+import {references} from './references.js?v=0.18.0';
 export const searchTabs=[['all','Tout'],['skills','Compétences'],['assets','Atouts'],['spells','Sorts'],['weapons','Armes'],['vehicles','Véhicules'],['drones','Drones'],['spirits','Esprits'],['drugs','Drogues'],['armor','Armures'],['equipment','Équipement'],['cyberware','Cyberware'],['bioware','Bioware'],['programs','Programmes'],['decks','Cyberdecks'],['focus','Focus'],['adept','Pouvoirs d’adepte'],['contacts','Contacts'],['traits','Traits'],['world','Dossiers de campagne'],['rules','Règles'],['sources','Sources']];
 export function resourceTabs(item){
  const category=normalize(item.category),name=normalize(item.name),tags=[];
@@ -31,6 +32,7 @@ export function globalSearch(state,query='',{includeSecrets=false,tab='all'}={})
   if(!matches([item.name,item.category,item.description,item.conditions,item.price,item.source,detail?.summary,...(detail?.specializations??[]).map(s=>s.name+' '+s.description)],q))continue;
   rows.push({key:kind+':'+item.id,type:kind,item,detail,protected:false,tabs:kind==='skills'?['skills']:['assets',...resourceTabs(item)]});
  }
+ for(const item of catalogs.spells.filter(s=>s.origin==='book-v2'))if(spellMatches(item,query))rows.push({key:'spell:'+item.id,type:'spell',item,protected:false,tabs:['spells']});
  for(const item of getCorporations(state)){
   const publicMatch=matches([item.name,item.aliases,item.tier,item.sectors,item.hq,item.leader,item.summary,item.source,item.relationship,item.contacts],q),secretMatch=q&&matches([item.objectives,item.secrets,item.notes],q);
   if(publicMatch||secretMatch)rows.push({key:'corporation:'+item.id,type:'corporation',item,protected:!includeSecrets&&!publicMatch,tabs:[]});
