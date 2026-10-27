@@ -1,3 +1,4 @@
+import {validateNpcProfile} from './npc-preferences.js?v=0.22.0';
 export const attributeFields=[['force','Force'],['agilite','Agilité'],['volonte','Volonté'],['logique','Logique'],['charisme','Charisme']];
 export const numberFields=[...attributeFields,['anarchy','Anarchy actuel'],['essence','Essence'],['nuyens','Nuyens'],['magicCancelled','Succès annulés (magie)'],['healingCancelled','Succès annulés (soins)']];
 export const textFields=[['keywords','Mots-clés'],['behaviors','Comportements'],['quotes','Répliques'],['skills','Compétences : indice, attribut, RD et RR'],['knowledge','Connaissances'],['weapons','Armes et sorts : type et caractéristiques'],['wounds','Blessures : seuils légère / grave / incapacité, état et RR'],['assets','Atouts : essence et niveau'],['equipment','Équipement'],['cyberdeck','Cyberdeck : attaque, firewall, dommages et seuils'],['vehicles','Véhicules / drones : autopilote, structure, maniabilité, vitesse, blindage'],['essenceEffects','Essence : succès annulés en magie / soins et désavantage social']];
@@ -6,12 +7,13 @@ export function validateProfile(profile){
  if(!profile||typeof profile!=='object'||Array.isArray(profile))throw Error('Fiche structurée invalide.');
  for(const [key] of numberFields){const v=profile[key];if(v!==undefined&&v!==''&&(typeof v!=='number'||!Number.isFinite(v)||v<0))throw Error('Valeur numérique de fiche invalide.');}
  for(const [key] of [...textFields,...structuredTextFields]){if(profile[key]!==undefined&&typeof profile[key]!=='string')throw Error('Texte de fiche invalide.');}
+ validateNpcProfile(profile.npc);
  validateRows(profile);
 }
 export function profileSearchText(profile={}){return [...numberFields,...textFields,...structuredTextFields].map(([key,label])=>profile[key]!==undefined?label+' '+profile[key]:'').join(' ')+' '+[...(profile.skillRows??[]),...(profile.assetRows??[]),...(profile.weaponRows??[])].map(r=>[r.name,r.specialization,r.notes,r.category,r.type,r.source].filter(Boolean).join(' ')).join(' ');}
 
 export function skillReserve(row,profile){
- return Number(row.rating||0)+Number(profile[row.attribute]||0)+(row.specialized&&row.specialization.trim()?2:0);
+ return Number(row.rating||0)+Number(profile[row.attribute]||0)+(row.includesSpecialization?(row.specialization.trim()&&!row.specialized?-2:0):(row.specialized&&row.specialization.trim()?2:0));
 }
 export const woundLabels=['Sans armure','Armure principale','Armure secondaire','Mental'];
 export const structuredTextFields=[['metatype','Métatype'],['socialDisadvantage','Désavantage social (essence)']];
@@ -19,8 +21,9 @@ export const structuredTextFields=[['metatype','Métatype'],['socialDisadvantage
 function validateRows(profile){
  for(const key of ['skillRows','assetRows','woundRows','vehicleRows','weaponRows'])if(profile[key]!==undefined&&(!Array.isArray(profile[key])||profile[key].length>300))throw Error('Table de fiche invalide.');
  for(const r of profile.skillRows??[]){
-  if(!r||!['name','catalogId','specialization'].every(k=>typeof r[k]==='string')||!r.name.trim()||!attributeFields.some(([k])=>k===r.attribute)||!Number.isInteger(r.rating)||r.rating<0||r.rating>8||!Number.isInteger(r.rr)||r.rr<0||r.rr>3||typeof r.specialized!=='boolean'||(r.specialized&&(!r.specialization.trim()||r.rating<1)))throw Error('Compétence de fiche invalide.');
+  if(!r||!['name','catalogId','specialization'].every(k=>typeof r[k]==='string')||!r.name.trim()||!attributeFields.some(([k])=>k===r.attribute)||!Number.isInteger(r.rating)||r.rating<0||r.rating>(profile.npc?12:8)||!Number.isInteger(r.rr)||r.rr<0||r.rr>3||typeof r.specialized!=='boolean'||(r.specialized&&(!r.specialization.trim()||r.rating<1)))throw Error('Compétence de fiche invalide.');
  }
+ for(const r of profile.skillRows??[]){if(r.mean!==undefined&&(!profile.npc||!Number.isInteger(r.mean)||r.mean<0||r.mean>30))throw Error('Succès moyens de PNJ invalides.');if(r.includesSpecialization!==undefined&&(!profile.npc||typeof r.includesSpecialization!=='boolean'))throw Error('Spécialisation de PNJ invalide.');}
  for(const r of profile.assetRows??[]){
   if(r.target!==undefined&&!['character','vehicle','drone'].includes(r.target))throw Error('Application d’atout invalide.');
   if(!r||!['name','catalogId','category','notes','source'].every(k=>typeof r[k]==='string')||!r.name.trim())throw Error('Atout de fiche invalide.');

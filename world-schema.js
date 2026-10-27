@@ -1,4 +1,5 @@
-import {validateBuilding} from './building-schema.js?v=0.21.0';
+import {validateBuilding} from './building-schema.js?v=0.22.0';
+import {validateScenarioChapters} from './chapter-schema.js?v=0.22.0';
 export const UNKNOWN='À définir';
 export const worldKinds={character:'Personnage',corporation:'Corporation',faction:'Faction',zone:'Quartier / zone',place:'Lieu',scenario:'Scénario',clue:'Indice',secret:'Secret',event:'Événement'};
 export const discoveryStates=['Non découvert','Partiellement découvert','Découvert'];
@@ -46,4 +47,5 @@ export function validateWorld(world){
  for(const r of world.records)if(r.timelineOrder!==undefined){
   if(r.kind!=='scenario'||!Array.isArray(r.timelineOrder)||new Set(r.timelineOrder).size!==r.timelineOrder.length||r.timelineOrder.some(id=>!world.records.some(x=>x.id===id&&x.kind==='event')||!world.relations.some(link=>(link.from===r.id&&link.to===id)||(link.to===r.id&&link.from===id))))throw Error('Ordre de la frise invalide.');
  }
+ validateScenarioChapters(world);
 }

@@ -1,12 +1,13 @@
-import {metatypeOptions} from './character-options.js?v=0.21.0';
-import {inlineField,mountInlineEditing} from './inline-edit.js?v=0.21.0';
-import {updateWorldInline,worldInlineSpec} from './inline-model.js?v=0.21.0';
-import {renderBuildingPanel} from './buildings-ui.js?v=0.21.0';
-import {escape,searchDisclosure} from './ui.js?v=0.21.0';
-import {secretSection} from './secrets-ui.js?v=0.21.0';
-import {renderScenarioWorkspace} from './scenarios-ui.js?v=0.21.0';
-import {worldKinds,worldFields,UNKNOWN,discoveryStates,visibilities,visibilityLabels,authorities,makeWorldRecord,validateWorld} from './world-schema.js?v=0.21.0';
-import {worldSearch,relatedRecords,relationIsSecret,worldDiagnostics,upsertWorldRecord} from './world.js?v=0.21.0';
+import {renderScenarioPage} from './scenario-page.js?v=0.22.0';
+import {metatypeOptions} from './character-options.js?v=0.22.0';
+import {inlineField,mountInlineEditing} from './inline-edit.js?v=0.22.0';
+import {updateWorldInline,worldInlineSpec} from './inline-model.js?v=0.22.0';
+import {renderBuildingPanel} from './buildings-ui.js?v=0.22.0';
+import {escape,searchDisclosure} from './ui.js?v=0.22.0';
+import {secretSection} from './secrets-ui.js?v=0.22.0';
+import {renderScenarioWorkspace} from './scenarios-ui.js?v=0.22.0';
+import {worldKinds,worldFields,UNKNOWN,discoveryStates,visibilities,visibilityLabels,authorities,makeWorldRecord,validateWorld} from './world-schema.js?v=0.22.0';
+import {worldSearch,relatedRecords,relationIsSecret,worldDiagnostics,upsertWorldRecord} from './world.js?v=0.22.0';
 const text=value=>escape(value===undefined||value===''?UNKNOWN:value);
 export const worldLink=(r,label)=>`<button class="world-link" ${r.kind==='character'?'data-open-character':'data-open-world'}="${escape(r.id)}">${escape(label??r.name)}</button>`;
 export function worldCard(hit){
@@ -19,7 +20,7 @@ export function renderWorldList(container,state,kind,callbacks,{initialQuery=''}
  const heading=kind==='zone'?'Quartiers et zones':kind==='place'?'Lieux':kind?worldKinds[kind]+'s':'Recherche dans l’univers';
  const filters=`<div class="world-filters"><label>Rechercher dans les dossiers<input id="world-query" type="search" value="${escape(initialQuery)}" placeholder="Nom, surnom, indice ou information…"></label>${!kind?select('world-kind','Type de fiche',Object.entries(worldKinds)):''}${select('world-discovery','Découverte',discoveryStates)}${(!kind||kind==='character')?select('world-metatype','Métatype',values('metatype'))+select('world-life','Statut vital',['Vivant','Mort','Disparu','Inconnu','À définir']):''}${select('world-corporation','Corporation',recordOptions('corporation'))}${select('world-faction','Faction',recordOptions('faction'))}${select('world-zone','Quartier / zone',recordOptions('zone'))}${select('world-scenario','Scénario',recordOptions('scenario'))}${(!kind||['zone','place'].includes(kind))?select('world-security','Niveau de sécurité',values('security')):''}<label class="check-label"><input id="world-show-secrets" type="checkbox">Afficher les fiches et informations MJ</label></div>`;
  const article=kind==='faction'?'une faction':kind==='corporation'?'une corporation':kind==='zone'?'une zone':kind==='place'?'un lieu':kind==='character'?'un personnage':kind==='scenario'?'un scénario':'une fiche';
- container.innerHTML=`<div class="toolbar"><div><span class="tag">DIJON / ${state.world.settings.year}</span><h3>${heading}</h3></div><button class="primary" data-world-new="${kind||'character'}">+ Ajouter ${article}</button></div>${searchDisclosure('world-search-panel',filters,{expanded:!!initialQuery})}<p class="muted" id="world-count" role="status"></p><div id="world-results" class="grid"></div>`;
+ container.innerHTML=`<div class="toolbar"><div><span class="tag">DIJON / ${state.world.settings.year}</span><h3>${heading}</h3></div><button class="primary" data-world-new="${kind||'character'}">${kind==='scenario'?'+ Nouveau scénario':'+ Ajouter '+article}</button></div>${searchDisclosure('world-search-panel',filters,{expanded:!!initialQuery})}<p class="muted" id="world-count" role="status"></p><div id="world-results" class="grid"></div>`;
  function values(key,includeSecrets=false){return [...new Set(state.world.records.filter(r=>(!kind||r.kind===kind)&&(includeSecrets||!r.isSecret)).map(r=>r.fields[key]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'fr'));}
  function updateChoices(){const includeSecrets=container.querySelector('#world-show-secrets').checked;for(const [key,recordKind] of [['faction','faction'],['corporation','corporation'],['zone','zone'],['scenario','scenario']]){const field=container.querySelector('#world-'+key),previous=field.value;field.innerHTML='<option value="">Tous / toutes</option>'+state.world.records.filter(r=>r.kind===recordKind&&(includeSecrets||!r.isSecret)).map(r=>`<option value="${escape(r.id)}">${escape(r.name)}</option>`).join('');field.value=[...field.options].some(x=>x.value===previous)?previous:'';}for(const key of ['metatype','security']){const field=container.querySelector('#world-'+key);if(!field)continue;const previous=field.value;field.innerHTML='<option value="">Tous / toutes</option>'+values(key,includeSecrets).map(v=>`<option>${escape(v)}</option>`).join('');field.value=[...field.options].some(x=>x.value===previous)?previous:'';}}
  function update(){const query=container.querySelector('#world-query').value,includeSecrets=container.querySelector('#world-show-secrets').checked;const filters={};for(const key of ['discovery','metatype','life','corporation','faction','zone','scenario','security']){const field=container.querySelector('#world-'+key);if(field)filters[key]=field.value;}const hits=worldSearch(state.world,query,{kind:kind||container.querySelector('#world-kind').value,includeSecrets,filters});container.querySelector('#world-count').textContent=hits.length+' fiche(s)';container.querySelector('#world-results').innerHTML=hits.map(worldCard).join('')||'<div class="empty"><h3>Aucune fiche trouvée.</h3><p>Essayez d’autres filtres.</p></div>';}
@@ -30,6 +31,7 @@ export function renderWorldRecord(container,state,id,callbacks,{reveal=false}={}
  const scope='world-'+id,f=(path,value,label,extra={})=>inlineField(scope,path,value,label,extra);
  const r=state.world.records.find(x=>x.id===id);if(!r){container.innerHTML='<p>Fiche introuvable.</p>';return;}
  if(r.isSecret&&!reveal){container.innerHTML=`<div class="empty"><span class="tag">FICHE MJ</span><h3>Information réservée au meneur.</h3><button class="primary" data-open-world="${r.id}" data-world-reveal="true">Révéler</button></div>`;return;}
+ if(r.kind==='scenario')return renderScenarioPage(container,state,id,callbacks);
  const otherLinks=items=>r.kind==='scenario'?items.filter(x=>!['character','event'].includes(x.other.kind)):items;
  const linked=otherLinks(relatedRecords(state.world,r.id,false)),hiddenLinks=otherLinks(relatedRecords(state.world,r.id,true).filter(x=>relationIsSecret(state.world,x.relation)));
  const fieldHtml=scope=>worldFields[r.kind].filter(([, ,s])=>(s==='secret')===(scope==='secret')).map(([key,label])=>`<div><dt>${escape(label)}</dt><dd>${f('fields.'+key,r.fields[key],label)}</dd></div>`).join('');

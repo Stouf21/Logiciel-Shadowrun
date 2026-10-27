@@ -1,12 +1,12 @@
-import {spellRow} from './spells.js?v=0.21.0';
-import {sheetSlots} from './sheet-layout.js?v=0.21.0';
-import {unclassifiedCharacter,metatypeOptions} from './character-options.js?v=0.21.0';
-import {numberFields,textFields,structuredTextFields,woundLabels,attributeFields} from './sheet.js?v=0.21.0';
-import {getCharacterCatalogs,assetReferenceText} from './catalog.js?v=0.21.0';
-import {characterEntryForRecord,upsertWorldRecord} from './world.js?v=0.21.0';
-import {worldFields,discoveryStates,authorities} from './world-schema.js?v=0.21.0';
-import {groups,validateCampaign} from './campaign.js?v=0.21.0';
-const rowKeys={skillRows:['catalogId','rating','attribute','rr','specialization','specialized'],assetRows:['catalogId','name','category','notes','source','level','essence'],weaponRows:['name','type','notes','source','spellId'],woundRows:['label','light','serious','incap','rr','status'],vehicleRows:['name','type','auto','structure','handling','speed','armor','light','serious','incap','notes']};
+import {spellRow} from './spells.js?v=0.22.0';
+import {sheetSlots} from './sheet-layout.js?v=0.22.0';
+import {unclassifiedCharacter,metatypeOptions} from './character-options.js?v=0.22.0';
+import {numberFields,textFields,structuredTextFields,woundLabels,attributeFields} from './sheet.js?v=0.22.0';
+import {getCharacterCatalogs,assetReferenceText} from './catalog.js?v=0.22.0';
+import {characterEntryForRecord,upsertWorldRecord} from './world.js?v=0.22.0';
+import {worldFields,discoveryStates,authorities} from './world-schema.js?v=0.22.0';
+import {groups,validateCampaign} from './campaign.js?v=0.22.0';
+const rowKeys={skillRows:['catalogId','rating','attribute','rr','specialization','specialized','mean'],assetRows:['catalogId','name','category','notes','source','level','essence'],weaponRows:['name','type','notes','source','spellId'],woundRows:['label','light','serious','incap','rr','status'],vehicleRows:['name','type','auto','structure','handling','speed','armor','light','serious','incap','notes']};
 export const deckKeys=['name','attack','firewall','light','serious','incap','minRisk','penalty','notes'];
 export const readPath=(record,path)=>path.split('.').reduce((value,key)=>value?.[key],record);
 function blankRows(key){return key==='woundRows'?woundLabels.map(label=>({label,light:'',serious:'',incap:'',rr:'',status:''})):Array.from({length:key==='vehicleRows'?sheetSlots.vehicles:sheetSlots.weapons},()=>Object.fromEntries(rowKeys[key].map(k=>[k,''])));}
@@ -19,6 +19,7 @@ function assertCharacterPath(path){
  if(['name','category','description','notes'].includes(path))return;
  const parts=path.split('.');if(parts[0]!=='profile')throw Error('Champ de personnage invalide.');
  if(parts.length===2&&[...numberFields,...textFields,...structuredTextFields].some(([k])=>k===parts[1]))return;
+ if(parts[1]==='npc'&&parts.length===3&&['combativeness','notes'].includes(parts[2]))return;
  if(parts[1]==='deck'&&parts.length===3&&deckKeys.includes(parts[2]))return;
  if(parts.length===4&&rowKeys[parts[1]]?.includes(parts[3])&&/^\d+$/.test(parts[2])&&Number(parts[2])<300)return;
  throw Error('Champ de personnage invalide.');
@@ -63,7 +64,7 @@ export function characterInlineSpec(state,target,path,label){
  if(path==='profile.metatype'){type='select';options=metatypeOptions(value);}else if(path==='category'){type='select';options=groups.characters;}else if(path==='name')type='text';
  else if(parts.at(-1)==='spellId'){type='select';options=getCharacterCatalogs(state).spells.map(s=>[s.id,s.name]);}
  else if(parts.at(-1)==='catalogId'){type='select';options=getCharacterCatalogs(state)[parts[1]==='skillRows'?'skills':'assets'].map(x=>[x.id,x.name]);}
- else if(path.startsWith('profile.')&&parts.length===2&&numberFields.some(([k])=>k===parts[1])||['rating','rr','level','essence'].includes(parts.at(-1))&&parts.length===4){type='number';min=0;step=parts.at(-1)==='essence'?'any':1;max=parts.at(-1)==='rating'?8:parts.at(-1)==='rr'?3:undefined;}
+ else if(path.startsWith('profile.')&&parts.length===2&&numberFields.some(([k])=>k===parts[1])||['rating','rr','level','essence','mean'].includes(parts.at(-1))&&parts.length===4){type='number';min=0;step=parts.at(-1)==='essence'?'any':1;max=parts.at(-1)==='rating'?(entry.profile?.npc?12:8):parts.at(-1)==='mean'?30:parts.at(-1)==='rr'?3:undefined;}
  else if(parts.at(-1)==='attribute'){type='select';options=attributeFields;}
  else if(parts.at(-1)==='specialized'){type='boolean';}
  else if(parts.at(-1)==='specialization'){suggestions=[];}

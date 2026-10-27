@@ -1,29 +1,31 @@
-import {renderSpellLibrary} from './spells-ui.js?v=0.21.0';
-import {renderSourceLibrary} from './book-art-ui.js?v=0.21.0';
-import {resourceArtwork,resourceImageKey} from './resource-art.js?v=0.21.0';
-import {mountResourceArt} from './resource-art-ui.js?v=0.21.0';
-import {mountSheetView} from './sheet-view.js?v=0.21.0';
-import {renderGlobalSearch} from './global-search-ui.js?v=0.21.0';
-import {unclassifiedCharacter} from './character-options.js?v=0.21.0';
-import {entryField,mountEntryInline} from './entry-inline.js?v=0.21.0';
-import {mountCharacterInline} from './character-inline.js?v=0.21.0';
-import {deleteScenario} from './scenarios.js?v=0.21.0';
-import {mergeWorld,characterEntryForRecord} from './world.js?v=0.21.0';
-import {worldKinds,makeWorldRecord} from './world-schema.js?v=0.21.0';
-import {renderDashboard,renderWorldList,renderWorldRecord,openWorldEditor} from './world-ui.js?v=0.21.0';
-import {secretSection,toggleSecret} from './secrets-ui.js?v=0.21.0';
-import {renderCorporations} from './corporations-ui.js?v=0.21.0';
-import {renderDijonMap} from './dijon-map.js?v=0.21.0';
-import {renderRules} from './rules-ui.js?v=0.21.0';
-import {validateProfile} from './sheet.js?v=0.21.0';
-import {references} from './references.js?v=0.21.0';
-import {mountQuickDice,renderDiceSettings} from './dice-ui.js?v=0.21.0';
-import {escape,toggleSearchDisclosure} from './ui.js?v=0.21.0';
-import {groups,validateCampaign} from './campaign.js?v=0.21.0';
-import {getCatalogs,getCharacterCatalogs} from './catalog.js?v=0.21.0';
-import {renderCatalogLibrary,showCustomEditor} from './catalog-ui.js?v=0.21.0';
-import {mountCharacterEditor} from './character-editor.js?v=0.21.0';
-import {characterSheet} from './character-sheet.js?v=0.21.0';
+import {openNewScenario} from './scenario-dialogs.js?v=0.22.0';
+import {renderNpcSettings} from './npc-settings-ui.js?v=0.22.0';
+import {renderSpellLibrary} from './spells-ui.js?v=0.22.0';
+import {renderSourceLibrary} from './book-art-ui.js?v=0.22.0';
+import {resourceArtwork,resourceImageKey} from './resource-art.js?v=0.22.0';
+import {mountResourceArt} from './resource-art-ui.js?v=0.22.0';
+import {mountSheetView} from './sheet-view.js?v=0.22.0';
+import {renderGlobalSearch} from './global-search-ui.js?v=0.22.0';
+import {unclassifiedCharacter} from './character-options.js?v=0.22.0';
+import {entryField,mountEntryInline} from './entry-inline.js?v=0.22.0';
+import {mountCharacterInline} from './character-inline.js?v=0.22.0';
+import {deleteScenario} from './scenarios.js?v=0.22.0';
+import {mergeWorld,characterEntryForRecord} from './world.js?v=0.22.0';
+import {worldKinds,makeWorldRecord} from './world-schema.js?v=0.22.0';
+import {renderDashboard,renderWorldList,renderWorldRecord,openWorldEditor} from './world-ui.js?v=0.22.0';
+import {secretSection,toggleSecret} from './secrets-ui.js?v=0.22.0';
+import {renderCorporations} from './corporations-ui.js?v=0.22.0';
+import {renderDijonMap} from './dijon-map.js?v=0.22.0';
+import {renderRules} from './rules-ui.js?v=0.22.0';
+import {validateProfile} from './sheet.js?v=0.22.0';
+import {references} from './references.js?v=0.22.0';
+import {mountQuickDice,renderDiceSettings} from './dice-ui.js?v=0.22.0';
+import {escape,toggleSearchDisclosure} from './ui.js?v=0.22.0';
+import {groups,validateCampaign} from './campaign.js?v=0.22.0';
+import {getCatalogs,getCharacterCatalogs} from './catalog.js?v=0.22.0';
+import {renderCatalogLibrary,showCustomEditor} from './catalog-ui.js?v=0.22.0';
+import {mountCharacterEditor} from './character-editor.js?v=0.22.0';
+import {characterSheet} from './character-sheet.js?v=0.22.0';
 const $=s=>document.querySelector(s),key='shadowrun-table-v1';
 const icons={characters:'<circle cx="9" cy="8" r="3"/><path d="M3 20v-3a6 6 0 0 1 12 0v3M16 5a3 3 0 0 1 0 6M18 14a5 5 0 0 1 3 4v2"/>',catalog:'<path d="m12 3 9 5-9 5-9-5 9-5ZM3 8v9l9 5 9-5V8M12 13v9"/>',rules:'<path d="M12 5c-3-2-6-2-10-1v15c4-1 7-1 10 1 3-2 6-2 10-1V4c-4-1-7-1-10 1Zm0 0v15"/>',dice:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h.01M17 7h.01M12 12h.01M7 17h.01M17 17h.01" stroke-width="3" stroke-linecap="round"/>',map:'<path d="m3 5 6-2 6 3 6-2v15l-6 2-6-3-6 2V5ZM9 3v15M15 6v15"/>',references:'<path d="M4 4h5v17H4zM10 4h4v17h-4zM15 5l4-1 4 16-4 1z"/>'};
 icons.library=icons.rules;icons.settings='<circle cx="12" cy="12" r="4"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/>';
@@ -53,7 +55,7 @@ function render(){
  $('.global-search-tools').hidden=!worldViewing&&!viewing&&(tab==='world-search'||!!$('#search').value.trim());
  $('#content').onclick=null;document.querySelector('.edition-strip span').textContent='DIJON / '+state.world.settings.year;
  $('nav').innerHTML=Object.entries(tabs).map(([id,label])=>`<button data-tab="${id}" class="${id===tab?'active':''}" ${id===tab?'aria-current="page"':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">${icons[id]}</svg><span>${label}</span></button>`).join('');
- if(worldViewing){document.body.classList.remove('viewing-character');$('#title').textContent='Dossier de campagne';const target=tab==='organizations'?organizationShell():tab==='map'&&mapCity?cityShell():$('#content');disposeWorld=renderWorldRecord(target,state,worldViewing,{onSave:persist,onRefresh:render,getState:()=>state}, {reveal:worldReveal});return;}
+ if(worldViewing){document.body.classList.remove('viewing-character');$('#title').textContent=state.world.records.find(r=>r.id===worldViewing)?.kind==='scenario'?'Scénario':'Dossier de campagne';const target=tab==='organizations'?organizationShell():tab==='map'&&mapCity?cityShell():$('#content');disposeWorld=renderWorldRecord(target,state,worldViewing,{onSave:persist,onRefresh:render,getState:()=>state}, {reveal:worldReveal});return;}
  const dossier=viewing&&state.world.records.find(r=>r.kind==='character'&&(r.id===viewing||r.gameEntryId===viewing));
  const savedEntry=state.entries.find(e=>e.id===viewing&&groups.characters.includes(e.category));
  const entry=savedEntry??(dossier?characterEntryForRecord(state,dossier):null);
@@ -79,7 +81,7 @@ function render(){
  }
  if(tab==='library'){renderCatalogLibrary($('#content'),getCatalogs(state),(kind,onDone)=>createCatalogEntry(kind,onDone,{characterOnly:false}),'',{getImages:()=>state.resourceImages,getBookRefs:()=>state.resourceArtRefs});return;}
  if(tab==='references'){renderSourceLibrary($('#content'),referenceCards(references));return;}
- if(tab==='settings'){renderDiceSettings($('#content'));return;}
+ if(tab==='settings'){renderDiceSettings($('#content'));renderNpcSettings($('#content'),()=>state,persist);return;}
  renderMap();
 }
 function createCatalogEntry(kind,onDone,{characterOnly=typeof onDone==='function'}={}){
@@ -116,7 +118,7 @@ document.addEventListener('click',e=>{
  if(b?.dataset.openCharacter){openCharacter(b.dataset.openCharacter);return;}
  if(b?.dataset.openWorld){openWorld(b.dataset.openWorld,b.dataset.worldReveal==='true');return;}
  if(b?.dataset.scenarioDelete){if(confirm('Supprimer ce scénario ? Les personnages et les événements seront conservés dans la campagne.')){try{persist(deleteScenario(state,b.dataset.scenarioDelete));worldViewing=null;viewing=null;worldReveal=false;tab='scenarios';render();}catch(err){message(err.message);}}return;}
- if(b?.dataset.worldNew){if(b.dataset.worldNew==='character'){openEditor();return;}const r=makeWorldRecord(b.dataset.worldNew,b.dataset.worldNew+'-'+crypto.randomUUID(),'');openWorldEditor(state,r,(next,id)=>{persist(next);openWorld(id);});return;}
+ if(b?.dataset.worldNew){if(b.dataset.worldNew==='scenario'){openNewScenario(()=>state,persist,openWorld);return;}if(b.dataset.worldNew==='character'){openEditor();return;}const r=makeWorldRecord(b.dataset.worldNew,b.dataset.worldNew+'-'+crypto.randomUUID(),'');openWorldEditor(state,r,(next,id)=>{persist(next);openWorld(id);});return;}
  if(b?.dataset.worldEdit){openWorldEditor(state,state.world.records.find(r=>r.id===b.dataset.worldEdit),(next,id)=>{persist(next);openWorld(id);});return;}
  if(b?.dataset.createWorldGame){openEditor(null,b.dataset.createWorldGame);return;}
  if(b?.dataset.worldBack){worldViewing=null;worldReveal=false;routeRecord(b.dataset.worldBack);render();return;}

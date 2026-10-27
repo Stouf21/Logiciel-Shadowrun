@@ -1,5 +1,5 @@
-import {bookArtworks} from './book-art-data.js?v=0.21.0';
-import {baseAssets} from './catalog-data.js?v=0.21.0';
+import {bookArtworks} from './book-art-data.js?v=0.22.0';
+import {baseAssets} from './catalog-data.js?v=0.22.0';
 
 const normalize=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim();
 const byId=new Map(bookArtworks.map(x=>[x.id,x]));
@@ -12,7 +12,7 @@ for(const art of bookArtworks){
  for(const name of [art.name,...(art.matchNames??[]),...art.assetIds.map(id=>assets.get(id)?.name).filter(Boolean)])byName.set(normalize(art.category)+'|'+normalize(name),art);
 }
 export const bookArtworkById=id=>byId.get(id)??null;
-export const bookArtworkPath=art=>'./assets/book/'+art.bookImage+'?v=0.21.0';
+export const bookArtworkPath=art=>'./assets/book/'+art.bookImage+'?v=0.22.0';
 export const bookArtworkSource=art=>'Shadowrun : Anarchy 2.0 · p. '+(art.pages??[art.page]).join('–');
 export function findBookArtwork(item,scope='asset'){
  if(scope==='asset'&&byAsset.has(item.id)){

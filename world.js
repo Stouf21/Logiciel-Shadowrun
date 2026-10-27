@@ -1,8 +1,9 @@
-import {characterCategories,unclassifiedCharacter} from './character-options.js?v=0.21.0';
-import {seedRecords,seedRelations,seedSettings} from './world-data.js?v=0.21.0';
-import {makeWorldRecord,worldFields,UNKNOWN,validateWorld} from './world-schema.js?v=0.21.0';
-import {getCorporations} from './corporations.js?v=0.21.0';
-import {buildingSearchText} from './building-schema.js?v=0.21.0';
+import {characterCategories,unclassifiedCharacter} from './character-options.js?v=0.22.0';
+import {chapterSearchText,chapterHasCharacter} from './chapter-schema.js?v=0.22.0';
+import {seedRecords,seedRelations,seedSettings} from './world-data.js?v=0.22.0';
+import {makeWorldRecord,worldFields,UNKNOWN,validateWorld} from './world-schema.js?v=0.22.0';
+import {getCorporations} from './corporations.js?v=0.22.0';
+import {buildingSearchText} from './building-schema.js?v=0.22.0';
 export const normalize=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('fr').trim().replace(/[’‘]/g,"'");
 export const isCorporationRecord=r=>r.kind==='corporation'||r.kind==='faction'&&(!!r.corporationId||/\b(corporation|corporatiste|filiale corporatiste)\b/.test(normalize(r.fields?.type)));
 const cloneRecord=r=>({...r,aliases:[...r.aliases],fields:{...r.fields},kind:isCorporationRecord(r)?'corporation':r.kind});
@@ -43,8 +44,8 @@ export function mergeWorld(state){
  for(const seed of seedRelations){const from=remap.get(seed.from)??seed.from,to=remap.get(seed.to)??seed.to;if(!deletedRelations.has(seed.id)&&recordIds.has(from)&&recordIds.has(to)&&!relations.some(r=>r.id===seed.id))relations.push({...seed,from,to});}
  const world={...original,version:1,settings:{...seedSettings,...original?.settings},records,relations};validateWorld(world);return {...state,world};
 }
-export function recordSecretText(r){const secretFields=worldFields[r.kind].filter(([, ,scope])=>scope==='secret').map(([key])=>r.fields[key]??'');return [r.secrets,r.gmNotes,r.consequences,r.history,...secretFields,buildingSearchText(r,true)].join(' ');}
-export function recordPublicText(r){const publicFields=worldFields[r.kind].filter(([, ,scope])=>scope!=='secret').map(([key])=>r.fields[key]??'');return [r.name,...r.aliases,r.publicInfo,r.knownInfo,r.rumors,r.revealedInfo,r.state,r.discovery,...publicFields,buildingSearchText(r)].join(' ');}
+export function recordSecretText(r){const secretFields=worldFields[r.kind].filter(([, ,scope])=>scope==='secret').map(([key])=>r.fields[key]??'');return [r.secrets,r.gmNotes,r.consequences,r.history,...secretFields,buildingSearchText(r,true),chapterSearchText(r,true)].join(' ');}
+export function recordPublicText(r){const publicFields=worldFields[r.kind].filter(([, ,scope])=>scope!=='secret').map(([key])=>r.fields[key]??'');return [r.name,...r.aliases,r.publicInfo,r.knownInfo,r.rumors,r.revealedInfo,r.state,r.discovery,...publicFields,buildingSearchText(r),chapterSearchText(r)].join(' ');}
 export function relationIsSecret(world,relation){return relation.visibility==='secret'||world.records.some(r=>(r.id===relation.from||r.id===relation.to)&&r.isSecret);}
 export function relatedRecords(world,id,includeSecrets=false){return world.relations.filter(r=>(r.from===id||r.to===id)&&(includeSecrets||!relationIsSecret(world,r))).map(relation=>({relation,other:world.records.find(r=>r.id===(relation.from===id?relation.to:relation.from))}));}
 export function worldSearch(world,query='',{includeSecrets=false,kind='',filters={}}={}){
@@ -83,7 +84,7 @@ function matchesFacet(world,record,kind,id,includeSecrets){
  const adjacent=recordId=>links.filter(r=>r.from===recordId||r.to===recordId).map(r=>r.from===recordId?r.to:r.from);
  if(record.id===id||adjacent(record.id).includes(id))return true;
  if(kind==='corporation'&&record.building?.ownerId===id&&world.records.some(r=>r.id===id&&(includeSecrets||!r.isSecret)))return true;
- if(kind==='scenario')return false;
+ if(kind==='scenario')return chapterHasCharacter(world,id,record.id,includeSecrets);
  const locations=new Set(record.kind==='zone'||record.kind==='place'?[record.id]:[]);
  for(const otherId of adjacent(record.id)){const other=world.records.find(r=>r.id===otherId);if(other&&['place','zone'].includes(other.kind))locations.add(other.id);}
  for(let depth=0;depth<3;depth++)for(const relation of links.filter(r=>r.type==='Situé dans'))if(locations.has(relation.from))locations.add(relation.to);

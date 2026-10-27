@@ -1,10 +1,11 @@
-import {characterCategories} from './character-options.js?v=0.21.0';
-import {validateMapState} from './map-model.js?v=0.21.0';
-import {validateWorld} from './world-schema.js?v=0.21.0';
-import {validateCorporations} from './corporations.js?v=0.21.0';
-import {validateProfile} from './sheet.js?v=0.21.0';
-import {validateCustomCatalog} from './catalog.js?v=0.21.0';
-import {validateResourceImages,validateResourceArtRefs} from './resource-art.js?v=0.21.0';
+import {validateNpcPreferences} from './npc-preferences.js?v=0.22.0';
+import {characterCategories} from './character-options.js?v=0.22.0';
+import {validateMapState} from './map-model.js?v=0.22.0';
+import {validateWorld} from './world-schema.js?v=0.22.0';
+import {validateCorporations} from './corporations.js?v=0.22.0';
+import {validateProfile} from './sheet.js?v=0.22.0';
+import {validateCustomCatalog} from './catalog.js?v=0.22.0';
+import {validateResourceImages,validateResourceArtRefs} from './resource-art.js?v=0.22.0';
 export const groups={characters:characterCategories,catalog:['Objet','Accessoire','Arme','Armure','Sort','Programme','Véhicule','Drone','Esprit','Drogue','Autre'],rules:['Règle','Aide-mémoire']};
 export function validateCampaign(data){
  if(!data||!Array.isArray(data.entries)||!Array.isArray(data.tokens))throw Error('Format de sauvegarde invalide.');
@@ -18,5 +19,6 @@ export function validateCampaign(data){
  validateCustomCatalog(data.customSkills,'skills');validateCustomCatalog(data.customAssets,'assets');
  validateResourceImages(data.resourceImages);
  validateResourceArtRefs(data.resourceArtRefs);
+ validateNpcPreferences(data.npcPreferences);
  return {...data,customSkills:data.customSkills??[],customAssets:data.customAssets??[]};
 }

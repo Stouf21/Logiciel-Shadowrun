@@ -1,4 +1,4 @@
-import {validateMapShapes} from './map-shape-schema.js?v=0.21.0';
+import {validateMapShapes} from './map-shape-schema.js?v=0.22.0';
 export const mapModes=['streets','cyberpunk'];
 export const dijonMapCenter=[47.322,5.0415];
 export const imageSize={width:1600,height:1200};
