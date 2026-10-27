@@ -16,11 +16,11 @@ test('Chaque référence de matériel a une illustration propre, identifiée par
  const expected=baseAssets.filter(x=>categories.has(x.category));assert.equal(expected.length,144);assert.equal(resourceIllustrations.length,expected.length);
  const addresses=new Set(),ids=new Set();
  for(const resource of expected){
-  const art=defaultResourceArt(resource);assert.ok(art,resource.name);assert.equal(art.name,resource.name);assert.equal(art.category,resource.category);
+  const art=resourceIllustrations.find(x=>x.id===resource.id);assert.ok(defaultResourceArt(resource),resource.name);assert.equal(art.name,resource.name);assert.equal(art.category,resource.category);
   const address=art.board+':'+art.index;assert.ok(!addresses.has(address),'Visuel déjà attribué : '+resource.name);addresses.add(address);ids.add(art.id);
   assert.ok(Number.isInteger(art.index)&&art.index>=0&&art.index<art.columns**2);assert.ok(art.depiction.length>40);
   assert.equal(art.crop.length,4);assert.ok(art.crop.every(Number.isFinite));const [x,y,w,h]=art.crop;assert.ok(x>=0&&y>=0&&w>.1&&h>.1&&x+w<=1&&y+h<=1);
-  assert.match(resourceArtwork(resource),/Illustration dédiée/);assert.ok(resourceArtwork(resource).includes('data-art-reference="'+resource.id+'"'));
+  assert.match(resourceArtwork(resource),/Illustration dédiée|Illustration du livre/);if(!defaultResourceArt(resource).bookImage)assert.ok(resourceArtwork(resource).includes('data-art-reference="'+resource.id+'"'));
  }
  assert.equal(ids.size,144);assert.equal(addresses.size,144);
  for(const category of ['Trait','Contact','Esprit mentor','Sort','Pouvoir d’adepte'])assert.equal(resourceArtwork(item(category,'Drone imaginaire')),'');
@@ -38,7 +38,7 @@ test('Les cadres individuels restent séparés et excluent les détails des rang
 
 test('Le cadrage distingue revolver, taser, BTL, interface neurale, monoroue et deltaplane',()=>{
  for(const [id,expression] of [['asset-19',/revolver.*BARILLET/i],['asset-13',/taser.*électrodes/i],['asset-28',/PUCE BTL/i],['asset-30',/PUCE BTL/i],['asset-42',/prise neurale/i],['asset-175',/MONOROUE/],['asset-177',/LIMOUSINE/],['asset-204',/deltaplane/i]])assert.match(resourceIllustrations.find(x=>x.id===id).depiction,expression);
- assert.notEqual(defaultResourceArt(baseAssets.find(x=>x.id==='asset-16')).index,defaultResourceArt(baseAssets.find(x=>x.id==='asset-17')).index);
+ assert.notEqual(defaultResourceArt(baseAssets.find(x=>x.id==='asset-16')).id,defaultResourceArt(baseAssets.find(x=>x.id==='asset-17')).id);
  assert.notEqual(defaultResourceArt(baseAssets.find(x=>x.id==='asset-50')).index,defaultResourceArt(baseAssets.find(x=>x.id==='asset-51')).index);
 });
 
@@ -47,7 +47,7 @@ test('Une création inconnue ne reçoit plus un visuel générique ; une référ
   assert.equal(defaultResourceArt(resource),null);assert.match(resourceArtwork(resource),/Ajouter une illustration/);assert.doesNotMatch(resourceArtwork(resource),/resource-art-atlas/);
  }
  const book=baseAssets.find(x=>x.name==='Ares Predator IV'),personal={...book,id:'my-weapon'};
- assert.equal(defaultResourceArt(personal),null);assert.equal(defaultResourceArt(personal,'entry').id,book.id);
+ assert.equal(defaultResourceArt(personal).id,'book-predator-iv');assert.equal(defaultResourceArt(personal,'entry').id,'book-predator-iv');
  assert.equal(defaultResourceArt({...personal,name:'Arme personnelle',id:book.id},'entry'),null);
  assert.equal(defaultResourceArt({...book,name:'Autre arme'}),null);
  assert.equal(defaultResourceArt({...personal,category:'Véhicule'},'entry'),null);
@@ -65,7 +65,7 @@ test('Les planches locales sont distinctes et carrées, avec des coordonnées va
 
 test('Une image personnelle reste prioritaire et propre à sa ressource, sans modifier les atouts du livre',()=>{
  const resource={...baseAssets.find(x=>x.name==='Ares Predator IV')},before=structuredClone(resource),key=resourceImageKey('asset',resource.id),images={[key]:png};
- assert.match(resourceArtwork(resource),/Illustration dédiée/);
+ assert.match(resourceArtwork(resource),/Illustration du livre/);
  assert.match(resourceArtwork(resource,images),/Image personnelle/);assert.ok(resourceArtwork(resource,images).includes(png));
  assert.doesNotMatch(resourceArtwork(resource,images,'entry'),/Image personnelle/);assert.deepEqual(resource,before);
  assert.match(resourceArtwork(item('Arme','Ares <exemple>'),{'asset:resource-test':png}),/Ares &lt;exemple&gt;/);

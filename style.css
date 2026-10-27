@@ -401,3 +401,12 @@ button.danger{color:var(--rust);border-color:var(--rust)}
 .resource-art-dialog .muted{font-size:12px;line-height:1.6}
 .resource-art-error{color:var(--rust);font-size:13px;white-space:pre-wrap}
 @media(max-width:480px){.resource-art-dialog .actions{flex-wrap:wrap}.resource-art-dialog .actions>*{max-width:100%}.resource-art-preview .resource-art-sprite{width:min(100%,300px)}}
+.resource-art-book-stage{display:block;width:100%;height:184px;overflow:hidden;background:#232727}
+.resource-art-book{display:block;width:100%;height:100%;min-width:0;min-height:0;max-width:100%;object-fit:contain;padding:10px}
+.resource-art-preview .resource-art-book-stage{height:min(48dvh,420px)}
+.book-art-card .actions .button{font-size:14px;min-height:36px;padding:7px 11px;text-decoration:none}
+.book-art-card .resource-art-open{margin:14px 0}
+.book-art-legend{font-size:12px;color:var(--muted)}
+.book-art-credit{font:11px/1.7 system-ui,sans-serif;color:var(--muted);margin-top:24px}
+[data-art-book-pick]{max-width:100%;margin-top:6px}
+.book-art-dialog .actions{flex-wrap:wrap}

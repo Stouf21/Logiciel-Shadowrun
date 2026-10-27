@@ -1,4 +1,4 @@
-import {validateBuilding} from './building-schema.js?v=0.20.0';
+import {validateBuilding} from './building-schema.js?v=0.21.0';
 export const UNKNOWN='À définir';
 export const worldKinds={character:'Personnage',corporation:'Corporation',faction:'Faction',zone:'Quartier / zone',place:'Lieu',scenario:'Scénario',clue:'Indice',secret:'Secret',event:'Événement'};
 export const discoveryStates=['Non découvert','Partiellement découvert','Découvert'];

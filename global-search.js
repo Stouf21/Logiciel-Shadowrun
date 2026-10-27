@@ -1,12 +1,14 @@
-import {spellMatches} from './spells.js?v=0.20.0';
-import {getCatalogs} from './catalog.js?v=0.20.0';
-import {getCorporations} from './corporations.js?v=0.20.0';
-import {groups} from './campaign.js?v=0.20.0';
-import {normalize,worldSearch} from './world.js?v=0.20.0';
-import {profileSearchText} from './sheet.js?v=0.20.0';
-import {describeSkill} from './skill-details.js?v=0.20.0';
-import {rules,ruleMatches} from './rules-data.js?v=0.20.0';
-import {references} from './references.js?v=0.20.0';
+import {spellMatches} from './spells.js?v=0.21.0';
+import {bookArtworks} from './book-art-data.js?v=0.21.0';
+import {bookArtworkMatches} from './book-art.js?v=0.21.0';
+import {getCatalogs} from './catalog.js?v=0.21.0';
+import {getCorporations} from './corporations.js?v=0.21.0';
+import {groups} from './campaign.js?v=0.21.0';
+import {normalize,worldSearch} from './world.js?v=0.21.0';
+import {profileSearchText} from './sheet.js?v=0.21.0';
+import {describeSkill} from './skill-details.js?v=0.21.0';
+import {rules,ruleMatches} from './rules-data.js?v=0.21.0';
+import {references} from './references.js?v=0.21.0';
 export const searchTabs=[['all','Tout'],['skills','Compétences'],['assets','Atouts'],['spells','Sorts'],['weapons','Armes'],['vehicles','Véhicules'],['drones','Drones'],['spirits','Esprits'],['drugs','Drogues'],['armor','Armures'],['equipment','Équipement'],['cyberware','Cyberware'],['bioware','Bioware'],['programs','Programmes'],['decks','Cyberdecks'],['focus','Focus'],['adept','Pouvoirs d’adepte'],['contacts','Contacts'],['traits','Traits'],['world','Dossiers de campagne'],['rules','Règles'],['sources','Sources']];
 export function resourceTabs(item){
  const category=normalize(item.category),name=normalize(item.name),tags=[];
@@ -39,6 +41,13 @@ export function globalSearch(state,query='',{includeSecrets=false,tab='all'}={})
  }
  for(const item of rules)if(!q||ruleMatches(item,query))rows.push({key:'rule:'+item.id,type:'rule',item,protected:false,tabs:['rules']});
  for(const [index,item] of references.entries())if(matches([item.title,item.source,item.status,item.text],q))rows.push({key:'source:'+index,type:'source',item,protected:false,tabs:['sources']});
- const counts=Object.fromEntries(searchTabs.map(([id])=>[id,id==='all'?rows.length:rows.filter(r=>r.tabs.includes(id)).length]));
- return {rows:rows.filter(r=>tab==='all'||r.tabs.includes(tab)),counts};
+ const representedAssets=new Set(rows.filter(r=>r.type==='assets').map(r=>r.item.id));
+ const captionKey=art=>art.part+':'+art.page+':'+art.legend;
+ const representedCaptions=new Set(bookArtworks.filter(art=>art.assetIds.some(id=>representedAssets.has(id))).map(captionKey));
+ for(const item of bookArtworks)if(bookArtworkMatches(item,query)){
+  const sourceOnly=item.assetIds.some(id=>representedAssets.has(id))||item.assetIds.length>0&&representedCaptions.has(captionKey(item));
+  rows.push({key:'book-art:'+item.id,type:'book-art',item,protected:false,sourceOnly,tabs:['sources',...(sourceOnly?[]:resourceTabs(item))]});
+ }
+ const counts=Object.fromEntries(searchTabs.map(([id])=>[id,id==='all'?rows.filter(r=>!r.sourceOnly).length:rows.filter(r=>r.tabs.includes(id)).length]));
+ return {rows:rows.filter(r=>tab==='all'?!r.sourceOnly:r.tabs.includes(tab)),counts};
 }

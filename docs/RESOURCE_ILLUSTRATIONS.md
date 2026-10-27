@@ -1,4 +1,6 @@
-# Illustrations individuelles du catalogue — V0.20
+# Illustrations des ressources — V0.20 et V0.21
+
+Depuis la V0.21, les dessins identifiés dans le livre ont priorité sur les créations décrites ci-dessous ; les choix personnels restent prioritaires. [Sources du livre et extraction](BOOK_ART.md).
 
 Les fichiers `assets/items/*.png` sont des créations originales produites avec l’outil de génération d’images le 27 octobre 2026 pour cette application. Ils ne sont pas extraits des illustrations des livres Shadowrun. Les noms identifient les références ; aucun logo ni texte de marque n’a été demandé dans les dessins. Les légendes « Illustration dédiée » et « Interprétation originale » distinguent ces créations des dessins officiels.
 
@@ -26,4 +28,6 @@ La propriété facultative de campagne `resourceImages` associe une URL de donn�
 
 La validation accepte uniquement les URL de données raster PNG / JPEG / WebP, avec des limites par image et par collection ; elle rejette les URL distantes et les SVG. Une image de sauvegarde illisible affiche un repli et permet de choisir un autre fichier. L’enregistrement utilise la sauvegarde atomique existante : en cas de quota dépassé, l’ancienne campagne et la sélection sont conservées. Les anciennes sauvegardes restent compatibles ; l’export/import inclut les images personnelles.
 
-Seules les créations originales intégrées sont publiées avec le code. Les images personnelles ne sont jamais téléversées par cette fonctionnalité. La recherche vérifie les correspondances réservées au MJ avant de produire les cartes illustrées. La mise à jour d’une image remplace seulement ses vignettes pour conserver l’onglet, les filtres et la requête.
+Les dessins identifiés du livre et les créations de repli sont publiés avec leur provenance ; les PDF et leurs filigranes d’achat restent hors du dépôt. Les images personnelles ne sont jamais téléversées par cette fonctionnalité. La recherche vérifie les correspondances réservées au MJ avant de produire les cartes illustrées. La mise à jour d’une image remplace seulement ses vignettes pour conserver l’onglet, les filtres et la requête.
+
+La propriété facultative `resourceArtRefs` conserve les choix explicites de dessins du livre, sous les mêmes clés `asset:<id>` / `entry:<id>`. Chaque valeur est un identifiant connu de `book-art-data.js`. Les images personnelles `resourceImages` conservent leur priorité ; les choix inconnus, clés malformées et collections surdimensionnées sont refusés. Les sauvegardes anciennes sans cette propriété restent acceptées.

@@ -1,0 +1,1008 @@
+[
+  {
+    "id": "book-rose",
+    "name": "Rose",
+    "category": "Personnage",
+    "part": "P1",
+    "page": 9,
+    "xrefs": [
+      1357
+    ]
+  },
+  {
+    "id": "book-kikisoblu",
+    "name": "Kikisoblu",
+    "category": "Personnage",
+    "part": "P1",
+    "page": 10,
+    "xrefs": [
+      1391
+    ]
+  },
+  {
+    "id": "book-humains",
+    "name": "Humains",
+    "category": "Métatype",
+    "part": "P1",
+    "page": 51,
+    "xrefs": [
+      3302
+    ]
+  },
+  {
+    "id": "book-elfes",
+    "name": "Elfes",
+    "category": "Métatype",
+    "part": "P1",
+    "page": 53,
+    "xrefs": [
+      3368
+    ]
+  },
+  {
+    "id": "book-nains",
+    "name": "Nains",
+    "category": "Métatype",
+    "part": "P1",
+    "page": 55,
+    "xrefs": [
+      3515
+    ]
+  },
+  {
+    "id": "book-orks",
+    "name": "Orks",
+    "category": "Métatype",
+    "part": "P1",
+    "page": 57,
+    "xrefs": [
+      3586
+    ]
+  },
+  {
+    "id": "book-trolls",
+    "name": "Trolls",
+    "category": "Métatype",
+    "part": "P1",
+    "page": 59,
+    "xrefs": [
+      3707
+    ]
+  },
+  {
+    "id": "book-hercules",
+    "name": "Hercules",
+    "category": "Personnage",
+    "part": "P2",
+    "page": 88,
+    "xrefs": [
+      212
+    ],
+    "legend": "Face adepte social, nain",
+    "description": "Face adepte social, nain ; nom confirmé sur la fiche de jeu qui suit le portrait."
+  },
+  {
+    "id": "book-wild-jane",
+    "name": "Wild Jane",
+    "category": "Personnage",
+    "part": "P2",
+    "page": 90,
+    "xrefs": [
+      361
+    ],
+    "legend": "Samouraï des rues, orke",
+    "description": "Samouraï des rues, orke ; nom confirmé sur la fiche de jeu qui suit le portrait."
+  },
+  {
+    "id": "book-trash",
+    "name": "Trash",
+    "category": "Personnage",
+    "part": "P2",
+    "page": 92,
+    "xrefs": [
+      429
+    ],
+    "legend": "Chaman, elfe",
+    "description": "Chaman, elfe ; nom confirmé sur la fiche de jeu qui suit le portrait."
+  },
+  {
+    "id": "book-gambit",
+    "name": "Gambit",
+    "category": "Personnage",
+    "part": "P2",
+    "page": 94,
+    "xrefs": [
+      497
+    ],
+    "legend": "Deckeuse, humaine",
+    "description": "Deckeuse, humaine ; nom confirmé sur la fiche de jeu qui suit le portrait."
+  },
+  {
+    "id": "book-charon",
+    "name": "Charon",
+    "category": "Personnage",
+    "part": "P2",
+    "page": 96,
+    "xrefs": [
+      558
+    ],
+    "legend": "Rigger, troll",
+    "description": "Rigger, troll ; nom confirmé sur la fiche de jeu qui suit le portrait."
+  },
+  {
+    "id": "book-luna",
+    "name": "Luna",
+    "category": "Personnage",
+    "part": "P2",
+    "page": 98,
+    "xrefs": [
+      626
+    ],
+    "legend": "Enquêtrice de l’occulte, orke",
+    "description": "Enquêtrice de l’occulte, orke ; nom confirmé sur la fiche de jeu qui suit le portrait."
+  },
+  {
+    "id": "book-casper",
+    "name": "Casper",
+    "category": "Personnage",
+    "part": "P2",
+    "page": 100,
+    "xrefs": [
+      720
+    ],
+    "legend": "Rigger de drones, humaine",
+    "description": "Rigger de drones, humaine ; nom confirmé sur la fiche de jeu qui suit le portrait."
+  },
+  {
+    "id": "book-echo",
+    "name": "Echo",
+    "category": "Personnage",
+    "part": "P2",
+    "page": 102,
+    "xrefs": [
+      788
+    ],
+    "legend": "Face infiltratrice, humaine",
+    "description": "Face infiltratrice, humaine ; nom confirmé sur la fiche de jeu qui suit le portrait."
+  },
+  {
+    "id": "book-drakk",
+    "name": "Drakk",
+    "category": "Personnage",
+    "part": "P2",
+    "page": 104,
+    "xrefs": [
+      856
+    ],
+    "legend": "Samouraï des rues, troll",
+    "description": "Samouraï des rues, troll ; nom confirmé sur la fiche de jeu qui suit le portrait."
+  },
+  {
+    "id": "book-white-rabbit",
+    "name": "White_Rabbit",
+    "category": "Personnage",
+    "part": "P2",
+    "page": 106,
+    "xrefs": [
+      919
+    ],
+    "legend": "Decker de combat, poseur ork, humain",
+    "description": "Decker de combat, poseur ork, humain ; nom confirmé sur la fiche de jeu qui suit le portrait."
+  },
+  {
+    "id": "book-mictlan",
+    "name": "Mictlan",
+    "category": "Personnage",
+    "part": "P2",
+    "page": 108,
+    "xrefs": [
+      984
+    ],
+    "legend": "Adepte physique, elfe",
+    "description": "Adepte physique, elfe ; nom confirmé sur la fiche de jeu qui suit le portrait."
+  },
+  {
+    "id": "book-capitan",
+    "name": "Capitán",
+    "category": "Personnage",
+    "part": "P2",
+    "page": 110,
+    "xrefs": [
+      1052
+    ],
+    "legend": "Face militaire, nain",
+    "description": "Face militaire, nain ; nom confirmé sur la fiche de jeu qui suit le portrait."
+  },
+  {
+    "id": "book-electro-gants-face",
+    "name": "Électro-gants — vue 1",
+    "category": "Arme",
+    "part": "P3-1",
+    "page": 143,
+    "xrefs": [
+      982
+    ],
+    "legend": "électro-gants",
+    "aliases": [
+      "Gants électriques"
+    ],
+    "matchNames": [
+      "Électro-gants"
+    ]
+  },
+  {
+    "id": "book-electro-gants-dos",
+    "name": "Électro-gants — vue 2",
+    "category": "Arme",
+    "part": "P3-1",
+    "page": 143,
+    "xrefs": [
+      986
+    ],
+    "legend": "électro-gants",
+    "primary": false
+  },
+  {
+    "id": "book-yamaha-pulsar",
+    "name": "Yamaha Pulsar",
+    "category": "Arme",
+    "part": "P3-1",
+    "page": 143,
+    "xrefs": [
+      990
+    ],
+    "assetIds": [
+      "asset-13"
+    ]
+  },
+  {
+    "id": "book-shiawase-puzzler",
+    "name": "Shiawase Arms Puzzler",
+    "category": "Arme",
+    "part": "P3-1",
+    "page": 144,
+    "xrefs": [
+      1148,
+      1313
+    ],
+    "join": "horizontal",
+    "assetIds": [
+      "asset-15"
+    ],
+    "pages": [
+      144,
+      145
+    ]
+  },
+  {
+    "id": "book-predator-vi-or",
+    "name": "Ares Predator VI — variante dorée",
+    "category": "Arme",
+    "part": "P3-1",
+    "page": 145,
+    "xrefs": [
+      1152,
+      1317
+    ],
+    "join": "horizontal",
+    "legend": "ARES PREDATOR IV, V & VI",
+    "assetIds": [
+      "asset-18"
+    ],
+    "primary": false,
+    "pages": [
+      144,
+      145
+    ],
+    "description": "Variante dorée ; le marquage du dessin identifie le modèle VI."
+  },
+  {
+    "id": "book-pistolet-typique-1",
+    "name": "Pistolets typiques — dessin 1",
+    "category": "Arme",
+    "part": "P3-1",
+    "page": 145,
+    "xrefs": [
+      1156,
+      1322
+    ],
+    "legend": "Pistolets légers et lourds typiques",
+    "join": "horizontal",
+    "pages": [
+      144,
+      145
+    ],
+    "description": "Exemple générique légendé dans le livre ; aucun modèle de fabricant n’est nommé."
+  },
+  {
+    "id": "book-pistolet-typique-2",
+    "name": "Pistolets typiques — dessin 2",
+    "category": "Arme",
+    "part": "P3-1",
+    "page": 145,
+    "xrefs": [
+      1341
+    ],
+    "legend": "Pistolets légers et lourds typiques",
+    "description": "Exemple générique légendé dans le livre ; aucun modèle de fabricant n’est nommé."
+  },
+  {
+    "id": "book-pistolet-typique-3",
+    "name": "Pistolets typiques — dessin 3",
+    "category": "Arme",
+    "part": "P3-1",
+    "page": 145,
+    "xrefs": [
+      1346
+    ],
+    "legend": "Pistolets légers et lourds typiques",
+    "description": "Exemple générique légendé dans le livre ; aucun modèle de fabricant n’est nommé."
+  },
+  {
+    "id": "book-pistolet-typique-4",
+    "name": "Pistolets typiques — dessin 4",
+    "category": "Arme",
+    "part": "P3-1",
+    "page": 145,
+    "xrefs": [
+      1350
+    ],
+    "legend": "Pistolets légers et lourds typiques",
+    "description": "Exemple générique légendé dans le livre ; aucun modèle de fabricant n’est nommé."
+  },
+  {
+    "id": "book-predator-iv",
+    "name": "Ares Predator IV",
+    "category": "Arme",
+    "part": "P3-1",
+    "page": 145,
+    "xrefs": [
+      1336
+    ],
+    "legend": "ARES PREDATOR IV, V & VI",
+    "assetIds": [
+      "asset-16"
+    ],
+    "description": "Modèle identifié par le marquage du dessin dans la planche des Predator."
+  },
+  {
+    "id": "book-predator-v",
+    "name": "Ares Predator V",
+    "category": "Arme",
+    "part": "P3-1",
+    "page": 145,
+    "xrefs": [
+      1331
+    ],
+    "legend": "ARES PREDATOR IV, V & VI",
+    "assetIds": [
+      "asset-17"
+    ],
+    "description": "Modèle identifié par le marquage du dessin dans la planche des Predator."
+  },
+  {
+    "id": "book-predator-vi",
+    "name": "Ares Predator VI",
+    "category": "Arme",
+    "part": "P3-1",
+    "page": 145,
+    "xrefs": [
+      1326
+    ],
+    "legend": "ARES PREDATOR IV, V & VI",
+    "assetIds": [
+      "asset-18"
+    ],
+    "description": "Modèle identifié par le marquage du dessin dans la planche des Predator."
+  },
+  {
+    "id": "book-ruger-super-warhawk",
+    "name": "Ruger Super Warhawk",
+    "category": "Arme",
+    "part": "P3-1",
+    "page": 146,
+    "xrefs": [
+      1449
+    ],
+    "assetIds": [
+      "asset-19"
+    ],
+    "description": "Planche de trois variantes visuelles du revolver."
+  },
+  {
+    "id": "book-ingram-smartgun",
+    "name": "Ingram Smartgun",
+    "category": "Arme",
+    "part": "P3-1",
+    "page": 146,
+    "xrefs": [
+      1454
+    ],
+    "assetIds": [
+      "asset-20"
+    ],
+    "description": "Planche de deux variantes visuelles de la mitraillette."
+  },
+  {
+    "id": "book-ares-alpha-mk-ii",
+    "name": "Ares Alpha Mk II",
+    "category": "Arme",
+    "part": "P3-1",
+    "page": 147,
+    "xrefs": [
+      1459,
+      1553
+    ],
+    "join": "horizontal",
+    "pages": [
+      146,
+      147
+    ],
+    "assetIds": [
+      "asset-21"
+    ],
+    "description": "Planche des variantes du fusil d’assaut ; fragments du dessin réunis à la jonction des pages."
+  },
+  {
+    "id": "book-barrett-model-122",
+    "name": "Barrett Model 122 — dessin 1",
+    "category": "Arme",
+    "part": "P3-1",
+    "page": 147,
+    "xrefs": [
+      1463,
+      1558
+    ],
+    "join": "horizontal",
+    "pages": [
+      146,
+      147
+    ],
+    "assetIds": [
+      "asset-22"
+    ],
+    "legend": "Barrett Model 122",
+    "aliases": [
+      "Barret Model 122"
+    ],
+    "matchNames": [
+      "Barret Model 122",
+      "Barrett Model 122"
+    ]
+  },
+  {
+    "id": "book-barrett-model-122-variante",
+    "name": "Barrett Model 122 — dessin 2",
+    "category": "Arme",
+    "part": "P3-1",
+    "page": 147,
+    "xrefs": [
+      1467,
+      1563
+    ],
+    "join": "horizontal",
+    "pages": [
+      146,
+      147
+    ],
+    "assetIds": [
+      "asset-22"
+    ],
+    "primary": false,
+    "legend": "Barrett Model 122",
+    "aliases": [
+      "Barret Model 122"
+    ]
+  },
+  {
+    "id": "book-combinaison-cameleon",
+    "name": "Combinaison caméléon",
+    "category": "Armure",
+    "part": "P3-1",
+    "page": 148,
+    "xrefs": [
+      1690
+    ],
+    "assetIds": [
+      "asset-24"
+    ]
+  },
+  {
+    "id": "book-drogues",
+    "name": "Drogues — planche",
+    "category": "Drogue",
+    "part": "P3-1",
+    "page": 149,
+    "xrefs": [
+      1801
+    ],
+    "legend": "Drogues",
+    "description": "Planche générale : les produits ne portent pas de légendes individuelles permettant de les attribuer aux drogues nommées."
+  },
+  {
+    "id": "book-bras-cybernetiques",
+    "name": "Bras cybernétiques — planche",
+    "category": "Cyberware",
+    "part": "P3-1",
+    "page": 158,
+    "xrefs": [
+      2593
+    ],
+    "legend": "Bras cybernétiques",
+    "description": "Trois apparences de bras cybernétiques ; aucun équipement intégré particulier n’est identifié par la légende."
+  },
+  {
+    "id": "book-medikits",
+    "name": "Médikits — planche",
+    "category": "Équipement",
+    "part": "P3-1",
+    "page": 160,
+    "xrefs": [
+      2836
+    ],
+    "legend": "Médikits",
+    "description": "Deux exemples de médikits sans modèle de fabricant précisé par la légende."
+  },
+  {
+    "id": "book-focus",
+    "name": "Focus — planche",
+    "category": "Focus",
+    "part": "P3-2",
+    "page": 189,
+    "xrefs": [
+      2137
+    ],
+    "legend": "Focus",
+    "description": "Exemples de talismans ; leur fonction précise n’est pas attribuée individuellement par la légende."
+  },
+  {
+    "id": "book-focus-arme",
+    "name": "Focus d’arme",
+    "category": "Focus",
+    "part": "P3-2",
+    "page": 190,
+    "xrefs": [
+      2184
+    ],
+    "description": "L’illustration représente une hache ; elle n’est pas attribuée au couteau ou à l’épée du catalogue."
+  },
+  {
+    "id": "book-commlinks",
+    "name": "Commlinks — planche",
+    "category": "Équipement",
+    "part": "P4",
+    "page": 206,
+    "xrefs": [
+      424
+    ],
+    "legend": "commlinks",
+    "description": "Deux appareils externes ; cette planche ne représente pas un commlink implanté."
+  },
+  {
+    "id": "book-cyberdecks",
+    "name": "Cyberdecks — planche",
+    "category": "Cyberdeck",
+    "part": "P4",
+    "page": 209,
+    "xrefs": [
+      844
+    ],
+    "legend": "cyberdecks",
+    "description": "Trois exemples sans noms de modèles individuels dans la légende."
+  },
+  {
+    "id": "book-lunettes-ra",
+    "name": "Lunettes RA",
+    "category": "Équipement",
+    "part": "P4",
+    "page": 211,
+    "xrefs": [
+      1019
+    ]
+  },
+  {
+    "id": "book-console-rigger",
+    "name": "Console de commande pour rigger",
+    "category": "Équipement",
+    "part": "P4",
+    "page": 232,
+    "xrefs": [
+      2675
+    ],
+    "description": "Console illustrée sans fabricant ni modèle nommé dans la légende."
+  },
+  {
+    "id": "book-chopper",
+    "name": "Chopper",
+    "category": "Véhicule",
+    "part": "P4",
+    "page": 235,
+    "xrefs": [
+      2894
+    ],
+    "assetIds": [
+      "asset-168"
+    ],
+    "matchNames": [
+      "Chopper",
+      "Moto de combat / chopper"
+    ],
+    "association": "type"
+  },
+  {
+    "id": "book-moto-course",
+    "name": "Moto de course",
+    "category": "Véhicule",
+    "part": "P4",
+    "page": 235,
+    "xrefs": [
+      2899
+    ],
+    "assetIds": [
+      "asset-202"
+    ]
+  },
+  {
+    "id": "book-moto-monoroue",
+    "name": "Moto monoroue",
+    "category": "Véhicule",
+    "part": "P4",
+    "page": 235,
+    "xrefs": [
+      2903
+    ],
+    "assetIds": [
+      "asset-175"
+    ],
+    "matchNames": [
+      "Moto monoroue",
+      "Moto Horizon-Doble Revolution"
+    ],
+    "association": "context",
+    "description": "La légende indique « Moto monoroue » ; le texte de cette page cite la Revolution produite par Horizon."
+  },
+  {
+    "id": "book-sportive",
+    "name": "Sportive",
+    "category": "Véhicule",
+    "part": "P4",
+    "page": 236,
+    "xrefs": [
+      2996
+    ],
+    "assetIds": [
+      "asset-203"
+    ],
+    "matchNames": [
+      "Sportive",
+      "Voiture de sport"
+    ],
+    "association": "type"
+  },
+  {
+    "id": "book-limousine",
+    "name": "Limousine — dessin 1",
+    "category": "Véhicule",
+    "part": "P4",
+    "page": 236,
+    "xrefs": [
+      3000
+    ],
+    "assetIds": [
+      "asset-177"
+    ],
+    "matchNames": [
+      "Limousine"
+    ],
+    "association": "context",
+    "legend": "Limousine",
+    "description": "Exemple de limousine ; le texte de la page cite la Nightsky. La légende ne nomme pas un modèle individuel."
+  },
+  {
+    "id": "book-limousine-variante",
+    "name": "Limousine — dessin 2",
+    "category": "Véhicule",
+    "part": "P4",
+    "page": 236,
+    "xrefs": [
+      3004
+    ],
+    "assetIds": [
+      "asset-177"
+    ],
+    "primary": false,
+    "legend": "Limousine",
+    "association": "context"
+  },
+  {
+    "id": "book-gmc-bulldog",
+    "name": "GMC-Bulldog Step-van",
+    "category": "Véhicule",
+    "part": "P4",
+    "page": 237,
+    "xrefs": [
+      3065
+    ],
+    "assetIds": [
+      "asset-171"
+    ],
+    "association": "type",
+    "matchNames": [
+      "GMC-Bulldog Step-van",
+      "GMC Bulldog Step Van"
+    ],
+    "description": "Modèle nommé du livre utilisé comme exemple de van ; les caractéristiques génériques du catalogue ne sont pas remplacées."
+  },
+  {
+    "id": "book-ares-citymaster",
+    "name": "Ares Citymaster",
+    "category": "Véhicule",
+    "part": "P4",
+    "page": 237,
+    "xrefs": [
+      3069
+    ]
+  },
+  {
+    "id": "book-adav",
+    "name": "ADAV",
+    "category": "Véhicule",
+    "part": "P4",
+    "page": 238,
+    "xrefs": [
+      3206
+    ],
+    "legend": "ADAV t-bird",
+    "description": "Appareil à décollage et atterrissage vertical de la planche ADAV / t-bird."
+  },
+  {
+    "id": "book-t-bird",
+    "name": "T-bird",
+    "category": "Véhicule",
+    "part": "P4",
+    "page": 238,
+    "xrefs": [
+      3210
+    ],
+    "legend": "ADAV t-bird",
+    "description": "Appareil t-bird de la planche ADAV / t-bird ; ce n’est pas le Nightwing personnel."
+  },
+  {
+    "id": "book-shiawase-kanmushi",
+    "name": "Shiawase Kanmushi",
+    "category": "Drone",
+    "part": "P4",
+    "page": 240,
+    "xrefs": [
+      3429
+    ],
+    "assetIds": [
+      "asset-182"
+    ]
+  },
+  {
+    "id": "book-mct-gnat",
+    "name": "MCT Gnat",
+    "category": "Drone",
+    "part": "P4",
+    "page": 240,
+    "xrefs": [
+      3411
+    ],
+    "assetIds": [
+      "asset-183"
+    ]
+  },
+  {
+    "id": "book-quadrotor",
+    "name": "Cyberspace Design Quadrotor",
+    "category": "Drone",
+    "part": "P4",
+    "page": 240,
+    "xrefs": [
+      3416
+    ],
+    "assetIds": [
+      "asset-184"
+    ]
+  },
+  {
+    "id": "book-roto-drone",
+    "name": "MCT-Nissan Roto-drone",
+    "category": "Drone",
+    "part": "P4",
+    "page": 240,
+    "xrefs": [
+      3402
+    ],
+    "assetIds": [
+      "asset-187"
+    ]
+  },
+  {
+    "id": "book-doberman",
+    "name": "GM-Nissan Doberman",
+    "category": "Drone",
+    "part": "P4",
+    "page": 240,
+    "xrefs": [
+      3407
+    ],
+    "assetIds": [
+      "asset-186"
+    ]
+  },
+  {
+    "id": "book-steel-lynx",
+    "name": "Steel Lynx",
+    "category": "Drone",
+    "part": "P4",
+    "page": 240,
+    "xrefs": [
+      3425
+    ],
+    "assetIds": [
+      "asset-189"
+    ]
+  },
+  {
+    "id": "book-optic-x2",
+    "name": "Lockheed Optic-X2",
+    "category": "Drone",
+    "part": "P4",
+    "page": 240,
+    "xrefs": [
+      3420
+    ],
+    "sourceCrop": [
+      0,
+      0,
+      821,
+      426
+    ],
+    "assetIds": [
+      "asset-205"
+    ]
+  },
+  {
+    "id": "book-pursuit-v",
+    "name": "Chrysler-Nissan Pursuit V",
+    "category": "Drone",
+    "part": "P4",
+    "page": 240,
+    "xrefs": [
+      3420
+    ],
+    "sourceCrop": [
+      0,
+      426,
+      821,
+      664
+    ],
+    "assetIds": [
+      "asset-185"
+    ]
+  },
+  {
+    "id": "book-barghest",
+    "name": "Barghest",
+    "category": "Créature",
+    "part": "P5",
+    "page": 256,
+    "xrefs": [
+      674
+    ]
+  },
+  {
+    "id": "book-chien-enfer",
+    "name": "Chien de l’enfer",
+    "category": "Créature",
+    "part": "P5",
+    "page": 256,
+    "xrefs": [
+      679
+    ]
+  },
+  {
+    "id": "book-tigre-shiawase",
+    "name": "Tigre cyber-augmenté Shiawase",
+    "category": "Créature",
+    "part": "P5",
+    "page": 256,
+    "xrefs": [
+      683
+    ]
+  },
+  {
+    "id": "book-basilic",
+    "name": "Basilic",
+    "category": "Créature",
+    "part": "P5",
+    "page": 258,
+    "xrefs": [
+      785
+    ]
+  },
+  {
+    "id": "book-cocatrix",
+    "name": "Cocatrix",
+    "category": "Créature",
+    "part": "P5",
+    "page": 258,
+    "xrefs": [
+      790
+    ]
+  },
+  {
+    "id": "book-goule",
+    "name": "Goule",
+    "category": "Créature",
+    "part": "P5",
+    "page": 258,
+    "xrefs": [
+      794
+    ]
+  },
+  {
+    "id": "book-palas",
+    "name": "Palas",
+    "category": "Personnage",
+    "part": "P5",
+    "page": 287,
+    "xrefs": [
+      2288
+    ]
+  },
+  {
+    "id": "book-rebecca-taylor",
+    "name": "Rebecca Taylor",
+    "category": "Personnage",
+    "part": "P5",
+    "page": 288,
+    "xrefs": [
+      2396
+    ]
+  },
+  {
+    "id": "book-ishii-sama",
+    "name": "Ishii-sama",
+    "category": "Personnage",
+    "part": "P5",
+    "page": 290,
+    "xrefs": [
+      2553
+    ]
+  },
+  {
+    "id": "book-barbara-bearclaw",
+    "name": "Barbara Bearclaw",
+    "category": "Personnage",
+    "part": "P5",
+    "page": 308,
+    "xrefs": [
+      3330
+    ]
+  },
+  {
+    "id": "book-kyle-incarnat",
+    "name": "Kyle Incarnat",
+    "category": "Personnage",
+    "part": "P5",
+    "page": 311,
+    "xrefs": [
+      3439
+    ]
+  },
+  {
+    "id": "book-drone-chenille",
+    "name": "Drone chenillé — modèle non légendé",
+    "category": "Drone",
+    "part": "P4",
+    "page": 240,
+    "xrefs": [
+      3397
+    ],
+    "legend": "",
+    "description": "Dessin présent sur la planche des drones, sans nom de modèle identifiable. Aucun modèle nommé n’est attribué automatiquement."
+  }
+]
