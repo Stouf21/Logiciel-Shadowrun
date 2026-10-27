@@ -1,13 +1,14 @@
-import {isCharacterAsset,assetReferenceText} from './catalog.js?v=0.15.0';
-import {numberFields,textFields,attributeFields,woundLabels,skillReserve} from './sheet.js?v=0.15.0';
-import {escape} from './ui.js?v=0.15.0';
+import {metatypeOptions} from './character-options.js?v=0.16.0';
+import {isCharacterAsset,assetReferenceText} from './catalog.js?v=0.16.0';
+import {numberFields,textFields,attributeFields,woundLabels,skillReserve} from './sheet.js?v=0.16.0';
+import {escape} from './ui.js?v=0.16.0';
 const deckFields=[['name','Nom du cyberdeck'],['attack','Attaque'],['firewall','Firewall'],['light','Seuil léger'],['serious','Seuil grave'],['incap','Seuil incapacitant'],['minRisk','Dés de risque minimum (Piratage)'],['penalty','Augmentation du seuil (Piratage)'],['notes','Notes cyberdeck']];
 const vehicleFields=[['name','Nom du véhicule'],['type','Type'],['auto','Autopilote'],['structure','Structure'],['handling','Maniabilité'],['speed','Vitesse'],['armor','Blindage'],['light','Seuil léger'],['serious','Seuil grave'],['incap','Seuil incapacitant'],['notes','Notes']];
 const numeric=v=>v===''?'':Number(v);
 export function mountCharacterEditor(form,profile={},getCatalogs,onCreate){
  let section=form.querySelector('#profile-editor');if(!section){section=document.createElement('fieldset');section.id='profile-editor';form.querySelector('.actions').before(section);}
  const legacyKeys=['skills','assets','wounds','cyberdeck','vehicles','weapons'];
- section.innerHTML=`<legend>Fiche Anarchy V2</legend><p class="muted">Rubriques de la fiche officielle recto-verso. Choisissez vos compétences et atouts dans les listes ; les valeurs restent modifiables.</p><label>Métatype<input name="profile_metatype" value="${escape(profile.metatype??'')}"></label><div class="attribute-grid">${numberFields.map(([key,label])=>`<label>${label}<input name="profile_${key}" type="number" min="0" step="${key==='essence'?'any':'1'}" value="${escape(profile[key]??'')}"></label>`).join('')}</div>
+ section.innerHTML=`<legend>Fiche Anarchy V2</legend><p class="muted">Rubriques de la fiche officielle recto-verso. Choisissez vos compétences et atouts dans les listes ; les valeurs restent modifiables.</p><label>Métatype<select name="profile_metatype">${metatypeOptions(profile.metatype).map(([value,label])=>`<option value="${escape(value)}" ${value===(profile.metatype??'')?'selected':''}>${escape(label)}</option>`).join('')}</select></label><div class="attribute-grid">${numberFields.map(([key,label])=>`<label>${label}<input name="profile_${key}" type="number" min="0" step="${key==='essence'?'any':'1'}" value="${escape(profile[key]??'')}"></label>`).join('')}</div>
  <section class="selection-editor"><h3>Compétences</h3><p class="muted">L’attribut dépend de l’action : choisissez celui qui s’applique. La spécialisation appliquée ajoute 2 dés.</p><div data-picker="skills"></div><div id="skill-rows"></div></section>
  <section class="selection-editor"><h3>Atouts</h3><div data-picker="assets"></div><div id="asset-rows"></div><details id="material-assets" hidden><summary>Anciennes associations de véhicules / drones conservées</summary><p class="muted">Ces références de matériel ne sont plus proposées comme atouts du personnage.</p><div id="material-asset-rows"></div></details></section>
  ${textFields.filter(([k])=>!legacyKeys.includes(k)).map(([key,label])=>`<label>${label}<textarea name="profile_${key}" rows="3">${escape(profile[key]??'')}</textarea></label>`).join('')}

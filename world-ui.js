@@ -1,11 +1,12 @@
-import {inlineField,mountInlineEditing} from './inline-edit.js?v=0.15.0';
-import {updateWorldInline,worldInlineSpec} from './inline-model.js?v=0.15.0';
-import {renderBuildingPanel} from './buildings-ui.js?v=0.15.0';
-import {escape,searchDisclosure} from './ui.js?v=0.15.0';
-import {secretSection} from './secrets-ui.js?v=0.15.0';
-import {renderScenarioWorkspace} from './scenarios-ui.js?v=0.15.0';
-import {worldKinds,worldFields,UNKNOWN,discoveryStates,visibilities,visibilityLabels,authorities,makeWorldRecord,validateWorld} from './world-schema.js?v=0.15.0';
-import {worldSearch,relatedRecords,relationIsSecret,worldDiagnostics,upsertWorldRecord} from './world.js?v=0.15.0';
+import {metatypeOptions} from './character-options.js?v=0.16.0';
+import {inlineField,mountInlineEditing} from './inline-edit.js?v=0.16.0';
+import {updateWorldInline,worldInlineSpec} from './inline-model.js?v=0.16.0';
+import {renderBuildingPanel} from './buildings-ui.js?v=0.16.0';
+import {escape,searchDisclosure} from './ui.js?v=0.16.0';
+import {secretSection} from './secrets-ui.js?v=0.16.0';
+import {renderScenarioWorkspace} from './scenarios-ui.js?v=0.16.0';
+import {worldKinds,worldFields,UNKNOWN,discoveryStates,visibilities,visibilityLabels,authorities,makeWorldRecord,validateWorld} from './world-schema.js?v=0.16.0';
+import {worldSearch,relatedRecords,relationIsSecret,worldDiagnostics,upsertWorldRecord} from './world.js?v=0.16.0';
 const text=value=>escape(value===undefined||value===''?UNKNOWN:value);
 export const worldLink=(r,label)=>`<button class="world-link" ${r.kind==='character'?'data-open-character':'data-open-world'}="${escape(r.id)}">${escape(label??r.name)}</button>`;
 export function worldCard(hit){
@@ -15,7 +16,7 @@ export function worldCard(hit){
 }
 export function renderWorldList(container,state,kind,callbacks,{initialQuery=''}={}){
  const recordOptions=recordKind=>state.world.records.filter(r=>r.kind===recordKind&&!r.isSecret).map(r=>[r.id,r.name]);
- const heading=kind==='zone'?'Quartiers et zones':kind?worldKinds[kind]+'s':'Recherche dans l’univers';
+ const heading=kind==='zone'?'Quartiers et zones':kind==='place'?'Lieux':kind?worldKinds[kind]+'s':'Recherche dans l’univers';
  const filters=`<div class="world-filters"><label>Rechercher dans les dossiers<input id="world-query" type="search" value="${escape(initialQuery)}" placeholder="Nom, surnom, indice ou information…"></label>${!kind?select('world-kind','Type de fiche',Object.entries(worldKinds)):''}${select('world-discovery','Découverte',discoveryStates)}${(!kind||kind==='character')?select('world-metatype','Métatype',values('metatype'))+select('world-life','Statut vital',['Vivant','Mort','Disparu','Inconnu','À définir']):''}${select('world-corporation','Corporation',recordOptions('corporation'))}${select('world-faction','Faction',recordOptions('faction'))}${select('world-zone','Quartier / zone',recordOptions('zone'))}${select('world-scenario','Scénario',recordOptions('scenario'))}${(!kind||['zone','place'].includes(kind))?select('world-security','Niveau de sécurité',values('security')):''}<label class="check-label"><input id="world-show-secrets" type="checkbox">Afficher les fiches et informations MJ</label></div>`;
  const article=kind==='faction'?'une faction':kind==='corporation'?'une corporation':kind==='zone'?'une zone':kind==='place'?'un lieu':kind==='character'?'un personnage':kind==='scenario'?'un scénario':'une fiche';
  container.innerHTML=`<div class="toolbar"><div><span class="tag">DIJON / ${state.world.settings.year}</span><h3>${heading}</h3></div><button class="primary" data-world-new="${kind||'character'}">+ Ajouter ${article}</button></div>${searchDisclosure('world-search-panel',filters,{expanded:!!initialQuery})}<p class="muted" id="world-count" role="status"></p><div id="world-results" class="grid"></div>`;
@@ -48,6 +49,7 @@ export function openWorldEditor(state,record,onSave){
  const dialog=document.createElement('dialog');dialog.className='world-editor';
  const fieldInputs=scope=>worldFields[r.kind].filter(([, ,s])=>(s==='secret')===(scope==='secret')).map(([key,label])=>{
  const options=key==='authority'?authorities:key==='life'?['À définir','Vivant','Mort','Disparu','Inconnu']:null;
+ if(key==='metatype')return `<label>${label}<select name="field_${key}" aria-label="${label}">${metatypeOptions(r.fields[key]).map(([value,text])=>`<option value="${escape(value)}" ${value===r.fields[key]?'selected':''}>${escape(text)}</option>`).join('')}</select></label>`;
  if(options)return `<label>${label}<select name="field_${key}" aria-label="${label}">${[...new Set([...options,r.fields[key]])].filter(Boolean).map(v=>`<option ${v===r.fields[key]?'selected':''}>${escape(v)}</option>`).join('')}</select></label>`;
  return `<label>${label}<textarea name="field_${key}" aria-label="${escape(label)}" rows="2">${escape(r.fields[key]??UNKNOWN)}</textarea></label>`;
  }).join('');
@@ -58,7 +60,7 @@ export function openWorldEditor(state,record,onSave){
 }
 export function renderDashboard(container,state){
  const world=state.world,diag=worldDiagnostics(state),counts=Object.fromEntries(Object.keys(worldKinds).map(k=>[k,world.records.filter(r=>r.kind===k).length]));
- const metrics=[['Personnages',counts.character,'data-tab="characters"'],['Corporations',counts.corporation,'data-tab="organizations" data-organization-section="corporation"'],['Factions',counts.faction,'data-tab="organizations" data-organization-section="faction"'],['Quartiers / zones',counts.zone,'data-map-city="dijon" data-map-section="zones"'],['Lieux',counts.place,'data-tab="places"'],['Scénarios',counts.scenario,'data-tab="scenarios"']];
+ const metrics=[['Personnages',counts.character,'data-tab="characters"'],['Corporations',counts.corporation,'data-tab="organizations" data-organization-section="corporation"'],['Factions',counts.faction,'data-tab="organizations" data-organization-section="faction"'],['Quartiers / zones',counts.zone,'data-map-city="dijon" data-map-section="zones"'],['Lieux',counts.place,'data-map-city="dijon" data-map-section="places"'],['Scénarios',counts.scenario,'data-tab="scenarios"']];
  container.innerHTML=`<div class="world-dashboard-heading"><span class="tag">CAMPAGNE / DIJON ${world.settings.year}</span><h3>La Cité des Ducs, vos intrigues.</h3><p>Shadowrun: Anarchy V2 · M. Dupont / Mme Dupont</p></div><div class="world-metrics">${metrics.map(([label,count,attributes])=>`<button ${attributes}><b>${count}</b><span>${label}</span></button>`).join('')}</div><div class="world-dashboard-grid"><section class="card"><span class="tag">INTRIGUES</span><h3>Scénarios</h3>${world.records.filter(r=>r.kind==='scenario'&&!r.isSecret).map(r=>`<p>${worldLink(r)}</p>`).join('')}</section><section class="card"><span class="tag">À COMPLÉTER</span><h3>Décisions ouvertes</h3><p>${escape(world.settings.openQuestions)}</p><p>Les fiches sans emplacement connu ne reçoivent aucune coordonnée.</p></section></div><div class="toolbar"><h3>Créer une fiche</h3><div class="world-create-actions">${Object.entries(worldKinds).filter(([kind])=>kind!=='event').map(([kind,label])=>`<button data-world-new="${kind}">+ ${label}</button>`).join('')}</div></div><p class="muted">${world.records.filter(r=>r.discovery==='Découvert').length} fiche(s) découverte(s).</p>${diag.length?`<section class="card"><h3>Points à vérifier</h3><ul>${diag.map(x=>`<li>${escape(x)}</li>`).join('')}</ul></section>`:''}`;
 }
 export function renderTimeline(container,state){

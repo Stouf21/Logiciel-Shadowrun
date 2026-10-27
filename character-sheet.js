@@ -1,8 +1,8 @@
-import {secretSection} from './secrets-ui.js?v=0.15.0';
-import {isCharacterAsset,assetReferenceForRow,assetReferenceText} from './catalog.js?v=0.15.0';
-import {attributeFields,woundLabels,skillReserve} from './sheet.js?v=0.15.0';
-import {escape} from './ui.js?v=0.15.0';
-import {inlineField} from './inline-edit.js?v=0.15.0';
+import {secretSection} from './secrets-ui.js?v=0.16.0';
+import {isCharacterAsset,assetReferenceForRow,assetReferenceText} from './catalog.js?v=0.16.0';
+import {attributeFields,woundLabels,skillReserve} from './sheet.js?v=0.16.0';
+import {escape} from './ui.js?v=0.16.0';
+import {inlineField} from './inline-edit.js?v=0.16.0';
 const block=(title,content,cls='')=>`<section class="sheet-block ${cls}"><h3>${title}</h3>${content}</section>`;
 export function characterSheet(entry,{worldId=null,unbound=false}={}){
  const p=entry.profile??{},f=(path,value,label,extra={})=>inlineField('character',path,value,label,{empty:'—',...extra});

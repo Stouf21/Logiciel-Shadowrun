@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {mergeWorld} from '../world.js';import {validateCampaign} from '../campaign.js';
+import {mergeWorld} from '../world.js';import {unclassifiedCharacter,metatypeOptions} from '../character-options.js';import {validateCampaign} from '../campaign.js';
 import {updateCharacterInline,changeCharacterRows,updateWorldInline,characterInlineSpec} from '../inline-model.js';
 import {updateBuildingInline} from '../building-inline.js';import {saveBuildingPlan} from '../buildings.js';
 const fresh=()=>validateCampaign(mergeWorld({entries:[{id:'lim-old',name:'Lim',category:'PJ',description:'Histoire',notes:'Ancien secret',profile:{force:3,charisme:3,skills:'Ancienne compétence libre',assets:'Anciennes notes',skillRows:[{catalogId:'skill-11',name:'Influence',rating:4,attribute:'charisme',rr:1,specialization:'Négociation',specialized:true}],assetRows:[{catalogId:'asset-16',name:'Mon Predator',category:'Arme',notes:'Modification personnelle',source:'Livre',level:4,essence:0}]}}],tokens:[{id:'lim-old',x:12,y:15}],customSkills:[],customAssets:[]}));
@@ -21,10 +21,21 @@ test('Les choix de compétences et spécialisations gardent la validation V2 et 
  for(const [path,value] of [['profile.skillRows.0.rating',9],['profile.skillRows.0.rr',4],['profile.skillRows.0.specialization',''],['profile.force',-1],['category','Objet'],['profile.__proto__.polluted',true],['profile.skillRows.300.name','X']])assert.throws(()=>updateCharacterInline(source,target,path,value));
  assert.equal(characterInlineSpec(source,target,'profile.skillRows.0.rating','Indice').max,8);
 });
-test('La première modification d’une fiche sans profil exige PJ ou PNJ et lie une seule fiche sans inventer les attributs',()=>{
- const source=fresh(),virtual={entryId:'char-boycow',worldId:'char-boycow'};assert.throws(()=>updateCharacterInline(source,virtual,'profile.force',4));
- const created=updateCharacterInline(source,virtual,'profile.force',4,'PNJ principal');assert.equal(created.state.entries.length,source.entries.length+1);const e=created.state.entries.find(e=>e.id===created.entryId);assert.equal(e.category,'PNJ principal');assert.deepEqual(e.profile,{force:4});
- const twice=updateCharacterInline(created.state,virtual,'profile.anarchy',3);assert.equal(twice.entryId,created.entryId);assert.equal(twice.state.entries.length,created.state.entries.length);assert.equal(e.profile.anarchy,undefined);
+test('Une fiche sans statut se modifie et reste non classée, avec une seule liaison conservée après fusion et import',()=>{
+ const source=fresh(),virtual={entryId:'char-boycow',worldId:'char-boycow'};
+ const created=updateCharacterInline(source,virtual,'profile.force',4);assert.equal(created.state.entries.length,source.entries.length+1);const e=created.state.entries.find(e=>e.id===created.entryId);assert.equal(e.category,unclassifiedCharacter);assert.deepEqual(e.profile,{force:4});
+ const restored=validateCampaign(mergeWorld(JSON.parse(JSON.stringify(created.state))));assert.equal(restored.world.records.find(r=>r.id===virtual.worldId).gameEntryId,created.entryId);
+ const twice=updateCharacterInline(restored,virtual,'profile.anarchy',3);assert.equal(twice.entryId,created.entryId);assert.equal(twice.state.entries.length,created.state.entries.length);assert.equal(e.profile.anarchy,undefined);
+ const chosen=updateCharacterInline(twice.state,virtual,'category','PNJ principal');assert.equal(chosen.state.entries.find(e=>e.id===created.entryId).category,'PNJ principal');assert.equal(chosen.entryId,created.entryId);
+ assert.equal(characterInlineSpec(source,virtual,'profile.force','Force').categoryRequired,undefined);
+});
+test('Les métatypes sont sélectionnables sans effacer les variantes déjà enregistrées',()=>{
+ const spec=characterInlineSpec(fresh(),target,'profile.metatype','Métatype');assert.equal(spec.type,'select');assert.deepEqual(spec.options.map(([value])=>value),['','Humain','Elfe','Nain','Ork','Troll']);
+ assert.ok(metatypeOptions('Elfe nocturne').some(([value])=>value==='Elfe nocturne'));assert.equal(metatypeOptions('À définir')[0][0],'À définir');
+ const updated=updateCharacterInline(fresh(),target,'profile.metatype','Nain');assert.equal(character(updated.state).profile.metatype,'Nain');assert.deepEqual(character(updated.state).profile.skillRows,character(fresh()).profile.skillRows);
+});
+test('Un atout ou une compétence peut être ajouté en premier à un personnage sans statut',()=>{
+ const source=fresh(),virtual={worldId:'char-boycow'};const result=changeCharacterRows(source,virtual,{kind:'skills',itemId:'skill-1'});const e=result.state.entries.find(e=>e.id===result.entryId);assert.equal(e.category,unclassifiedCharacter);assert.equal(e.profile.skillRows.length,1);assert.equal(e.profile.force,undefined);assert.equal(mergeWorld(result.state).world.records.find(r=>r.id===virtual.worldId).gameEntryId,result.entryId);
 });
 test('Ajouter ou retirer une ligne conserve les atouts personnels et refuse les références de drones sur le personnage',()=>{
  const source=fresh();let state=changeCharacterRows(source,target,{kind:'assets',itemId:'asset-17'}).state;assert.match(character(state).profile.assetRows[1].notes,/VD 5/);assert.equal(character(state).profile.assetRows[0].notes,'Modification personnelle');

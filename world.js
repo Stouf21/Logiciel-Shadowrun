@@ -1,7 +1,8 @@
-import {seedRecords,seedRelations,seedSettings} from './world-data.js?v=0.15.0';
-import {makeWorldRecord,worldFields,UNKNOWN,validateWorld} from './world-schema.js?v=0.15.0';
-import {getCorporations} from './corporations.js?v=0.15.0';
-import {buildingSearchText} from './building-schema.js?v=0.15.0';
+import {characterCategories,unclassifiedCharacter} from './character-options.js?v=0.16.0';
+import {seedRecords,seedRelations,seedSettings} from './world-data.js?v=0.16.0';
+import {makeWorldRecord,worldFields,UNKNOWN,validateWorld} from './world-schema.js?v=0.16.0';
+import {getCorporations} from './corporations.js?v=0.16.0';
+import {buildingSearchText} from './building-schema.js?v=0.16.0';
 export const normalize=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('fr').trim().replace(/[’‘]/g,"'");
 export const isCorporationRecord=r=>r.kind==='corporation'||r.kind==='faction'&&(!!r.corporationId||/\b(corporation|corporatiste|filiale corporatiste)\b/.test(normalize(r.fields?.type)));
 const cloneRecord=r=>({...r,aliases:[...r.aliases],fields:{...r.fields},kind:isCorporationRecord(r)?'corporation':r.kind});
@@ -15,7 +16,7 @@ export function mergeWorld(state){
  const deletedRecords=new Set(original?.deletedRecordIds??[]),deletedRelations=new Set(original?.deletedRelationIds??[]);
  const records=(original?.records??[]).map(cloneRecord),remap=new Map();
  for(const seed of seedRecords){if(deletedRecords.has(seed.id))continue;const match=records.find(r=>r.id===seed.id)||records.find(r=>r.kind===seed.kind&&aliasesMatch(r,seed));if(match){remap.set(seed.id,match.id);Object.assign(match,fillMissing(match,seed));}else{records.push(cloneRecord(seed));remap.set(seed.id,seed.id);}}
- const gameEntries=state.entries.filter(e=>['PJ','PNJ principal','PNJ secondaire'].includes(e.category));
+ const gameEntries=state.entries.filter(e=>characterCategories.includes(e.category));
  const bound=new Set();
  for(const r of records)if(r.building)r.building={...r.building,ownerId:remap.get(r.building.ownerId)??r.building.ownerId};
  for(const r of records.filter(r=>r.kind==='character')){
@@ -72,7 +73,7 @@ export function worldDiagnostics(state){
  const w=state.world;if(!w)return [];
  const result=[];const ids=new Set(w.records.map(r=>r.id));
  for(const rel of w.relations)if(!ids.has(rel.from)||!ids.has(rel.to))result.push('Relation invalide : '+rel.id);
- const names=new Map();for(const e of state.entries.filter(e=>['PJ','PNJ principal','PNJ secondaire'].includes(e.category))){const k=normalize(e.name);if(names.has(k))result.push('Plusieurs fiches de jeu portent le nom '+e.name+' ; elles sont conservées séparément.');else names.set(k,true);}
+ const names=new Map();for(const e of state.entries.filter(e=>characterCategories.includes(e.category))){const k=normalize(e.name);if(names.has(k))result.push('Plusieurs fiches de jeu portent le nom '+e.name+' ; elles sont conservées séparément.');else names.set(k,true);}
  return result;
 }
 export function upsertWorldRecord(state,record){const records=state.world.records.some(r=>r.id===record.id)?state.world.records.map(r=>r.id===record.id?record:r):[...state.world.records,record];const next={...state,world:{...state.world,records}};validateWorld(next.world);return next;}
@@ -94,5 +95,5 @@ function matchesFacet(world,record,kind,id,includeSecrets){
 export function characterEntryForRecord(state,record){
  const existing=state.entries.find(e=>e.id===record.gameEntryId);if(existing)return existing;
  const profile={};if(known(record.fields.metatype))profile.metatype=record.fields.metatype;
- return {id:record.id,name:record.name,category:'PJ / PNJ : À définir',description:known(record.fields.role)?record.fields.role:'',notes:'',profile};
+ return {id:record.id,name:record.name,category:unclassifiedCharacter,description:known(record.fields.role)?record.fields.role:'',notes:'',profile};
 }

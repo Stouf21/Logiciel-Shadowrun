@@ -1,12 +1,13 @@
-import {scaleMapLabels} from './map-labels.js?v=0.15.0';
-import {mountMapShapes} from './map-shapes-ui.js?v=0.15.0';
-import {mapPlaceTypes,createMapPlace,positionMapPlace,removeMapPlacePosition} from './map-places.js?v=0.15.0';
-import {secretSection} from './secrets-ui.js?v=0.15.0';
-import {escape,searchDisclosure} from './ui.js?v=0.15.0';
-import {dijonPlaces} from './dijon-places.js?v=0.15.0';
-import {worldSearch} from './world.js?v=0.15.0';
-import {authorities} from './world-schema.js?v=0.15.0';
-import {copyMapState,dijonMapCenter,imageSize,imagePointFromPercent,imagePointToPercent,validMapPoint,routeDistance,routeAfterEdit,formatDistance,maxWaypoints,requestStreetRoute} from './map-model.js?v=0.15.0';
+import {characterCategories} from './character-options.js?v=0.16.0';
+import {scaleMapLabels} from './map-labels.js?v=0.16.0';
+import {mountMapShapes} from './map-shapes-ui.js?v=0.16.0';
+import {mapPlaceTypes,createMapPlace,positionMapPlace,removeMapPlacePosition} from './map-places.js?v=0.16.0';
+import {secretSection} from './secrets-ui.js?v=0.16.0';
+import {escape,searchDisclosure} from './ui.js?v=0.16.0';
+import {dijonPlaces} from './dijon-places.js?v=0.16.0';
+import {worldSearch} from './world.js?v=0.16.0';
+import {authorities} from './world-schema.js?v=0.16.0';
+import {copyMapState,dijonMapCenter,imageSize,imagePointFromPercent,imagePointToPercent,validMapPoint,routeDistance,routeAfterEdit,formatDistance,maxWaypoints,requestStreetRoute} from './map-model.js?v=0.16.0';
 export {dijonPlaces};
 
 export function renderDijonMap(container,snapshot,onChange,{onOpenRecord}={}){
@@ -39,7 +40,7 @@ export function renderDijonMap(container,snapshot,onChange,{onOpenRecord}={}){
  function visibleRecords(){return worldSearch(state.world,'',{includeSecrets:$('#map-secrets').checked,filters:{authority:$('#map-authority').value,corporation:$('#map-corporation').value,faction:$('#map-faction').value,security:$('#map-security').value}}).map(hit=>hit.record).filter(r=>['zone','place'].includes(r.kind)&&(!$('#map-type').value||r.fields.type===$('#map-type').value));}
  function characters(){
   const known=records.filter(r=>r.kind==='character'&&($('#map-secrets').checked||!r.isSecret));
-  return [...state.entries.filter(e=>['PJ','PNJ principal','PNJ secondaire'].includes(e.category)&&!records.some(r=>r.gameEntryId===e.id&&r.isSecret&&!$('#map-secrets').checked)).map(e=>({id:e.id,name:e.name})),...known.filter(r=>!r.gameEntryId).map(r=>({id:r.id,name:r.name}))];
+  return [...state.entries.filter(e=>characterCategories.includes(e.category)&&!records.some(r=>r.gameEntryId===e.id&&r.isSecret&&!$('#map-secrets').checked)).map(e=>({id:e.id,name:e.name})),...known.filter(r=>!r.gameEntryId).map(r=>({id:r.id,name:r.name}))];
  }
  function refreshChoices(){
   const showSecrets=$('#map-secrets').checked;

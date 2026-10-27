@@ -1,8 +1,9 @@
-import {numberFields,textFields,structuredTextFields,woundLabels,attributeFields} from './sheet.js?v=0.15.0';
-import {getCharacterCatalogs,assetReferenceText} from './catalog.js?v=0.15.0';
-import {characterEntryForRecord,upsertWorldRecord} from './world.js?v=0.15.0';
-import {worldFields,discoveryStates,authorities} from './world-schema.js?v=0.15.0';
-import {groups,validateCampaign} from './campaign.js?v=0.15.0';
+import {unclassifiedCharacter,metatypeOptions} from './character-options.js?v=0.16.0';
+import {numberFields,textFields,structuredTextFields,woundLabels,attributeFields} from './sheet.js?v=0.16.0';
+import {getCharacterCatalogs,assetReferenceText} from './catalog.js?v=0.16.0';
+import {characterEntryForRecord,upsertWorldRecord} from './world.js?v=0.16.0';
+import {worldFields,discoveryStates,authorities} from './world-schema.js?v=0.16.0';
+import {groups,validateCampaign} from './campaign.js?v=0.16.0';
 const rowKeys={skillRows:['catalogId','rating','attribute','rr','specialization','specialized'],assetRows:['catalogId','name','category','notes','source','level','essence'],weaponRows:['name','type'],woundRows:['label','light','serious','incap','rr','status'],vehicleRows:['name','type','auto','structure','handling','speed','armor','light','serious','incap','notes']};
 export const deckKeys=['name','attack','firewall','light','serious','incap','minRisk','penalty','notes'];
 export const readPath=(record,path)=>path.split('.').reduce((value,key)=>value?.[key],record);
@@ -23,7 +24,7 @@ function assertCharacterPath(path){
 export function updateCharacterInline(state,target,path,value,category){
  if(path==='category'&&!groups.characters.includes(value))throw Error('Choisissez une catégorie PJ ou PNJ.');
  assertCharacterPath(path);const {entry,record,unbound}=characterForInline(state,target),next=structuredClone(entry);
- if(unbound){next.id='runner-'+crypto.randomUUID();next.category=path==='category'?value:category;if(!groups.characters.includes(next.category))throw Error('Choisissez PJ ou PNJ pour créer sa fiche.');}
+ if(unbound){next.id='runner-'+crypto.randomUUID();next.category=path==='category'?value:category??unclassifiedCharacter;if(!groups.characters.includes(next.category))throw Error('Catégorie de personnage invalide.');}
  next.profile??={};const parts=path.split('.');
  if(parts[1]==='deck')next.profile.deck??=Object.fromEntries(deckKeys.map(k=>[k,'']));
  if(rowKeys[parts[1]]){const key=parts[1],i=Number(parts[2]);if(!next.profile[key]){if(['skillRows','assetRows'].includes(key))throw Error('Ajoutez d’abord cette ligne à la fiche.');next.profile[key]=blankRows(key);}if(!next.profile[key][i])throw Error('Ligne de fiche introuvable.');}
@@ -38,7 +39,7 @@ export function updateCharacterInline(state,target,path,value,category){
 export function changeCharacterRows(state,target,{kind,itemId,index,remove=false,category}){
  const keys={skills:'skillRows',assets:'assetRows',weapons:'weaponRows',vehicles:'vehicleRows'};const key=keys[kind];if(!key)throw Error('Table de personnage invalide.');
  const current=characterForInline(state,target);let nextState=state,entryId=current.entry.id;
- if(current.unbound){const created=updateCharacterInline(state,target,'category',category);nextState=created.state;entryId=created.entryId;}
+ if(current.unbound){const created=updateCharacterInline(state,target,'category',category??unclassifiedCharacter);nextState=created.state;entryId=created.entryId;}
  const entry=structuredClone(nextState.entries.find(e=>e.id===entryId));entry.profile??={};const rows=entry.profile[key]??(['weaponRows','vehicleRows'].includes(key)?blankRows(key):[]);
  if(remove){if(!Number.isInteger(index)||index<0||index>=rows.length)throw Error('Ligne introuvable.');entry.profile[key]=rows.filter((_,i)=>i!==index);}
  else{
@@ -54,8 +55,8 @@ export function updateWorldInline(state,id,path,value){
  else throw Error('Champ de dossier invalide.');return upsertWorldRecord(state,next);
 }
 export function characterInlineSpec(state,target,path,label){
- assertCharacterPath(path);const {entry,unbound}=characterForInline(state,target),parts=path.split('.');let value=readPath(entry,path),type='text',options,suggestions,min,max,step;
- if(path==='category'){type='select';options=groups.characters;}else if(path==='name')type='text';
+ assertCharacterPath(path);const {entry}=characterForInline(state,target),parts=path.split('.');let value=readPath(entry,path),type='text',options,suggestions,min,max,step;
+ if(path==='profile.metatype'){type='select';options=metatypeOptions(value);}else if(path==='category'){type='select';options=groups.characters;}else if(path==='name')type='text';
  else if(parts.at(-1)==='catalogId'){type='select';options=getCharacterCatalogs(state)[parts[1]==='skillRows'?'skills':'assets'].map(x=>[x.id,x.name]);}
  else if(path.startsWith('profile.')&&parts.length===2&&numberFields.some(([k])=>k===parts[1])||['rating','rr','level','essence'].includes(parts.at(-1))&&parts.length===4){type='number';min=0;step=parts.at(-1)==='essence'?'any':1;max=parts.at(-1)==='rating'?8:parts.at(-1)==='rr'?3:undefined;}
  else if(parts.at(-1)==='attribute'){type='select';options=attributeFields;}
@@ -63,10 +64,10 @@ export function characterInlineSpec(state,target,path,label){
  else if(parts.at(-1)==='specialization'){suggestions=[];}
  else if(['description','notes','knowledge','keywords','behaviors','quotes','equipment','skills','assets','weapons','wounds','vehicles','cyberdeck','essenceEffects'].includes(parts.at(-1)))type='textarea';
  if(value===undefined&&parts[1]==='woundRows')value=blankRows('woundRows')[Number(parts[2])]?.[parts[3]];
- return {value:value??'',label,type,options,suggestions,min,max,step,required:path==='name',maxLength:path==='name'?120:30000,categoryRequired:unbound&&path!=='category'};
+ return {value:value??'',label,type,options,suggestions,min,max,step,required:path==='name',maxLength:path==='name'?120:30000};
 }
 export function worldInlineSpec(state,id,path,label){
  const record=state.world.records.find(r=>r.id===id),key=path.split('.').at(-1);let type=['isSecret'].includes(path)?'boolean':['name','state','portraitUrl','aliases'].includes(path)?'text':'textarea',options;
- if(path==='discovery'){type='select';options=discoveryStates;}if(key==='authority'){type='select';options=authorities;}if(key==='life'){type='select';options=['À définir','Vivant','Mort','Disparu','Inconnu'];}if(path==='portraitUrl')type='url';
+ if(key==='metatype'){type='select';options=metatypeOptions(record.fields.metatype);}if(path==='discovery'){type='select';options=discoveryStates;}if(key==='authority'){type='select';options=authorities;}if(key==='life'){type='select';options=['À définir','Vivant','Mort','Disparu','Inconnu'];}if(path==='portraitUrl')type='url';
  return {value:path==='aliases'?record.aliases.join(', '):readPath(record,path),type,options,label,required:path==='name',maxLength:path==='name'?200:30000};
 }
