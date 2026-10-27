@@ -1,6 +1,6 @@
-import {baseAssets} from './catalog-data.js?v=0.19.0';
-import {escape} from './ui.js?v=0.19.0';
-import {resourceImageKey,resourceArtwork,resourceArtPreview,defaultResourceArt,maxResourceImageLength} from './resource-art.js?v=0.19.0';
+import {baseAssets} from './catalog-data.js?v=0.20.0';
+import {escape} from './ui.js?v=0.20.0';
+import {resourceImageKey,resourceArtwork,resourceArtPreview,defaultResourceArt,maxResourceImageLength} from './resource-art.js?v=0.20.0';
 
 export async function readResourceImage(file){
  if(!file||!['image/png','image/jpeg','image/webp'].includes(file.type))throw Error('Choisissez une image PNG, JPEG ou WebP.');
@@ -42,9 +42,9 @@ export function mountResourceArt({getState,onSave}){
   document.body.append(dialog);
   const $=selector=>dialog.querySelector(selector),error=$('.resource-art-error');
   function preview(){
-   const art=draft?{image:draft}:defaultResourceArt(item);
+   const art=draft?{image:draft}:defaultResourceArt(item,resource.scope);
    $('.resource-art-preview').innerHTML=art?resourceArtPreview(art,item.name):'<p class="muted">Choisissez une illustration pour cette ressource.</p>';
-   $('[data-art-caption]').textContent=draft?'Image personnelle':art?'Illustration d’ambiance · '+art.label:'';
+   $('[data-art-caption]').textContent=draft?'Image personnelle':art?'Interprétation originale · '+art.name:'';
    $('[data-art-reset]').hidden=!draft;
   }
   function close(){dialog.close();dialog.remove();document.querySelectorAll('[data-art-open]').forEach(b=>{if(b.dataset.artOpen===key)b.focus({preventScroll:true});});}
@@ -71,9 +71,12 @@ export function mountResourceArt({getState,onSave}){
  }
  const click=e=>{const button=e.target.closest('[data-art-open]');if(button){e.preventDefault();open(button.dataset.artOpen);}};
  const imageError=e=>{
-  const img=e.target;if(!img.matches?.('img.resource-art-image'))return;
+  const img=e.target;if(!img.matches?.('img.resource-art-image, img.resource-art-atlas'))return;
   const root=img.closest('[data-resource-art], [data-art-resource]'),resource=resolve(root?.dataset.resourceArt??root?.dataset.artResource);
-  const fallback=resource&&defaultResourceArt(resource.item);
+  if(img.matches('.resource-art-atlas')){
+   const placeholder=document.createElement('span');placeholder.className='muted';placeholder.textContent='Illustration indisponible';img.closest('.resource-art-sprite').replaceWith(placeholder);return;
+  }
+  const fallback=resource&&defaultResourceArt(resource.item,resource.scope);
   img.outerHTML=fallback?resourceArtPreview(fallback,resource.item.name):'<span class="muted">Image indisponible</span>';
   const caption=root?.querySelector('.resource-art-caption');if(caption)caption.textContent='Image personnelle illisible : choisissez une autre image.';
  };

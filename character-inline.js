@@ -1,10 +1,10 @@
-import {mountSpellPicker} from './spells-ui.js?v=0.19.0';
-import {mountInlineEditing} from './inline-edit.js?v=0.19.0';
-import {characterInlineSpec,updateCharacterInline,characterForInline,changeCharacterRows} from './inline-model.js?v=0.19.0';
-import {getCharacterCatalogs} from './catalog.js?v=0.19.0';
-import {describeSkill} from './skill-details.js?v=0.19.0';
-import {skillReserve} from './sheet.js?v=0.19.0';
-import {escape} from './ui.js?v=0.19.0';
+import {mountSpellPicker} from './spells-ui.js?v=0.20.0';
+import {mountInlineEditing} from './inline-edit.js?v=0.20.0';
+import {characterInlineSpec,updateCharacterInline,characterForInline,changeCharacterRows} from './inline-model.js?v=0.20.0';
+import {getCharacterCatalogs} from './catalog.js?v=0.20.0';
+import {describeSkill} from './skill-details.js?v=0.20.0';
+import {skillReserve} from './sheet.js?v=0.20.0';
+import {escape} from './ui.js?v=0.20.0';
 export function mountCharacterInline(container,{getState,target,onSave,onEntry,onRefresh}){
  const apply=result=>{onSave(result.state);target.entryId=result.entryId;onEntry(result.entryId);const p=characterForInline(getState(),target).entry.profile??{};for(const b of container.querySelectorAll('[data-skill-reserve]')){const row=p.skillRows?.[Number(b.dataset.skillReserve)];if(row)b.textContent=skillReserve(row,p);}};let dialog=null;
  const dispose=mountInlineEditing(container,{scope:'character',floating:true,resolve:(path,label)=>{const spec=characterInlineSpec(getState(),target,path,label);if(path.endsWith('.specialization')){const row=characterForInline(getState(),target).entry.profile.skillRows[Number(path.split('.')[2])],skill=getCharacterCatalogs(getState()).skills.find(s=>s.id===row.catalogId);if(skill)spec.suggestions=describeSkill(skill).specializations.map(s=>s.name);}return spec;},save:(path,value)=>apply(updateCharacterInline(getState(),target,path,value)),refresh:onRefresh});

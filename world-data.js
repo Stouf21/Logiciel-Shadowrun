@@ -1,5 +1,5 @@
-import {makeWorldRecord as R} from './world-schema.js?v=0.19.0';
-import {emptyBuilding} from './building-schema.js?v=0.19.0';
+import {makeWorldRecord as R} from './world-schema.js?v=0.20.0';
+import {emptyBuilding} from './building-schema.js?v=0.20.0';
 export const seedSettings={city:'Dijon',year:2082,system:'Shadowrun: Anarchy V2',johnsonMale:'M. Dupont',johnsonFemale:'Mme Dupont',openQuestions:'Identité des corporations d’Osvald et de Valmy, capacité de la biopuce, circonstances de la mort d’Osvald : À définir.'};
 export const seedRecords=[
  R('character','char-anilla-yusupova','Anilla Yusupova',{aliases:['Anilla'],publicInfo:'Jeune femme d’origine russe vivant à Dijon. Retrouvée morte, poignardée dans son appartement, le lendemain d’une soirée avec David.',secrets:'Son père lui a implanté une biopuce expérimentale pendant son enfance. Elle contient l’unique exemplaire fonctionnel d’un ancien projet secret-défense. Ce qu’Anilla en savait réellement : À définir.',state:'Morte au début de l’affaire Anilla'},{gender:'Femme',life:'Mort',usualLocation:'Dijon ; appartement, adresse À définir',implants:'Biopuce expérimentale, capacité exacte À définir'}),

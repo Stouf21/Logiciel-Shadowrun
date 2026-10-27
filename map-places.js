@@ -1,5 +1,5 @@
-import {makeWorldRecord,UNKNOWN,validateWorld} from './world-schema.js?v=0.19.0';
-import {copyMapState,validMapPoint,imagePointToPercent,validateMapState} from './map-model.js?v=0.19.0';
+import {makeWorldRecord,UNKNOWN,validateWorld} from './world-schema.js?v=0.20.0';
+import {copyMapState,validMapPoint,imagePointToPercent,validateMapState} from './map-model.js?v=0.20.0';
 
 export const mapPlaceTypes=['Boutique','Lieu important','Bar / restaurant','Clinique','Planque','Autre'];
 const text=value=>typeof value==='string'?value.trim():'';
