@@ -1,4 +1,4 @@
-import {baseCorporations} from './corporations-data.js?v=0.26.1';
+import {baseCorporations} from './corporations-data.js?v=0.26.2';
 export {baseCorporations};
 export const corporationTiers=['AAA','AA','A','Non classée','Alliance'];
 export const corporationRelations=['Neutre','Employeur','Alliée','Hostile','À surveiller'];

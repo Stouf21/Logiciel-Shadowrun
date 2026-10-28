@@ -23,3 +23,8 @@
 }
 
 .official-cell.official-spell-type{font-size:1.03cqi}
+
+.official-remove-cell>.sheet-row-remove{display:flex;align-items:center;justify-content:center;width:100%;height:100%;min-height:0;min-width:0;padding:0;border:0;border-radius:2px;background:#a4452614;color:#85351f;font:600 1.5cqi/1 Arial,sans-serif;box-shadow:none;cursor:pointer}.official-remove-cell>.sheet-row-remove:hover{background:#a4452630;color:#5a210f}.official-remove-cell>.sheet-row-remove:focus-visible{outline:2px solid #684590;outline-offset:1px}.official-remove-cell>.sheet-row-remove[hidden]{display:none}
+@media print{.official-remove-cell{display:none!important}}
+
+.official-specialization.is-empty>.inline-field{color:#76694e;font-style:italic}@media print{.official-specialization.is-empty{visibility:hidden}}

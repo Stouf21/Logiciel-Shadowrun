@@ -1,6 +1,6 @@
-import {validateWorld,UNKNOWN} from './world-schema.js?v=0.26.1';
-import {seedRecords} from './world-data.js?v=0.26.1';
-import {normalize,relationIsSecret} from './world.js?v=0.26.1';
+import {validateWorld,UNKNOWN} from './world-schema.js?v=0.26.2';
+import {seedRecords} from './world-data.js?v=0.26.2';
+import {normalize,relationIsSecret} from './world.js?v=0.26.2';
 
 const scenarioFor=(state,id)=>{const r=state.world.records.find(r=>r.id===id&&r.kind==='scenario');if(!r)throw Error('Scénario introuvable.');return r;};
 const connects=(r,a,b)=>(r.from===a&&r.to===b)||(r.from===b&&r.to===a);

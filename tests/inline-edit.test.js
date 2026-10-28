@@ -1,3 +1,5 @@
+import {buildNpcProfile} from '../npc-generator.js';
+import {skillReserve,skillReserves} from '../sheet.js';
 import test from 'node:test';import assert from 'node:assert/strict';
 import {mergeWorld} from '../world.js';import {unclassifiedCharacter,metatypeOptions} from '../character-options.js';import {validateCampaign} from '../campaign.js';
 import {updateCharacterInline,changeCharacterRows,updateWorldInline,characterInlineSpec} from '../inline-model.js';
@@ -55,4 +57,22 @@ test('Saisir ou retirer une spécialisation active son bonus sans choix supplém
  state=updateCharacterInline(state,target,'profile.skillRows.0.specialization','Bluff').state;assert.equal(character(state).profile.skillRows[0].specialized,true);assert.equal(character(state).profile.skillRows[0].specialization,'Bluff');
  state=updateCharacterInline(state,target,'profile.skillRows.0.rating',0).state;assert.equal(character(state).profile.skillRows[0].specialized,false);state=updateCharacterInline(state,target,'profile.skillRows.0.rating',2).state;assert.equal(character(state).profile.skillRows[0].specialized,true);
  assert.deepEqual(character(state).profile.assetRows,character(source).profile.assetRows);assert.equal(character(source).profile.skillRows[0].specialization,'Négociation');
+});
+
+function importantNpc(){const state=fresh(),entry=state.entries.find(e=>e.id==='lim-old');entry.category='PNJ principal';entry.profile=buildNpcProfile('ganger','Humain');const index=entry.profile.skillRows.findIndex(r=>r.includesSpecialization);return {state,target:{entryId:entry.id},index};}
+test('Supprimer une spécialisation PNJ conserve son indice de base et ses autres données sans conserver le +2 imprimé',()=>{
+ const {state,target,index}=importantNpc(),before=structuredClone(state),original=character(state).profile.skillRows[index],base=skillReserves(original,character(state).profile).base;
+ const removed=changeCharacterRows(state,target,{kind:'specializations',index,remove:true}).state,p=character(removed).profile,row=p.skillRows[index];assert.equal(row.specialization,'');assert.equal(row.specialized,false);assert.equal(row.includesSpecialization,false);assert.equal(row.rating,original.rating-2);assert.equal(skillReserve(row,p),base);assert.equal(row.mean,original.mean);assert.equal(row.source,original.source);assert.deepEqual(p.assetRows,character(state).profile.assetRows);assert.deepEqual(state,before);
+ const added=updateCharacterInline(removed,target,'profile.skillRows.'+index+'.specialization','Nouvelle spécialisation').state;assert.equal(skillReserve(character(added).profile.skillRows[index],character(added).profile),base+2);assert.equal(character(added).profile.skillRows[index].rating,row.rating);
+ assert.throws(()=>changeCharacterRows(state,target,{kind:'specializations',index:300,remove:true}));
+});
+test('L’indice affiché et modifié est l’indice de base même quand le bonus du PNJ était déjà compris dans le livre',()=>{
+ const {state,target,index}=importantNpc(),row=character(state).profile.skillRows[index];assert.equal(characterInlineSpec(state,target,'profile.skillRows.'+index+'.rating','Indice').value,row.rating-2);
+ const changed=updateCharacterInline(state,target,'profile.skillRows.'+index+'.rating',5).state,p=character(changed).profile,next=p.skillRows[index];assert.equal(next.rating,5);assert.equal(next.includesSpecialization,false);assert.equal(skillReserves(next,p).base,5+p[next.attribute]);assert.equal(skillReserve(next,p),7+p[next.attribute]);
+ const renamed=updateCharacterInline(state,target,'profile.skillRows.'+index+'.specialization','Autre spécialisation').state;assert.equal(skillReserve(character(renamed).profile.skillRows[index],character(renamed).profile),skillReserve(row,character(state).profile));
+});
+test('Supprimer une compétence enlève sa spécialisation et réindexe les autres lignes sans toucher au catalogue ni aux autres fiches',()=>{
+ const source=fresh(),withRow=changeCharacterRows(source,target,{kind:'skills',itemId:'skill-9'}).state,before=structuredClone(withRow),next=changeCharacterRows(withRow,target,{kind:'skills',index:0,remove:true}).state;
+ assert.equal(character(next).profile.skillRows.length,1);assert.deepEqual(character(next).profile.skillRows[0],character(withRow).profile.skillRows[1]);assert.deepEqual(character(next).profile.assetRows,character(withRow).profile.assetRows);assert.deepEqual(next.world,withRow.world);assert.deepEqual(next.tokens,withRow.tokens);assert.deepEqual(withRow,before);
+ assert.throws(()=>changeCharacterRows(next,target,{kind:'skills',index:5,remove:true}));assert.deepEqual(next.customSkills,source.customSkills);
 });

@@ -1,11 +1,11 @@
-import {spellCard} from './spells-ui.js?v=0.26.1';
-import {bookArtworkCard} from './book-art-ui.js?v=0.26.1';
-import {resourceArtwork} from './resource-art.js?v=0.26.1';
-import {globalSearch,searchTabs} from './global-search.js?v=0.26.1';
-import {escape,searchDisclosure} from './ui.js?v=0.26.1';
-import {worldCard,renderWorldList} from './world-ui.js?v=0.26.1';
-import {corporationCard} from './corporations-ui.js?v=0.26.1';
-import {ruleSource} from './rules-data.js?v=0.26.1';
+import {spellCard} from './spells-ui.js?v=0.26.2';
+import {bookArtworkCard} from './book-art-ui.js?v=0.26.2';
+import {resourceArtwork} from './resource-art.js?v=0.26.2';
+import {globalSearch,searchTabs} from './global-search.js?v=0.26.2';
+import {escape,searchDisclosure} from './ui.js?v=0.26.2';
+import {worldCard,renderWorldList} from './world-ui.js?v=0.26.2';
+import {corporationCard} from './corporations-ui.js?v=0.26.2';
+import {ruleSource} from './rules-data.js?v=0.26.2';
 export function renderGlobalSearch(container,state,prefs,{entryCard,onResultsChanged,onQuery,getState}={}){
  if(!searchTabs.some(([id])=>id===prefs.tab))prefs.tab='all';prefs.query??='';prefs.includeSecrets??=false;
  const $=selector=>container.querySelector(selector);let worldPanel=false;

@@ -1,5 +1,5 @@
-import {defaultColors,validColors} from './dice-colors.js?v=0.26.1';
-import {validateOptions} from './anarchy-dice.js?v=0.26.1';
+import {defaultColors,validColors} from './dice-colors.js?v=0.26.2';
+import {validateOptions} from './anarchy-dice.js?v=0.26.2';
 export const dicePrefsKey='shadowrun-dice-preferences-v1';
 export const defaultDicePrefs=()=>({colors:{...defaultColors},rr:0,condition:'normal',target:null});
 export function validateDicePrefs(value){

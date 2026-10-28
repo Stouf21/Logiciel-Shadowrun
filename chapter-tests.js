@@ -1,8 +1,8 @@
-import {scenarioChapters,chapterCharacters} from './scenario-chapters.js?v=0.26.1';
-import {scenarioNpcs} from './scenario-npcs.js?v=0.26.1';
-import {baseSkills} from './catalog.js?v=0.26.1';
-import {skillReserve,skillReserves} from './sheet.js?v=0.26.1';
-import {rollAnarchy,rerollAnarchy,validateOptions} from './anarchy-dice.js?v=0.26.1';
+import {scenarioChapters,chapterCharacters} from './scenario-chapters.js?v=0.26.2';
+import {scenarioNpcs} from './scenario-npcs.js?v=0.26.2';
+import {baseSkills} from './catalog.js?v=0.26.2';
+import {skillReserve,skillReserves} from './sheet.js?v=0.26.2';
+import {rollAnarchy,rerollAnarchy,validateOptions} from './anarchy-dice.js?v=0.26.2';
 export const chapterTestTypes=[
  {id:'simple',name:'Test simple',opposed:false,source:'p. 64–65',help:'Choisissez la compétence et le seuil de difficulté.'},
  {id:'opposed',name:'Test opposé',opposed:true,source:'p. 64–65',help:'Comparez les succès. Une égalité se tranche selon la situation.'},

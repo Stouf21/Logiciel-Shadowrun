@@ -1,18 +1,18 @@
-import {mountSpellPicker} from './spells-ui.js?v=0.26.1';
-import {mountInlineEditing} from './inline-edit.js?v=0.26.1';
-import {characterInlineSpec,updateCharacterInline,characterForInline,changeCharacterRows} from './inline-model.js?v=0.26.1';
-import {getCharacterCatalogs} from './catalog.js?v=0.26.1';
-import {describeSkill} from './skill-details.js?v=0.26.1';
-import {skillReserves} from './sheet.js?v=0.26.1';
-import {escape} from './ui.js?v=0.26.1';
+import {mountSpellPicker} from './spells-ui.js?v=0.26.2';
+import {mountInlineEditing} from './inline-edit.js?v=0.26.2';
+import {characterInlineSpec,updateCharacterInline,characterForInline,changeCharacterRows} from './inline-model.js?v=0.26.2';
+import {getCharacterCatalogs} from './catalog.js?v=0.26.2';
+import {describeSkill} from './skill-details.js?v=0.26.2';
+import {skillReserves} from './sheet.js?v=0.26.2';
+import {escape} from './ui.js?v=0.26.2';
 export function mountCharacterInline(container,{getState,target,onSave,onEntry,onRefresh}){
- const syncSkills=()=>{const p=characterForInline(getState(),target).entry.profile??{};for(const b of container.querySelectorAll('[data-skill-reserve]')){const row=p.skillRows?.[Number(b.dataset.skillReserve)];if(row)b.textContent=skillReserves(row,p)[b.dataset.skillVariant]??'';}for(const [i,row] of (p.skillRows??[]).entries()){const reserves=skillReserves(row,p),prefix='profile.skillRows.'+i;for(const [key,value] of [['specialization',reserves.label],['rating',reserves.baseRating],['attribute',{force:'FOR',agilite:'AGI',volonte:'VOL',logique:'LOG',charisme:'CHA'}[row.attribute]]]){const b=container.querySelector('.official-sheet [data-inline-key="'+prefix+'.'+key+'"]');if(b)b.textContent=value;}}};
+ const syncSkills=()=>{const p=characterForInline(getState(),target).entry.profile??{};for(const b of container.querySelectorAll('[data-skill-reserve]')){const row=p.skillRows?.[Number(b.dataset.skillReserve)];if(row)b.textContent=skillReserves(row,p)[b.dataset.skillVariant]??'';}for(const [i,row] of (p.skillRows??[]).entries()){const reserves=skillReserves(row,p),prefix='profile.skillRows.'+i;const remove=container.querySelector('.official-sheet [data-sheet-remove="specializations"][data-index="'+i+'"]');if(remove)remove.hidden=!row.specialization.trim();for(const [key,value] of [['specialization',reserves.label||'+ Spécialisation'],['rating',reserves.baseRating],['attribute',{force:'FOR',agilite:'AGI',volonte:'VOL',logique:'LOG',charisme:'CHA'}[row.attribute]]]){const b=container.querySelector('.official-sheet [data-inline-key="'+prefix+'.'+key+'"]');if(b){b.textContent=value;if(key==='specialization')b.parentElement.classList.toggle('is-empty',!reserves.label);}}}};
  const apply=result=>{onSave(result.state);target.entryId=result.entryId;onEntry(result.entryId);syncSkills();queueMicrotask(()=>{if(container.isConnected)syncSkills();});};let dialog=null;
  const dispose=mountInlineEditing(container,{scope:'character',floating:true,resolve:(path,label)=>{const spec=characterInlineSpec(getState(),target,path,label);if(path.endsWith('.specialization')){const row=characterForInline(getState(),target).entry.profile.skillRows[Number(path.split('.')[2])],skill=getCharacterCatalogs(getState()).skills.find(s=>s.id===row.catalogId);if(skill)spec.suggestions=describeSkill(skill).specializations.map(s=>s.name);}return spec;},save:(path,value)=>apply(updateCharacterInline(getState(),target,path,value)),refresh:onRefresh});
  const click=e=>{
   const rr=e.target.closest('[data-sheet-rr]');if(rr){e.preventDefault();e.stopPropagation();const i=Number(rr.dataset.index),value=Number(rr.dataset.sheetRr),old=characterForInline(getState(),target).entry.profile.skillRows[i].rr;try{apply(updateCharacterInline(getState(),target,'profile.skillRows.'+i+'.rr',old===value?value-1:value));onRefresh();}catch(err){alert(err.message);}return;}
   const add=e.target.closest('[data-sheet-add]'),remove=e.target.closest('[data-sheet-remove]');if(!add&&!remove)return;e.preventDefault();e.stopPropagation();dispose();
-  if(remove){if(!confirm('Retirer cette ligne de la fiche du personnage ?')){onRefresh();return;}try{apply(changeCharacterRows(getState(),target,{kind:remove.dataset.sheetRemove,index:Number(remove.dataset.index),remove:true}));}catch(err){alert(err.message);}onRefresh();return;}
+  if(remove){const kind=remove.dataset.sheetRemove,index=Number(remove.dataset.index),row=characterForInline(getState(),target).entry.profile?.skillRows?.[index],question=kind==='skills'?'Supprimer la compétence « '+row.name+' » et sa spécialisation de cette fiche ?':kind==='specializations'?'Supprimer la spécialisation « '+row.specialization+' » ? La compétence sera conservée.':'Retirer cette ligne de la fiche du personnage ?';if(!confirm(question)){onRefresh();return;}try{apply(changeCharacterRows(getState(),target,{kind,index,remove:true}));}catch(err){alert(err.message);}onRefresh();return;}
   const kind=add.dataset.sheetAdd;
   if(kind==='spells'){
    dialog=document.createElement('dialog');dialog.className='sheet-spell-picker';dialog.innerHTML='<form><h2>Ajouter un sort</h2><div data-spell-picker></div><p class="inline-edit-error" role="alert"></p><div class="actions"><button type="button" data-spell-cancel>Annuler</button></div></form>';document.body.append(dialog);

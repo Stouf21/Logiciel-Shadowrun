@@ -1,8 +1,8 @@
-import {baseAssets} from './catalog-data.js?v=0.26.1';
-import {bookArtworks,bookArtCredit} from './book-art-data.js?v=0.26.1';
-import {bookArtworkById,bookArtworkPath,bookArtworkSource} from './book-art.js?v=0.26.1';
-import {escape} from './ui.js?v=0.26.1';
-import {resourceImageKey,resourceArtwork,resourceArtPreview,defaultResourceArt,maxResourceImageLength} from './resource-art.js?v=0.26.1';
+import {baseAssets} from './catalog-data.js?v=0.26.2';
+import {bookArtworks,bookArtCredit} from './book-art-data.js?v=0.26.2';
+import {bookArtworkById,bookArtworkPath,bookArtworkSource} from './book-art.js?v=0.26.2';
+import {escape} from './ui.js?v=0.26.2';
+import {resourceImageKey,resourceArtwork,resourceArtPreview,defaultResourceArt,maxResourceImageLength} from './resource-art.js?v=0.26.2';
 
 export async function readResourceImage(file){
  if(!file||!['image/png','image/jpeg','image/webp'].includes(file.type))throw Error('Choisissez une image PNG, JPEG ou WebP.');

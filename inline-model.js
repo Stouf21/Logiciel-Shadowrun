@@ -1,11 +1,11 @@
-import {spellRow} from './spells.js?v=0.26.1';
-import {sheetSlots} from './sheet-layout.js?v=0.26.1';
-import {unclassifiedCharacter,metatypeOptions} from './character-options.js?v=0.26.1';
-import {numberFields,textFields,structuredTextFields,woundLabels,attributeFields} from './sheet.js?v=0.26.1';
-import {getCharacterCatalogs,assetReferenceText} from './catalog.js?v=0.26.1';
-import {characterEntryForRecord,upsertWorldRecord} from './world.js?v=0.26.1';
-import {worldFields,discoveryStates,authorities} from './world-schema.js?v=0.26.1';
-import {groups,validateCampaign} from './campaign.js?v=0.26.1';
+import {spellRow} from './spells.js?v=0.26.2';
+import {sheetSlots} from './sheet-layout.js?v=0.26.2';
+import {unclassifiedCharacter,metatypeOptions} from './character-options.js?v=0.26.2';
+import {numberFields,textFields,structuredTextFields,woundLabels,attributeFields,skillReserves,updateSkillRow} from './sheet.js?v=0.26.2';
+import {getCharacterCatalogs,assetReferenceText} from './catalog.js?v=0.26.2';
+import {characterEntryForRecord,upsertWorldRecord} from './world.js?v=0.26.2';
+import {worldFields,discoveryStates,authorities} from './world-schema.js?v=0.26.2';
+import {groups,validateCampaign} from './campaign.js?v=0.26.2';
 const rowKeys={skillRows:['catalogId','rating','attribute','rr','specialization','specialized','mean'],assetRows:['catalogId','name','category','notes','source','level','essence'],weaponRows:['name','type','notes','source','spellId'],woundRows:['label','light','serious','incap','rr','status'],vehicleRows:['name','type','auto','structure','handling','speed','armor','light','serious','incap','notes']};
 export const deckKeys=['name','attack','firewall','light','serious','incap','minRisk','penalty','notes'];
 export const readPath=(record,path)=>path.split('.').reduce((value,key)=>value?.[key],record);
@@ -31,8 +31,9 @@ export function updateCharacterInline(state,target,path,value,category){
  next.profile??={};const parts=path.split('.');
  if(parts[1]==='deck')next.profile.deck??=Object.fromEntries(deckKeys.map(k=>[k,'']));
  if(rowKeys[parts[1]]){const key=parts[1],i=Number(parts[2]);if(!next.profile[key]){if(['skillRows','assetRows'].includes(key))throw Error('Ajoutez d’abord cette ligne à la fiche.');next.profile[key]=blankRows(key);}if(!next.profile[key][i]&&['weaponRows','vehicleRows','woundRows'].includes(key)&&i<({weaponRows:sheetSlots.weapons,vehicleRows:sheetSlots.vehicles,woundRows:sheetSlots.wounds}[key])){const empty=blankRows(key);while(next.profile[key].length<=i)next.profile[key].push(empty[next.profile[key].length]);}if(!next.profile[key][i])throw Error('Ligne de fiche introuvable.');}
- let parent=next;for(const key of parts.slice(0,-1))parent=parent[key];parent[parts.at(-1)]=value;
- if(parts[1]==='skillRows'&&!next.profile.npc&&['rating','specialization'].includes(parts.at(-1)))parent.specialized=parent.rating>0&&!!parent.specialization.trim();
+ let parent=next;for(const key of parts.slice(0,-1))parent=parent[key];
+ if(parts[1]==='skillRows'&&['rating','specialization','specialized'].includes(parts.at(-1)))Object.assign(parent,updateSkillRow(parent,{[parts.at(-1)]:value},{npc:!!next.profile.npc}));
+ else parent[parts.at(-1)]=value;
  if(parts.at(-1)==='catalogId'){
   const kind=parts[1]==='skillRows'?'skills':'assets',item=getCharacterCatalogs(state)[kind].find(x=>x.id===value);if(!item)throw Error('Référence applicable au personnage introuvable.');parent.name=item.name;
   if(kind==='assets')Object.assign(parent,{category:item.category,source:item.source,level:item.level,essence:item.essence,notes:assetReferenceText(item),target:'character'});
@@ -41,6 +42,11 @@ export function updateCharacterInline(state,target,path,value,category){
  const updated={...state,entries,world:unbound?{...state.world,records:state.world.records.map(r=>r.id===record.id?{...r,gameEntryId:next.id}:r)}:state.world};validateCampaign(updated);return {state:updated,entryId:next.id};
 }
 export function changeCharacterRows(state,target,{kind,itemId,index,remove=false,category}){
+ if(kind==='specializations'&&remove){
+  const row=characterForInline(state,target).entry.profile?.skillRows?.[index];
+  if(!Number.isInteger(index)||index<0||!row)throw Error('Spécialisation introuvable.');
+  return updateCharacterInline(state,target,'profile.skillRows.'+index+'.specialization','');
+ }
  const keys={skills:'skillRows',assets:'assetRows',spells:'weaponRows',weapons:'weaponRows',vehicles:'vehicleRows'};const key=keys[kind];if(!key)throw Error('Table de personnage invalide.');
  const current=characterForInline(state,target);let nextState=state,entryId=current.entry.id;
  if(current.unbound){const created=updateCharacterInline(state,target,'category',category??unclassifiedCharacter);nextState=created.state;entryId=created.entryId;}
@@ -71,6 +77,7 @@ export function characterInlineSpec(state,target,path,label){
  else if(parts.at(-1)==='specialization'){suggestions=[];}
  else if(['description','notes','knowledge','keywords','behaviors','quotes','equipment','skills','assets','weapons','wounds','vehicles','cyberdeck','essenceEffects'].includes(parts.at(-1)))type='textarea';
  if(value===undefined&&parts[1]==='woundRows')value=blankRows('woundRows')[Number(parts[2])]?.[parts[3]];
+ if(parts[1]==='skillRows'&&parts.at(-1)==='rating')value=skillReserves(entry.profile.skillRows[Number(parts[2])],entry.profile).baseRating;
  return {value:value??'',label,type,options,suggestions,min,max,step,required:path==='name',maxLength:path==='name'?120:30000};
 }
 export function worldInlineSpec(state,id,path,label){
