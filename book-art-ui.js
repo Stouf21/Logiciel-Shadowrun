@@ -1,7 +1,7 @@
-import {bookArtworks,bookArtCredit} from './book-art-data.js?v=0.26.0';
-import {bookArtworkPath,bookArtworkSource,bookArtworkMatches} from './book-art.js?v=0.26.0';
-import {resourceArtPreview} from './resource-art.js?v=0.26.0';
-import {escape,searchDisclosure} from './ui.js?v=0.26.0';
+import {bookArtworks,bookArtCredit} from './book-art-data.js?v=0.26.1';
+import {bookArtworkPath,bookArtworkSource,bookArtworkMatches} from './book-art.js?v=0.26.1';
+import {resourceArtPreview} from './resource-art.js?v=0.26.1';
+import {escape,searchDisclosure} from './ui.js?v=0.26.1';
 
 export function bookArtworkCard(art){
  return `<article class="card book-art-card"><span class="tag">Illustration du livre · ${escape(art.category)}</span><h3>${escape(art.name)}</h3><button type="button" class="resource-art-open" data-book-art-view="${escape(art.id)}" aria-label="Agrandir l’illustration du livre : ${escape(art.name)}">${resourceArtPreview(art,art.name)}</button><p>${escape(art.description??'Illustration identifiée par sa légende dans le livre fourni.')}</p>${art.legend?`<p class="book-art-legend">Légende : ${escape(art.legend)}</p>`:''}<div class="actions"><button type="button" data-book-art-view="${escape(art.id)}">Agrandir</button><a class="button" href="${bookArtworkPath(art)}" download="${escape(art.bookImage)}">Télécharger</a></div><small>${escape(bookArtworkSource(art))} · ${escape(art.part)}, PDF ${art.pdfPage}<br>Benjamin Giletti</small></article>`;

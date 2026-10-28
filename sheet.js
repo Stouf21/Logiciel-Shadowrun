@@ -1,4 +1,4 @@
-import {validateNpcProfile} from './npc-preferences.js?v=0.26.0';
+import {validateNpcProfile} from './npc-preferences.js?v=0.26.1';
 export const attributeFields=[['force','Force'],['agilite','Agilité'],['volonte','Volonté'],['logique','Logique'],['charisme','Charisme']];
 export const numberFields=[...attributeFields,['anarchy','Anarchy actuel'],['essence','Essence'],['nuyens','Nuyens'],['magicCancelled','Succès annulés (magie)'],['healingCancelled','Succès annulés (soins)']];
 export const textFields=[['keywords','Mots-clés'],['behaviors','Comportements'],['quotes','Répliques'],['skills','Compétences : indice, attribut, RD et RR'],['knowledge','Connaissances'],['weapons','Armes et sorts : type et caractéristiques'],['wounds','Blessures : seuils légère / grave / incapacité, état et RR'],['assets','Atouts : essence et niveau'],['equipment','Équipement'],['cyberdeck','Cyberdeck : attaque, firewall, dommages et seuils'],['vehicles','Véhicules / drones : autopilote, structure, maniabilité, vitesse, blindage'],['essenceEffects','Essence : succès annulés en magie / soins et désavantage social']];
@@ -14,6 +14,12 @@ export function profileSearchText(profile={}){return [...numberFields,...textFie
 
 export function skillReserve(row,profile){
  return Number(row.rating||0)+Number(profile[row.attribute]||0)+(row.includesSpecialization?(row.specialization.trim()&&!row.specialized?-2:0):(row.specialized&&row.specialization.trim()?2:0));
+}
+export function skillReserves(row,profile){
+ const name=row.specialization.trim(),included=!!(name&&row.includesSpecialization);
+ const baseRating=Number(row.rating||0)-(included?2:0),base=baseRating+Number(profile[row.attribute]||0);
+ const bonus=name&&row.rating>0&&(!profile.npc||included||row.specialized)?2:0;
+ return {baseRating,base,specialization:name?base+bonus:null,bonus,label:name?'('+name+(bonus?' +2':'')+')':''};
 }
 export const woundLabels=['Sans armure','Armure principale','Armure secondaire','Mental'];
 export const structuredTextFields=[['metatype','Métatype'],['socialDisadvantage','Désavantage social (essence)']];

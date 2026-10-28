@@ -1,12 +1,13 @@
-import {mountSpellPicker} from './spells-ui.js?v=0.26.0';
-import {mountInlineEditing} from './inline-edit.js?v=0.26.0';
-import {characterInlineSpec,updateCharacterInline,characterForInline,changeCharacterRows} from './inline-model.js?v=0.26.0';
-import {getCharacterCatalogs} from './catalog.js?v=0.26.0';
-import {describeSkill} from './skill-details.js?v=0.26.0';
-import {skillReserve} from './sheet.js?v=0.26.0';
-import {escape} from './ui.js?v=0.26.0';
+import {mountSpellPicker} from './spells-ui.js?v=0.26.1';
+import {mountInlineEditing} from './inline-edit.js?v=0.26.1';
+import {characterInlineSpec,updateCharacterInline,characterForInline,changeCharacterRows} from './inline-model.js?v=0.26.1';
+import {getCharacterCatalogs} from './catalog.js?v=0.26.1';
+import {describeSkill} from './skill-details.js?v=0.26.1';
+import {skillReserves} from './sheet.js?v=0.26.1';
+import {escape} from './ui.js?v=0.26.1';
 export function mountCharacterInline(container,{getState,target,onSave,onEntry,onRefresh}){
- const apply=result=>{onSave(result.state);target.entryId=result.entryId;onEntry(result.entryId);const p=characterForInline(getState(),target).entry.profile??{};for(const b of container.querySelectorAll('[data-skill-reserve]')){const row=p.skillRows?.[Number(b.dataset.skillReserve)];if(row)b.textContent=skillReserve(row,p);}};let dialog=null;
+ const syncSkills=()=>{const p=characterForInline(getState(),target).entry.profile??{};for(const b of container.querySelectorAll('[data-skill-reserve]')){const row=p.skillRows?.[Number(b.dataset.skillReserve)];if(row)b.textContent=skillReserves(row,p)[b.dataset.skillVariant]??'';}for(const [i,row] of (p.skillRows??[]).entries()){const reserves=skillReserves(row,p),prefix='profile.skillRows.'+i;for(const [key,value] of [['specialization',reserves.label],['rating',reserves.baseRating],['attribute',{force:'FOR',agilite:'AGI',volonte:'VOL',logique:'LOG',charisme:'CHA'}[row.attribute]]]){const b=container.querySelector('.official-sheet [data-inline-key="'+prefix+'.'+key+'"]');if(b)b.textContent=value;}}};
+ const apply=result=>{onSave(result.state);target.entryId=result.entryId;onEntry(result.entryId);syncSkills();queueMicrotask(()=>{if(container.isConnected)syncSkills();});};let dialog=null;
  const dispose=mountInlineEditing(container,{scope:'character',floating:true,resolve:(path,label)=>{const spec=characterInlineSpec(getState(),target,path,label);if(path.endsWith('.specialization')){const row=characterForInline(getState(),target).entry.profile.skillRows[Number(path.split('.')[2])],skill=getCharacterCatalogs(getState()).skills.find(s=>s.id===row.catalogId);if(skill)spec.suggestions=describeSkill(skill).specializations.map(s=>s.name);}return spec;},save:(path,value)=>apply(updateCharacterInline(getState(),target,path,value)),refresh:onRefresh});
  const click=e=>{
   const rr=e.target.closest('[data-sheet-rr]');if(rr){e.preventDefault();e.stopPropagation();const i=Number(rr.dataset.index),value=Number(rr.dataset.sheetRr),old=characterForInline(getState(),target).entry.profile.skillRows[i].rr;try{apply(updateCharacterInline(getState(),target,'profile.skillRows.'+i+'.rr',old===value?value-1:value));onRefresh();}catch(err){alert(err.message);}return;}

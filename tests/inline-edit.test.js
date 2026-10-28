@@ -18,7 +18,7 @@ test('Les tables vides reçoivent uniquement la cellule saisie et les textes vid
 test('Les choix de compétences et spécialisations gardent la validation V2 et les autres lignes',()=>{
  const source=fresh();let state=updateCharacterInline(source,target,'profile.skillRows.0.rating',5).state;state=updateCharacterInline(state,target,'profile.skillRows.0.attribute','logique').state;
  assert.equal(character(state).profile.skillRows[0].rating,5);assert.equal(character(state).profile.skillRows[0].attribute,'logique');assert.equal(character(state).profile.skillRows[0].specialization,'Négociation');
- for(const [path,value] of [['profile.skillRows.0.rating',9],['profile.skillRows.0.rr',4],['profile.skillRows.0.specialization',''],['profile.force',-1],['category','Objet'],['profile.__proto__.polluted',true],['profile.skillRows.300.name','X']])assert.throws(()=>updateCharacterInline(source,target,path,value));
+ for(const [path,value] of [['profile.skillRows.0.rating',9],['profile.skillRows.0.rr',4],['profile.force',-1],['category','Objet'],['profile.__proto__.polluted',true],['profile.skillRows.300.name','X']])assert.throws(()=>updateCharacterInline(source,target,path,value));
  assert.equal(characterInlineSpec(source,target,'profile.skillRows.0.rating','Indice').max,8);
 });
 test('Une fiche sans statut se modifie et reste non classée, avec une seule liaison conservée après fusion et import',()=>{
@@ -48,4 +48,11 @@ test('Les dossiers, bâtiments et plans se modifient par champ en conservant leu
  state=updateWorldInline(state,'char-lim','aliases','Runner, Le Lim');assert.deepEqual(state.world.records.find(r=>r.id==='char-lim').aliases,['Runner','Le Lim']);assert.throws(()=>updateWorldInline(state,'zone-centre','fields.invente','x'));
  state=saveBuildingPlan(state,'place-arcologie-fontaine',{id:'plan-inline',name:'Hall',level:'RDC',description:'Public',gmNotes:'Privé',isSecret:false,imageData:''});state=updateBuildingInline(state,'place-arcologie-fontaine','building.floors','29');state=updateBuildingInline(state,'place-arcologie-fontaine','plans.plan-inline.name','Accueil');const b=state.world.records.find(r=>r.id==='place-arcologie-fontaine').building;
  assert.equal(b.floors,'29');assert.equal(b.plans[0].name,'Accueil');assert.equal(b.plans[0].gmNotes,'Privé');assert.throws(()=>updateBuildingInline(state,'place-arcologie-fontaine','building.plans',[]));assert.deepEqual(before.entries,fresh().entries);
+});
+
+test('Saisir ou retirer une spécialisation active son bonus sans choix supplémentaire et conserve les autres données',()=>{
+ const source=fresh(),target={entryId:source.entries[0].id};let state=updateCharacterInline(source,target,'profile.skillRows.0.specialization','').state;assert.equal(character(state).profile.skillRows[0].specialized,false);
+ state=updateCharacterInline(state,target,'profile.skillRows.0.specialization','Bluff').state;assert.equal(character(state).profile.skillRows[0].specialized,true);assert.equal(character(state).profile.skillRows[0].specialization,'Bluff');
+ state=updateCharacterInline(state,target,'profile.skillRows.0.rating',0).state;assert.equal(character(state).profile.skillRows[0].specialized,false);state=updateCharacterInline(state,target,'profile.skillRows.0.rating',2).state;assert.equal(character(state).profile.skillRows[0].specialized,true);
+ assert.deepEqual(character(state).profile.assetRows,character(source).profile.assetRows);assert.equal(character(source).profile.skillRows[0].specialization,'Négociation');
 });

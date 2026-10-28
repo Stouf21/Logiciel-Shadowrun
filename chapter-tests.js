@@ -1,8 +1,8 @@
-import {scenarioChapters,chapterCharacters} from './scenario-chapters.js?v=0.26.0';
-import {scenarioNpcs} from './scenario-npcs.js?v=0.26.0';
-import {baseSkills} from './catalog.js?v=0.26.0';
-import {skillReserve} from './sheet.js?v=0.26.0';
-import {rollAnarchy,rerollAnarchy,validateOptions} from './anarchy-dice.js?v=0.26.0';
+import {scenarioChapters,chapterCharacters} from './scenario-chapters.js?v=0.26.1';
+import {scenarioNpcs} from './scenario-npcs.js?v=0.26.1';
+import {baseSkills} from './catalog.js?v=0.26.1';
+import {skillReserve,skillReserves} from './sheet.js?v=0.26.1';
+import {rollAnarchy,rerollAnarchy,validateOptions} from './anarchy-dice.js?v=0.26.1';
 export const chapterTestTypes=[
  {id:'simple',name:'Test simple',opposed:false,source:'p. 64–65',help:'Choisissez la compétence et le seuil de difficulté.'},
  {id:'opposed',name:'Test opposé',opposed:true,source:'p. 64–65',help:'Comparez les succès. Une égalité se tranche selon la situation.'},
@@ -23,7 +23,10 @@ export function chapterTestParticipants(state,scenarioId,chapterId,{includeSecre
  return chapterCharacters(state,chapter,{scenarioId,includeSecrets}).map(record=>({id:record.id,name:record.name,record,entry:locals.get(record.id)??state.entries.find(e=>e.id===record.gameEntryId),profile:(locals.get(record.id)??state.entries.find(e=>e.id===record.gameEntryId))?.profile??{}}));
 }
 export function testSkillChoices(person){
- const p=person.profile,rows=p.skillRows??[],choices=rows.map((r,i)=>({id:'row:'+i,name:r.name,specialization:r.specialization,label:r.name+(r.specialization?' · '+r.specialization:''),count:number(p[r.attribute])===null?null:skillReserve(r,p),rr:r.rr,mean:number(r.mean),attribute:r.attribute}));
+ const p=person.profile,rows=p.skillRows??[],choices=rows.flatMap((r,i)=>{
+  const reserves=skillReserves(r,p),known=number(p[r.attribute])!==null,choice={id:'row:'+i,name:r.name,specialization:r.specialization,label:r.name+(r.specialization?' · '+r.specialization+(reserves.bonus?' +2':''):''),count:known?(p.npc?skillReserve(r,p):reserves.specialization??reserves.base):null,rr:r.rr,mean:number(r.mean),attribute:r.attribute};
+  return !p.npc&&r.specialization.trim()?[{...choice,id:choice.id+':base',specialization:'',label:r.name+' · sans spécialisation',count:known?reserves.base:null,mean:null},choice]:[choice];
+ });
  for(const skill of baseSkills)if(!rows.some(r=>norm(r.name)===norm(skill.name))){const trained=Array.isArray(p.skillRows)&&number(p[skill.attribute])!==null;choices.push({id:'skill:'+skill.id,name:skill.name,specialization:'',label:skill.name+' · indice à renseigner / non entraîné',count:trained?number(p[skill.attribute]):null,rr:0,mean:null,attribute:skill.attribute});}
  return [...choices,{id:'manual',name:'Valeurs manuelles',label:'Valeurs manuelles',count:null,rr:0,mean:null}];
 }

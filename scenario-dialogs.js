@@ -1,10 +1,10 @@
-import {scenarioCharacterRecords,scenarioNpcs} from './scenario-npcs.js?v=0.26.0';
-import {escape} from './ui.js?v=0.26.0';
-import {createScenario,scenarioChapters,attachChapterCharacter,addChapterVehicle} from './scenario-chapters.js?v=0.26.0';
-import {npcTypes,npcTypeLabel,generateNpcBatch,attachNpcBatch,vehicleFromText} from './npc-generator.js?v=0.26.0';
-import {npcPreferences,metatypeDistribution,npcOccupations} from './npc-preferences.js?v=0.26.0';
-import {getCatalogs} from './catalog.js?v=0.26.0';
-import {resourceTabs} from './global-search.js?v=0.26.0';
+import {scenarioCharacterRecords,scenarioNpcs} from './scenario-npcs.js?v=0.26.1';
+import {escape} from './ui.js?v=0.26.1';
+import {createScenario,scenarioChapters,attachChapterCharacter,addChapterVehicle} from './scenario-chapters.js?v=0.26.1';
+import {npcTypes,npcTypeLabel,generateNpcBatch,attachNpcBatch,vehicleFromText} from './npc-generator.js?v=0.26.1';
+import {npcPreferences,metatypeDistribution,npcOccupations} from './npc-preferences.js?v=0.26.1';
+import {getCatalogs} from './catalog.js?v=0.26.1';
+import {resourceTabs} from './global-search.js?v=0.26.1';
 export function scenarioDialog(title,body,submit){
  const dialog=document.createElement('dialog');dialog.className='scenario-dialog';dialog.innerHTML=`<form><h2>${escape(title)}</h2>${body}<p class="scenario-dialog-error" role="alert"></p><div class="actions"><button type="button" data-dialog-cancel>Annuler</button><button type="submit" class="primary">${escape(submit)}</button></div></form>`;
  const form=dialog.querySelector('form'),close=()=>{dialog.close();dialog.remove();};dialog.querySelector('[data-dialog-cancel]').onclick=close;dialog.oncancel=()=>dialog.remove();document.body.append(dialog);dialog.showModal();return {dialog,form,close,error:error=>{dialog.querySelector('[role=alert]').textContent=error.message;}};

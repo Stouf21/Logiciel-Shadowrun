@@ -1,4 +1,4 @@
-import {escape} from './ui.js?v=0.26.0';
+import {escape} from './ui.js?v=0.26.1';
 let active=null,installed=false;
 export const inlineField=(scope,key,value,label,{display,empty='À définir'}={})=>`<button type="button" class="inline-field" data-inline-scope="${escape(scope)}" data-inline-key="${escape(key)}" data-inline-label="${escape(label)}" aria-label="Modifier ${escape(label)}" title="Cliquer pour modifier">${escape(display??(value===undefined||value===''?empty:value))}</button>`;
 

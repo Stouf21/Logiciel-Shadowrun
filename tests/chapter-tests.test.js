@@ -52,3 +52,10 @@ test('Les personnages et véhicules MJ ne sont proposés que lorsque leur visibi
  assert.ok(!chapterTestVehicles(s.state,s.id,s.cid).some(x=>x.id===v.id));assert.ok(chapterTestVehicles(s.state,s.id,s.cid,{includeSecrets:true}).some(x=>x.id===v.id));
  const cfg=config(s,'piloting',{a:side(hidden.id,{control:'autonomous',vehicleId:v.id})});assert.throws(()=>resolve(s,cfg));assert.equal(resolve(s,cfg,{includeSecrets:true,random:()=>.99}).a.options.count,6);
 });
+
+test('Les tests proposent la compétence normale et sa spécialisation avec +2 sans doubler les bonus imprimés des PNJ',()=>{
+ const row={catalogId:'skill-2',name:'Armes à distance',rating:5,attribute:'agilite',specialization:'Pistolets',specialized:false,rr:1},person={profile:{agilite:3,skillRows:[row]}};
+ const choices=testSkillChoices(person).filter(c=>c.name==='Armes à distance');assert.equal(choices.length,2);assert.equal(choices.find(c=>!c.specialization).count,8);assert.equal(choices.find(c=>c.specialization).count,10);assert.match(choices.find(c=>c.specialization).label,/Pistolets \+2/);
+ assert.equal(defaultTestSkill(person,'ranged').count,8);assert.equal(testSkillChoices({profile:{skillRows:[row]}}).find(c=>c.specialization).count,null);
+ const npc={profile:{agilite:3,npc:{},skillRows:[{...row,rating:7,includesSpecialization:true,specialized:true}]}};const npcChoices=testSkillChoices(npc).filter(c=>c.name==='Armes à distance');assert.equal(npcChoices.length,1);assert.equal(npcChoices[0].count,10);
+});
