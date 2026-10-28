@@ -1,7 +1,7 @@
-import {validateProfile} from './sheet.js?v=0.26.2';
-import {characterCategories} from './character-options.js?v=0.26.2';
-import {validateBuilding} from './building-schema.js?v=0.26.2';
-import {validateScenarioChapters} from './chapter-schema.js?v=0.26.2';
+import {validateProfile} from './sheet.js?v=0.27.0';
+import {characterCategories} from './character-options.js?v=0.27.0';
+import {validateBuilding} from './building-schema.js?v=0.27.0';
+import {validateScenarioChapters} from './chapter-schema.js?v=0.27.0';
 export const UNKNOWN='À définir';
 export const worldKinds={character:'Personnage',corporation:'Corporation',faction:'Faction',zone:'Quartier / zone',place:'Lieu',scenario:'Scénario',clue:'Indice',secret:'Secret',event:'Événement'};
 export const discoveryStates=['Non découvert','Partiellement découvert','Découvert'];

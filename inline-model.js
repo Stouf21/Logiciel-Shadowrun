@@ -1,12 +1,12 @@
-import {spellRow} from './spells.js?v=0.26.2';
-import {sheetSlots} from './sheet-layout.js?v=0.26.2';
-import {unclassifiedCharacter,metatypeOptions} from './character-options.js?v=0.26.2';
-import {numberFields,textFields,structuredTextFields,woundLabels,attributeFields,skillReserves,updateSkillRow} from './sheet.js?v=0.26.2';
-import {getCharacterCatalogs,assetReferenceText} from './catalog.js?v=0.26.2';
-import {characterEntryForRecord,upsertWorldRecord} from './world.js?v=0.26.2';
-import {worldFields,discoveryStates,authorities} from './world-schema.js?v=0.26.2';
-import {groups,validateCampaign} from './campaign.js?v=0.26.2';
-const rowKeys={skillRows:['catalogId','rating','attribute','rr','specialization','specialized','mean'],assetRows:['catalogId','name','category','notes','source','level','essence'],weaponRows:['name','type','notes','source','spellId'],woundRows:['label','light','serious','incap','rr','status'],vehicleRows:['name','type','auto','structure','handling','speed','armor','light','serious','incap','notes']};
+import {spellRow} from './spells.js?v=0.27.0';
+import {sheetSlots} from './sheet-layout.js?v=0.27.0';
+import {unclassifiedCharacter,metatypeOptions} from './character-options.js?v=0.27.0';
+import {numberFields,textFields,structuredTextFields,woundLabels,attributeFields,skillReserves,updateSkillRow,skillVariants} from './sheet.js?v=0.27.0';
+import {getCharacterCatalogs,assetReferenceText} from './catalog.js?v=0.27.0';
+import {characterEntryForRecord,upsertWorldRecord} from './world.js?v=0.27.0';
+import {worldFields,discoveryStates,authorities} from './world-schema.js?v=0.27.0';
+import {groups,validateCampaign} from './campaign.js?v=0.27.0';
+const rowKeys={skillRows:['catalogId','rating','attribute','rr','specialization','specialized','mean','specializationAttribute','specializationTrained','specializationRR'],assetRows:['catalogId','name','category','notes','source','level','essence','rrActive','rrChoices'],weaponRows:['name','type','notes','source','spellId'],woundRows:['label','light','serious','incap','rr','status'],vehicleRows:['name','type','auto','structure','handling','speed','armor','light','serious','incap','notes']};
 export const deckKeys=['name','attack','firewall','light','serious','incap','minRisk','penalty','notes'];
 export const readPath=(record,path)=>path.split('.').reduce((value,key)=>value?.[key],record);
 function blankRows(key){return key==='woundRows'?woundLabels.map(label=>({label,light:'',serious:'',incap:'',rr:'',status:''})):Array.from({length:key==='vehicleRows'?sheetSlots.vehicles:sheetSlots.weapons},()=>Object.fromEntries(rowKeys[key].map(k=>[k,''])));}
@@ -21,6 +21,7 @@ function assertCharacterPath(path){
  if(parts.length===2&&[...numberFields,...textFields,...structuredTextFields].some(([k])=>k===parts[1]))return;
  if(parts[1]==='npc'&&parts.length===3&&['combativeness','notes'].includes(parts[2]))return;
  if(parts[1]==='deck'&&parts.length===3&&deckKeys.includes(parts[2]))return;
+ if(parts.length===6&&parts[1]==='skillRows'&&/^\d+$/.test(parts[2])&&Number(parts[2])<300&&parts[3]==='extraSpecializations'&&/^\d+$/.test(parts[4])&&Number(parts[4])<50&&['name','attribute','specialized','rr'].includes(parts[5]))return;
  if(parts.length===4&&rowKeys[parts[1]]?.includes(parts[3])&&/^\d+$/.test(parts[2])&&Number(parts[2])<300)return;
  throw Error('Champ de personnage invalide.');
 }
@@ -32,8 +33,9 @@ export function updateCharacterInline(state,target,path,value,category){
  if(parts[1]==='deck')next.profile.deck??=Object.fromEntries(deckKeys.map(k=>[k,'']));
  if(rowKeys[parts[1]]){const key=parts[1],i=Number(parts[2]);if(!next.profile[key]){if(['skillRows','assetRows'].includes(key))throw Error('Ajoutez d’abord cette ligne à la fiche.');next.profile[key]=blankRows(key);}if(!next.profile[key][i]&&['weaponRows','vehicleRows','woundRows'].includes(key)&&i<({weaponRows:sheetSlots.weapons,vehicleRows:sheetSlots.vehicles,woundRows:sheetSlots.wounds}[key])){const empty=blankRows(key);while(next.profile[key].length<=i)next.profile[key].push(empty[next.profile[key].length]);}if(!next.profile[key][i])throw Error('Ligne de fiche introuvable.');}
  let parent=next;for(const key of parts.slice(0,-1))parent=parent[key];
- if(parts[1]==='skillRows'&&['rating','specialization','specialized'].includes(parts.at(-1)))Object.assign(parent,updateSkillRow(parent,{[parts.at(-1)]:value},{npc:!!next.profile.npc}));
+ if(parts.length===4&&parts[1]==='skillRows'&&['rating','specialization','specialized'].includes(parts.at(-1)))Object.assign(parent,updateSkillRow(parent,{[parts.at(-1)]:value},{npc:!!next.profile.npc}));
  else parent[parts.at(-1)]=value;
+ if(parts[1]==='assetRows'&&parts.at(-1)==='notes')parent.effectsHidden=!String(value).trim();
  if(parts.at(-1)==='catalogId'){
   const kind=parts[1]==='skillRows'?'skills':'assets',item=getCharacterCatalogs(state)[kind].find(x=>x.id===value);if(!item)throw Error('Référence applicable au personnage introuvable.');parent.name=item.name;
   if(kind==='assets')Object.assign(parent,{category:item.category,source:item.source,level:item.level,essence:item.essence,notes:assetReferenceText(item),target:'character'});
@@ -41,11 +43,22 @@ export function updateCharacterInline(state,target,path,value,category){
  const entries=unbound?[...state.entries,next]:state.entries.map(e=>e.id===entry.id?next:e);
  const updated={...state,entries,world:unbound?{...state.world,records:state.world.records.map(r=>r.id===record.id?{...r,gameEntryId:next.id}:r)}:state.world};validateCampaign(updated);return {state:updated,entryId:next.id};
 }
-export function changeCharacterRows(state,target,{kind,itemId,index,remove=false,category}){
- if(kind==='specializations'&&remove){
-  const row=characterForInline(state,target).entry.profile?.skillRows?.[index];
-  if(!Number.isInteger(index)||index<0||!row)throw Error('Spécialisation introuvable.');
-  return updateCharacterInline(state,target,'profile.skillRows.'+index+'.specialization','');
+export function changeCharacterRows(state,target,{kind,itemId,index,remove=false,category,name,specializationKey='primary',attribute,trained=true}){
+ if(kind==='specializations'){
+  const current=characterForInline(state,target),row=current.entry.profile?.skillRows?.[index];if(!Number.isInteger(index)||index<0||!row)throw Error('Compétence introuvable.');
+  let next=structuredClone(current.entry),r=next.profile.skillRows[index];
+  if(remove){
+   if(specializationKey==='primary'){r=updateSkillRow(r,{specialization:''},{npc:!!next.profile.npc});delete r.specializationAttribute;delete r.specializationRR;delete r.specializationTrained;next.profile.skillRows[index]=r;}
+   else {const n=Number(specializationKey.split(':')[1]);if(!/^extra:\d+$/.test(specializationKey)||!r.extraSpecializations?.[n])throw Error('Spécialisation introuvable.');r.extraSpecializations.splice(n,1);}
+  }else{
+   name=String(name??'').trim();if(!name||name.length>120)throw Error('Donnez un nom de spécialisation (120 caractères maximum).');
+   if(skillVariants(r,next.profile,{derived:false}).some(v=>v.name.toLocaleLowerCase('fr')===name.toLocaleLowerCase('fr')))throw Error('Cette spécialisation existe déjà.');
+   if(trained&&skillReserves(r,next.profile).baseRating<1)throw Error('Une spécialisation +2 nécessite un indice d’au moins 1.');
+   const v={name,attribute:attribute??r.attribute,specialized:!!trained,rr:0};
+   if(!r.specialization.trim()){next.profile.skillRows[index]=updateSkillRow(r,{specialization:name},{npc:!!next.profile.npc});Object.assign(next.profile.skillRows[index],{specializationAttribute:v.attribute,specializationTrained:v.specialized,specialized:v.specialized});}
+   else {r.extraSpecializations??=[];r.extraSpecializations.push(v);}
+  }
+  const updated={...state,entries:state.entries.map(e=>e.id===next.id?next:e)};validateCampaign(updated);return {state:updated,entryId:next.id};
  }
  const keys={skills:'skillRows',assets:'assetRows',spells:'weaponRows',weapons:'weaponRows',vehicles:'vehicleRows'};const key=keys[kind];if(!key)throw Error('Table de personnage invalide.');
  const current=characterForInline(state,target);let nextState=state,entryId=current.entry.id;
@@ -71,17 +84,43 @@ export function characterInlineSpec(state,target,path,label){
  if(path==='profile.metatype'){type='select';options=metatypeOptions(value);}else if(path==='category'){type='select';options=groups.characters;}else if(path==='name')type='text';
  else if(parts.at(-1)==='spellId'){type='select';options=getCharacterCatalogs(state).spells.map(s=>[s.id,s.name]);}
  else if(parts.at(-1)==='catalogId'){type='select';options=getCharacterCatalogs(state)[parts[1]==='skillRows'?'skills':'assets'].map(x=>[x.id,x.name]);}
- else if(path.startsWith('profile.')&&parts.length===2&&numberFields.some(([k])=>k===parts[1])||['rating','rr','level','essence','mean'].includes(parts.at(-1))&&parts.length===4){type='number';min=0;step=parts.at(-1)==='essence'?'any':1;max=parts.at(-1)==='rating'?(entry.profile?.npc?12:8):parts.at(-1)==='mean'?30:parts.at(-1)==='rr'?3:undefined;}
- else if(parts.at(-1)==='attribute'){type='select';options=attributeFields;}
- else if(parts.at(-1)==='specialized'){type='boolean';}
+ else if(path.startsWith('profile.')&&parts.length===2&&numberFields.some(([k])=>k===parts[1])||['rating','rr','specializationRR','level','essence','mean'].includes(parts.at(-1))&&[4,6].includes(parts.length)){type='number';min=0;step=parts.at(-1)==='essence'?'any':1;max=parts.at(-1)==='rating'?(entry.profile?.npc?12:8):parts.at(-1)==='mean'?30:['rr','specializationRR'].includes(parts.at(-1))?3:undefined;}
+ else if(['attribute','specializationAttribute'].includes(parts.at(-1))){type='select';options=attributeFields;}
+ else if(['specialized','specializationTrained','rrActive'].includes(parts.at(-1))){type='boolean';}
  else if(parts.at(-1)==='specialization'){suggestions=[];}
  else if(['description','notes','knowledge','keywords','behaviors','quotes','equipment','skills','assets','weapons','wounds','vehicles','cyberdeck','essenceEffects'].includes(parts.at(-1)))type='textarea';
  if(value===undefined&&parts[1]==='woundRows')value=blankRows('woundRows')[Number(parts[2])]?.[parts[3]];
  if(parts[1]==='skillRows'&&parts.at(-1)==='rating')value=skillReserves(entry.profile.skillRows[Number(parts[2])],entry.profile).baseRating;
+ if(parts[1]==='skillRows'&&parts.at(-1)==='specializationAttribute'&&value===undefined)value=entry.profile.skillRows[Number(parts[2])].attribute;
+ if(parts[1]==='skillRows'&&parts.at(-1)==='specializationTrained'&&value===undefined)value=!!skillReserves(entry.profile.skillRows[Number(parts[2])],entry.profile).bonus;
+ if(parts.at(-1)==='specializationRR'&&value===undefined)value=0;
  return {value:value??'',label,type,options,suggestions,min,max,step,required:path==='name',maxLength:path==='name'?120:30000};
 }
 export function worldInlineSpec(state,id,path,label){
  const record=state.world.records.find(r=>r.id===id),key=path.split('.').at(-1);let type=['isSecret'].includes(path)?'boolean':['name','state','portraitUrl','aliases'].includes(path)?'text':'textarea',options;
  if(key==='metatype'){type='select';options=metatypeOptions(record.fields.metatype);}if(path==='discovery'){type='select';options=discoveryStates;}if(key==='authority'){type='select';options=authorities;}if(key==='life'){type='select';options=['À définir','Vivant','Mort','Disparu','Inconnu'];}if(path==='portraitUrl')type='url';
  return {value:path==='aliases'?record.aliases.join(', '):readPath(record,path),type,options,label,required:path==='name',maxLength:path==='name'?200:30000};
+}
+
+export function deleteCharacterElement(state,target,path){
+ assertCharacterPath(path);const parts=path.split('.'),key=parts.at(-1),entry=characterForInline(state,target).entry;
+ if(parts[1]==='skillRows'){
+  const index=Number(parts[2]);if(parts[3]==='catalogId')return changeCharacterRows(state,target,{kind:'skills',index,remove:true});
+  if(parts[3]==='extraSpecializations'){
+   if(key==='name')return changeCharacterRows(state,target,{kind:'specializations',index,specializationKey:'extra:'+parts[4],remove:true});
+   return updateCharacterInline(state,target,path,key==='attribute'?entry.profile.skillRows[index].attribute:key==='specialized'?false:0);
+  }
+  if(key==='specialization')return changeCharacterRows(state,target,{kind:'specializations',index,remove:true});
+  if(key==='specializationAttribute')return updateCharacterInline(state,target,path,entry.profile.skillRows[index].attribute);
+  if(key==='specializationTrained')return updateCharacterInline(state,target,path,false);
+  if(key==='specializationRR')return updateCharacterInline(state,target,path,0);
+  if(key==='attribute')return updateCharacterInline(state,target,path,getCharacterCatalogs(state).skills.find(s=>s.id===entry.profile.skillRows[index].catalogId)?.attribute??'agilite');
+  return updateCharacterInline(state,target,path,0);
+ }
+ const kinds={assetRows:'assets',weaponRows:'weapons',vehicleRows:'vehicles'};
+ if(kinds[parts[1]]&&['name','catalogId'].includes(key))return changeCharacterRows(state,target,{kind:kinds[parts[1]],index:Number(parts[2]),remove:true});
+ if(parts[1]==='deck'&&key==='name'){let next=state,result;for(const k of deckKeys){result=updateCharacterInline(next,target,'profile.deck.'+k,'');next=result.state;}return result;}
+ if(path==='name')return updateCharacterInline(state,target,path,'Sans nom');
+ if(path==='category')return updateCharacterInline(state,target,path,unclassifiedCharacter);
+ return updateCharacterInline(state,target,path,'');
 }

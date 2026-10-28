@@ -1,5 +1,5 @@
-import {getSpellCatalog} from './spells.js?v=0.26.2';
-import {baseSkills,baseAssets} from './catalog-data.js?v=0.26.2';
+import {getSpellCatalog} from './spells.js?v=0.27.0';
+import {baseSkills,baseAssets} from './catalog-data.js?v=0.27.0';
 export {baseSkills,baseAssets};
 export function getCatalogs(state){return {spells:getSpellCatalog(state),skills:[...baseSkills,...(state.customSkills??[])],assets:[...baseAssets,...(state.customAssets??[])]};}
 export function assetReferenceText(asset){return [asset.description,asset.conditions,asset.price?'Prix : '+asset.price:''].filter(Boolean).join('\n');}

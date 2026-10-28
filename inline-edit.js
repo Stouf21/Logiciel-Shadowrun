@@ -1,8 +1,8 @@
-import {escape} from './ui.js?v=0.26.2';
+import {escape} from './ui.js?v=0.27.0';
 let active=null,installed=false;
 export const inlineField=(scope,key,value,label,{display,empty='À définir'}={})=>`<button type="button" class="inline-field" data-inline-scope="${escape(scope)}" data-inline-key="${escape(key)}" data-inline-label="${escape(label)}" aria-label="Modifier ${escape(label)}" title="Cliquer pour modifier">${escape(display??(value===undefined||value===''?empty:value))}</button>`;
 
-export function mountInlineEditing(container,{scope,resolve,save,refresh,floating=false}){
+export function mountInlineEditing(container,{scope,resolve,save,refresh,floating=false,remove}){
  if(!installed){
   const finishOutside=e=>{if(!active||active.form.contains(e.target))return;const previous=active;
    if(!previous.commit(false)){e.preventDefault();if(e.type==='click')e.stopImmediatePropagation();return;}
@@ -22,7 +22,7 @@ export function mountInlineEditing(container,{scope,resolve,save,refresh,floatin
    const disclosureKey=d=>d.id||d.dataset.sheetDetail||d.querySelector(':scope > summary')?.textContent;
    const openedDetails=new Set([...container.querySelectorAll('details[open]')].map(disclosureKey));
    const scrollPositions=[...container.querySelectorAll('[data-inline-scroll]')].map(el=>({key:el.dataset.inlineScroll,left:el.scrollLeft,top:el.scrollTop}));
-   save(edit.key,value);clearTimeout(edit.timer);current=null;if(active?.owner===owner)active=null;
+   save(edit.key,value,edit.readExtras?.());clearTimeout(edit.timer);current=null;if(active?.owner===owner)active=null;
    if(edit.form.isConnected){const option=edit.spec.type==='select'?[...edit.input.options].find(o=>o.value===String(value))?.textContent:null;edit.button.textContent=edit.spec.format?edit.spec.format(value):option??(edit.spec.type==='boolean'?value?'Oui':'Non':value===''?'À définir':String(value));restore(edit);}
    if(update&&!disposed){const scroll={x:scrollX,y:scrollY};refresh?.();const root=document.querySelector('[data-inline-context="'+CSS.escape(scope)+'"]');
     for(const panel of root?.querySelectorAll('.secret-panel')??[])if(opened.includes(panel.querySelector('h4')?.textContent)){panel.querySelector('.secret-content').hidden=false;const button=panel.querySelector('[data-reveal-secret]');button.setAttribute('aria-expanded','true');button.textContent='Masquer';}
@@ -42,10 +42,15 @@ export function mountInlineEditing(container,{scope,resolve,save,refresh,floatin
   if(spec.type==='boolean')input.checked=!!spec.value;else input.value=spec.value??'';
   if(spec.type==='textarea')input.rows=4;for(const key of ['min','max','step','maxLength','required'])if(spec[key]!==undefined)input[key]=spec[key];label.append(input);form.append(label);
   if(spec.suggestions?.length&&spec.type!=='select'){const list=document.createElement('datalist');list.id='inline-suggestions-'+crypto.randomUUID();for(const s of spec.suggestions){const o=document.createElement('option');o.value=s;list.append(o);}input.setAttribute('list',list.id);form.append(list);}
+  const readExtras=spec.render?.(form);
   const error=document.createElement('p');error.className='inline-edit-error';error.setAttribute('role','alert');form.append(error);
   const actions=document.createElement('div');actions.className='inline-edit-actions';actions.innerHTML='<button type="submit" aria-label="Enregistrer cette valeur" title="Enregistrer">✓</button><button type="button" data-inline-cancel aria-label="Annuler cette modification" title="Annuler">×</button>';form.append(actions);
+  if(spec.deletion&&remove){
+   const deleteButton=document.createElement('button');deleteButton.type='button';deleteButton.className='inline-delete';deleteButton.dataset.inlineDelete='';deleteButton.textContent='× '+(spec.deletion.label??'Supprimer');
+   deleteButton.onclick=e=>{e.preventDefault();e.stopPropagation();if(!confirm(spec.deletion.question??'Supprimer cet élément de la fiche ?'))return;try{remove(key);cancel();refresh?.();}catch(err){error.textContent=err.message;current?.reposition?.();}};actions.prepend(deleteButton);
+  }
   const useFloating=floating&&!!button.closest('.official-sheet');
-  current={key,spec,input,form,button,error,timer:null,saving:false,floating:useFloating};active={owner,commit,form,refresh};
+  current={key,spec,input,form,button,error,readExtras,timer:null,saving:false,floating:useFloating};active={owner,commit,form,refresh};
   if(useFloating){
    form.classList.add('floating-inline-editor');form.setAttribute('role','dialog');form.setAttribute('aria-label',spec.label);button.hidden=true;document.body.append(form);
    const place=()=>{const v=window.visualViewport,top=v?.offsetTop??0,left=v?.offsetLeft??0,width=v?.width??innerWidth,height=v?.height??innerHeight,b=button.parentElement.getBoundingClientRect();form.style.width=Math.min(360,width-24)+'px';form.style.maxHeight=Math.max(100,height-24)+'px';form.style.left=Math.max(left+12,Math.min(b.left,left+width-form.offsetWidth-12))+'px';form.style.top=Math.max(top+12,Math.min(b.bottom+8,top+height-form.offsetHeight-12))+'px';};
