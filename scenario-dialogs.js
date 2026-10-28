@@ -1,10 +1,10 @@
-import {scenarioCharacterRecords,scenarioNpcs} from './scenario-npcs.js?v=0.24.0';
-import {escape} from './ui.js?v=0.24.0';
-import {createScenario,scenarioChapters,attachChapterCharacter,addChapterVehicle} from './scenario-chapters.js?v=0.24.0';
-import {npcTypes,generateNpcBatch,attachNpcBatch,vehicleFromText} from './npc-generator.js?v=0.24.0';
-import {npcPreferences,metatypeDistribution,npcOccupations} from './npc-preferences.js?v=0.24.0';
-import {getCatalogs} from './catalog.js?v=0.24.0';
-import {resourceTabs} from './global-search.js?v=0.24.0';
+import {scenarioCharacterRecords,scenarioNpcs} from './scenario-npcs.js?v=0.25.0';
+import {escape} from './ui.js?v=0.25.0';
+import {createScenario,scenarioChapters,attachChapterCharacter,addChapterVehicle} from './scenario-chapters.js?v=0.25.0';
+import {npcTypes,generateNpcBatch,attachNpcBatch,vehicleFromText} from './npc-generator.js?v=0.25.0';
+import {npcPreferences,metatypeDistribution,npcOccupations} from './npc-preferences.js?v=0.25.0';
+import {getCatalogs} from './catalog.js?v=0.25.0';
+import {resourceTabs} from './global-search.js?v=0.25.0';
 export function scenarioDialog(title,body,submit){
  const dialog=document.createElement('dialog');dialog.className='scenario-dialog';dialog.innerHTML=`<form><h2>${escape(title)}</h2>${body}<p class="scenario-dialog-error" role="alert"></p><div class="actions"><button type="button" data-dialog-cancel>Annuler</button><button type="submit" class="primary">${escape(submit)}</button></div></form>`;
  const form=dialog.querySelector('form'),close=()=>{dialog.close();dialog.remove();};dialog.querySelector('[data-dialog-cancel]').onclick=close;dialog.oncancel=()=>dialog.remove();document.body.append(dialog);dialog.showModal();return {dialog,form,close,error:error=>{dialog.querySelector('[role=alert]').textContent=error.message;}};
@@ -32,7 +32,7 @@ export function openChapterNpcs(getState,scenarioId,chapter,onSave,afterSave){
   ui.form.querySelector('.npc-source-preview div').innerHTML=`<p>${escape(t.name)} · ${escape(npcOccupations[t.occupation])} · Anarchy V2, p. ${t.page}</p>${t.sections.filter(s=>s.heading.includes('ATOUT')||s.heading==='ARMES'||s.heading==='COMPÉTENCES'||s.heading.includes('COMPÉTENCE ET')).map(s=>`<h4>${escape(s.heading)}</h4><ul>${s.items.map(i=>`<li>${escape(i.text)}</li>`).join('')}</ul>`).join('')}`;
  }
  ui.form.elements.typeId.onchange=update;ui.form.elements.region.onchange=update;update();
- ui.form.onsubmit=e=>{e.preventDefault();try{const params={typeId:ui.form.elements.typeId.value,count:Number(ui.form.elements.count.value),region:ui.form.elements.region.value,rank:ui.form.elements.rank.value,senior:ui.form.elements.typeId.value==='cadre'&&ui.form.elements.senior.checked,isSecret:ui.form.elements.isSecret.checked},key=JSON.stringify([params,npcPreferences(getState())]);if(key!==cachedKey){cached=generateNpcBatch(getState(),params);cachedKey=key;}onSave(attachNpcBatch(getState(),scenarioId,chapter.id,cached,{withVehicles:ui.form.elements.withVehicles.checked}));ui.close();afterSave(params.count+' PNJ créé(s) dans ce scénario. Cliquez sur leur nom pour ouvrir leur fiche.');}catch(error){ui.error(error);}};
+ ui.form.onsubmit=e=>{e.preventDefault();try{const params={typeId:ui.form.elements.typeId.value,count:Number(ui.form.elements.count.value),region:ui.form.elements.region.value,rank:ui.form.elements.rank.value,senior:ui.form.elements.typeId.value==='cadre'&&ui.form.elements.senior.checked,isSecret:ui.form.elements.isSecret.checked},key=JSON.stringify([params,npcPreferences(getState())]);if(key!==cachedKey){cached=generateNpcBatch(getState(),params);cachedKey=key;}onSave(attachNpcBatch(getState(),scenarioId,chapter.id,cached,{withVehicles:ui.form.elements.withVehicles.checked}));ui.close();afterSave(params.count+' PNJ créé(s) dans ce scénario. Cliquez sur leur nom pour ouvrir leurs informations.');}catch(error){ui.error(error);}};
 }
 export function chapterVehicleCatalog(state){
  const rows=[...getCatalogs(state).assets.map(item=>({...item,sourceCatalogId:item.id})),...state.entries.map(item=>({...item,sourceEntryId:item.id}))].filter(item=>resourceTabs(item).some(t=>['vehicles','drones'].includes(t)));

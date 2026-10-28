@@ -1,7 +1,7 @@
-import {escape,searchDisclosure} from './ui.js?v=0.24.0';
-import {describeSkill} from './skill-details.js?v=0.24.0';
-import {attributeFields} from './sheet.js?v=0.24.0';
-import {resourceArtwork} from './resource-art.js?v=0.24.0';
+import {escape,searchDisclosure} from './ui.js?v=0.25.0';
+import {describeSkill} from './skill-details.js?v=0.25.0';
+import {attributeFields} from './sheet.js?v=0.25.0';
+import {resourceArtwork} from './resource-art.js?v=0.25.0';
 export function showCustomEditor(kind,onSave,{characterOnly=false}={}){
  const dialog=document.createElement('dialog');
  const skills=kind==='skills';

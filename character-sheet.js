@@ -1,9 +1,9 @@
-import {secretSection} from './secrets-ui.js?v=0.24.0';
-import {isCharacterAsset,assetReferenceForRow,assetReferenceText} from './catalog.js?v=0.24.0';
-import {attributeFields,woundLabels,skillReserve} from './sheet.js?v=0.24.0';
-import {sheetSlots,skillLine,weaponLine,assetLine,vehicleTop,sheetBox} from './sheet-layout.js?v=0.24.0';
-import {escape} from './ui.js?v=0.24.0';
-import {inlineField} from './inline-edit.js?v=0.24.0';
+import {secretSection} from './secrets-ui.js?v=0.25.0';
+import {isCharacterAsset,assetReferenceForRow,assetReferenceText} from './catalog.js?v=0.25.0';
+import {attributeFields,woundLabels,skillReserve} from './sheet.js?v=0.25.0';
+import {sheetSlots,skillLine,weaponLine,assetLine,vehicleTop,sheetBox} from './sheet-layout.js?v=0.25.0';
+import {escape} from './ui.js?v=0.25.0';
+import {inlineField} from './inline-edit.js?v=0.25.0';
 const block=(title,body)=>`<section class="sheet-extra-block"><h3>${title}</h3>${body}</section>`;
 export function characterSheet(entry,{worldId=null,unbound=false,portraitUrl=''}={}){
  const p=entry.profile??{},f=(path,value,label,extra={})=>inlineField('character',path,value,label,{empty:'',...extra});
@@ -64,7 +64,7 @@ export function characterSheet(entry,{worldId=null,unbound=false,portraitUrl=''}
   verso.push(field(543,b.y,30,b.height,path+'.level',r.level,'Niveau de '+r.name,'official-centered'));
  }
  verso.push(field(253,671,325,79,'profile.equipment',p.equipment,'Équipement','official-note'));
- const page=(face,body)=>`<article class="sheet-page official-sheet official-sheet-${face}" data-sheet-face="${face}" aria-label="Fiche de personnage ${face}"><img class="official-paper" src="./assets/sheets/anarchy-v2-${face}.webp?v=0.24.0" width="2404" height="3119" alt="" aria-hidden="true" draggable="false"><h3 class="sheet-sr-only">Fiche Anarchy V2 · ${face}</h3>${body.join('')}${face==='recto'?'<div class="sheet-sr-only">Niveau de risque : RR 0 : 1, 2, 4, 6+ dés ; RR 1 : 3, 5, 7, 10+ dés ; RR 2 : 5, 8, 11, 13+ dés ; RR 3 : 8, 12, 15 dés, extrême non applicable.</div>':''}</article>`;
+ const page=(face,body)=>`<article class="sheet-page official-sheet official-sheet-${face}" data-sheet-face="${face}" aria-label="Fiche de personnage ${face}"><img class="official-paper" src="./assets/sheets/anarchy-v2-${face}.webp?v=0.25.0" width="2404" height="3119" alt="" aria-hidden="true" draggable="false"><h3 class="sheet-sr-only">Fiche Anarchy V2 · ${face}</h3>${body.join('')}${face==='recto'?'<div class="sheet-sr-only">Niveau de risque : RR 0 : 1, 2, 4, 6+ dés ; RR 1 : 3, 5, 7, 10+ dés ; RR 2 : 5, 8, 11, 13+ dés ; RR 3 : 8, 12, 15 dés, extrême non applicable.</div>':''}</article>`;
  const detailField=(path,value,label,extra={})=>f(path,value,label,{empty:'À définir',...extra});
  const details=(label,body,print=false)=>`<details data-sheet-detail="${escape(label)}" class="sheet-detail ${print?'sheet-print-appendix':''}"><summary>${label}</summary>${body}</details>`;
  const skillDetails=skills.map((r,i)=>{const path='profile.skillRows.'+i;return `<article class="sheet-row-detail"><h4>${detailField(path+'.catalogId',r.catalogId,'Compétence '+(i+1),{display:r.name})}</h4><dl><div><dt>Indice</dt><dd>${detailField(path+'.rating',r.rating,'Indice de '+r.name)}</dd></div><div><dt>Attribut</dt><dd>${detailField(path+'.attribute',r.attribute,'Attribut de '+r.name,{display:attributeFields.find(([k])=>k===r.attribute)?.[1]})}</dd></div><div><dt>Spécialisation</dt><dd>${detailField(path+'.specialization',r.specialization,'Spécialisation de '+r.name)}</dd></div><div><dt>Spécialisation appliquée (${r.includesSpecialization?'incluse':'+2'})</dt><dd>${detailField(path+'.specialized',r.specialized,'Spécialisation appliquée de '+r.name,{display:r.specialized?'Oui':'Non'})}</dd></div><div><dt>RR</dt><dd>${detailField(path+'.rr',r.rr,'RR de '+r.name)}</dd></div></dl>${remove('skills',i)}</article>`;}).join('');

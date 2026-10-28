@@ -1,4 +1,4 @@
-# Scénarios par chapitres et génération de PNJ — V0.24
+# Scénarios par chapitres et génération de PNJ — V0.25
 
 ## Références utilisées
 
@@ -17,7 +17,7 @@ Les véhicules et drones sont séparés des atouts du personnage. Les quantités
 
 Les premiers rôles reçoivent 4 points d’Anarchy humains ou 3 pour les autres, plus les conversions d’initiative de la page 243. Les conditions d’utilisation (RV, notamment) restent dans les notes des atouts. Les effets spéciaux nécessitant un point d’Anarchy sont rappelés dans les notes. Les profils secondaires n’inventent pas de budget d’Anarchy, essence, nuyens, niveau ou coût d’atout absent du tableau.
 
-Les noms sont des créations aléatoires sans biographie ni affiliation imposée ; ils restent uniques dans la campagne (y compris face aux alias). La fiche officielle conserve ses rubriques recto-verso ; le panneau PNJ expose les succès moyens et la combativité.
+Les noms sont des créations aléatoires sans biographie ni affiliation imposée ; ils restent uniques dans la campagne (y compris face aux alias). Les personnages importants conservent leur fiche officielle recto-verso. Les PNJ générés utilisent une fenêtre d’informations de jeu, qui expose notamment leurs succès moyens et leur combativité.
 
 ## Répartition des métatypes
 
@@ -39,7 +39,7 @@ Le générateur prépare un groupe complet en mémoire, puis effectue une sauveg
 
 Les PNJ créés par « Ajouter PNJ » restent dans le scénario et n’augmentent ni la liste Personnages, ni la liste des personnages à placer sur la carte, ni les résultats de personnages globaux. Les personnages importants ajoutés depuis le menu Personnages gardent leur fonctionnement et peuvent participer à plusieurs scénarios. Le compteur du tableau de bord compte les mêmes personnages visibles que le menu, sans inclure les fiches entièrement réservées au MJ.
 
-Dans la préparation d’un scénario, les PNJ locaux sont affichés dans leur chapitre, même lorsque leur dossier porte l’indication MJ. Les notes privées restent derrière « Révéler ». Le répertoire « PNJ du scénario » permet aussi de retrouver les fiches retirées d’un chapitre ; « Ajouter perso. » propose les personnages importants et les PNJ de ce scénario. Une fiche locale s’ouvre sur le recto-verso, avec édition au clic, éditeur complet, informations narratives et retour au scénario. L’éditeur utilise une projection temporaire du PNJ ; seule la fiche intégrée au scénario est sauvegardée.
+Dans la préparation d’un scénario, les PNJ locaux sont affichés dans leur chapitre, même lorsque leur dossier porte l’indication MJ. Les notes privées restent derrière « Révéler ». Le répertoire « PNJ du scénario » permet aussi de retrouver les fiches retirées d’un chapitre ; « Ajouter perso. » propose les personnages importants et les PNJ de ce scénario. Un PNJ local s’ouvre dans une fenêtre compacte déplaçable qui laisse le scénario en place et permet d’utiliser le lanceur de dés. Elle affiche attributs, combativité, succès moyens, réserves / RR, attaques et blessures, avec les atouts / matériels / notes repliables. Les valeurs restent modifiables au clic. Le formulaire officiel recto-verso et l’éditeur complet ne sont pas ouverts pour ces PNJ. L’édition utilise une projection temporaire du PNJ ; seules ses données intégrées au scénario sont sauvegardées. Le format enregistré ne change pas : les valeurs et notes des PNJ déjà créés sont conservées.
 
 Au chargement ou à l’import, les anciens couples dossier / fiche identifiables comme générés sont replacés dans les scénarios qui les référencent. Attributs, notes, atouts, visibilité et références de véhicules sont conservés. Leurs anciens liens sont conservés dans `legacyRelations`. Si un même PNJ était partagé entre plusieurs scénarios, chaque scénario reçoit une copie indépendante avec des identifiants distincts. Les personnages déjà placés sur une carte ou liés à des dossiers extérieurs sont conservés comme personnages de campagne pour préserver ces usages ; les personnages saisis manuellement ne sont pas déplacés. Les anciens PNJ sans scénario identifiable restent conservés dans la campagne.
 

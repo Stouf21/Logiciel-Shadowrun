@@ -1,10 +1,10 @@
-import {escape} from './ui.js?v=0.24.0';
-import {inlineField,mountInlineEditing} from './inline-edit.js?v=0.24.0';
-import {worldInlineSpec,updateWorldInline} from './inline-model.js?v=0.24.0';
-import {renderScenarioWorkspace} from './scenarios-ui.js?v=0.24.0';
-import {worldFields,UNKNOWN} from './world-schema.js?v=0.24.0';
-import {secretSection} from './secrets-ui.js?v=0.24.0';
-import {relatedRecords,relationIsSecret} from './world.js?v=0.24.0';
+import {escape} from './ui.js?v=0.25.0';
+import {inlineField,mountInlineEditing} from './inline-edit.js?v=0.25.0';
+import {worldInlineSpec,updateWorldInline} from './inline-model.js?v=0.25.0';
+import {renderScenarioWorkspace} from './scenarios-ui.js?v=0.25.0';
+import {worldFields,UNKNOWN} from './world-schema.js?v=0.25.0';
+import {secretSection} from './secrets-ui.js?v=0.25.0';
+import {relatedRecords,relationIsSecret} from './world.js?v=0.25.0';
 export function renderScenarioPage(container,state,id,callbacks){
  const r=state.world.records.find(r=>r.id===id),scope='scenario-'+id,f=(key,value,label)=>inlineField(scope,key,value,label);
  const links=relatedRecords(state.world,id,false).filter(x=>!['character','event'].includes(x.other.kind));

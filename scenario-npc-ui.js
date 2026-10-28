@@ -1,12 +1,55 @@
-import {inlineField,mountInlineEditing} from './inline-edit.js?v=0.24.0';
-import {worldInlineSpec,updateWorldInline} from './inline-model.js?v=0.24.0';
-import {worldFields} from './world-schema.js?v=0.24.0';
-import {escape} from './ui.js?v=0.24.0';
-import {secretSection} from './secrets-ui.js?v=0.24.0';
-export function mountScenarioNpcDossier(container,record,{getState,onSave,onRefresh}){
- const scope='local-dossier-'+record.id,section=document.createElement('section'),field=(key,value,label)=>inlineField(scope,key,value,label);
- const info=(key,label)=>`<section><h4>${label}</h4>${field(key,record[key],label)}</section>`;
- section.className='scenario-npc-dossier';section.innerHTML=`<details><summary>En savoir plus sur ce PNJ</summary>${record.portraitUrl?`<img class="world-portrait" src="${escape(record.portraitUrl)}" alt="Portrait de ${escape(record.name)}">`:''}${field('portraitUrl',record.portraitUrl,'Portrait (URL)')}<dl class="world-facts">${worldFields.character.filter(([key,,secret])=>secret!=='secret'&&key!=='metatype').map(([key,label])=>`<div><dt>${label}</dt><dd>${field('fields.'+key,record.fields[key],label)}</dd></div>`).join('')}<div><dt>Alias</dt><dd>${field('aliases',record.aliases.join(', '),'Alias du PNJ')}</dd></div></dl>${[['publicInfo','Informations publiques'],['knownInfo','Informations connues des PJ'],['rumors','Rumeurs'],['revealedInfo','Informations révélées']].map(([key,label])=>info(key,label)).join('')}${secretSection('Dossier narratif du MJ',`${[['secrets','Secrets'],['gmNotes','Notes du dossier'],['history','Historique'],['consequences','Conséquences possibles']].map(([key,label])=>info(key,label)).join('')}${worldFields.character.filter(([, ,secret])=>secret==='secret').map(([key,label])=>`<section><h4>${label}</h4>${field('fields.'+key,record.fields[key],label)}</section>`).join('')}`)}</details>`;container.append(section);
- const button=document.createElement('button');button.type='button';button.textContent='En savoir plus sur le PNJ';container.querySelector('.sheet-toolbar .actions').prepend(button);button.onclick=()=>{section.querySelector('details').open=true;section.scrollIntoView({block:'start'});};
- return mountInlineEditing(section,{scope,resolve:(key,label)=>worldInlineSpec(getState(),record.id,key,label),save:(key,value)=>onSave(updateWorldInline(getState(),record.id,key,value)),refresh:onRefresh});
+import {worldFields} from './world-schema.js?v=0.25.0';
+import {inlineField,mountInlineEditing} from './inline-edit.js?v=0.25.0';
+import {characterInlineSpec,updateCharacterInline,worldInlineSpec,updateWorldInline} from './inline-model.js?v=0.25.0';
+import {scenarioNpc,scenarioNpcEditorState,saveScenarioNpcEdits} from './scenario-npcs.js?v=0.25.0';
+import {attributeFields,skillReserve} from './sheet.js?v=0.25.0';
+import {draggableWindow} from './floating-window.js?v=0.25.0';
+import {escape} from './ui.js?v=0.25.0';
+import {secretSection} from './secrets-ui.js?v=0.25.0';
+const filled=value=>value!==undefined&&value!=='';
+export function npcQuickContent(pair,scenarioName){
+ const {entry,record}=pair,p=entry.profile??{},scope='quick-npc-'+record.id;
+ const f=(key,value,label,extra={})=>inlineField(scope,'entry.'+key,value,label,extra);
+ const rf=(key,value,label)=>inlineField(scope,'record.'+key,value,label);
+ const title=id=>p.skillRows[id].specialization?p.skillRows[id].name+' · '+p.skillRows[id].specialization:p.skillRows[id].name;
+ const skills=p.skillRows??[],weapons=p.weaponRows??[],assets=p.assetRows??[],vehicles=p.vehicleRows??[];
+ const block=(label,body,extra='')=>`<section class="npc-quick-section ${extra}"><h3>${label}</h3>${body}</section>`;
+ const folds=(label,body)=>`<details class="npc-quick-details"><summary>${label}</summary>${body}</details>`;
+ const attribute=(key,label)=>`<div><dt>${label}</dt><dd>${f('profile.'+key,p[key],label)}</dd></div>`;
+ const skillTable=`<p class="npc-quick-tip">Succès moyens pour jouer directement ; RD pour lancer les dés.</p><div class="table-scroll"><table><thead><tr><th>Compétence</th><th>Moy.</th><th>RD</th><th>RR</th></tr></thead><tbody>${skills.map((r,i)=>`<tr><th scope="row" class="${r.specialization?'npc-quick-specialization':''}">${escape(title(i))}</th><td>${f('profile.skillRows.'+i+'.mean',r.mean,'Succès moyens de '+title(i))}</td><td><output data-quick-reserve="${i}">${skillReserve(r,p)}</output></td><td>${f('profile.skillRows.'+i+'.rr',r.rr,'RR de '+title(i))}</td></tr>`).join('')}</tbody></table></div>`;
+ const attacks=weapons.filter(r=>r.name||r.notes).map(r=>({r,i:weapons.indexOf(r)})).map(({r,i})=>`<article class="npc-quick-attack"><div><strong>${f('profile.weaponRows.'+i+'.name',r.name,'Nom de l’arme ou du sort '+(i+1))}</strong><span>${f('profile.weaponRows.'+i+'.type',r.type,'Dommages / type de '+r.name)}</span></div>${r.notes?`<p>${f('profile.weaponRows.'+i+'.notes',r.notes,'Effets de '+r.name)}</p>`:''}</article>`).join('');
+ const wounds=(p.woundRows??[]).map((r,i)=>({r,i})).filter(({r})=>['light','serious','incap','status'].some(k=>filled(r[k])));
+ const woundTable=`<div class="table-scroll"><table><thead><tr><th>Protection</th><th>Lég.</th><th>Grave</th><th>Incap.</th></tr></thead><tbody>${wounds.map(({r,i})=>`<tr><th scope="row">${escape(r.label)}</th>${['light','serious','incap'].map(k=>`<td>${f('profile.woundRows.'+i+'.'+k,r[k],r.label+' · '+({light:'Légère',serious:'Grave',incap:'Incapacité'}[k]))}</td>`).join('')}</tr><tr class="npc-quick-wound-state"><td colspan="4">État · ${escape(r.label)} : ${f('profile.woundRows.'+i+'.status',r.status,'État des blessures · '+r.label,{empty:'Indemne'})}</td></tr>`).join('')}</tbody></table></div>`;
+ const assetList=assets.map((r,i)=>`<article class="npc-quick-asset"><strong>${f('profile.assetRows.'+i+'.name',r.name,'Nom de l’atout '+(i+1))}</strong><div>${f('profile.assetRows.'+i+'.notes',r.notes,'Effets de '+r.name)}</div>${filled(r.level)||filled(r.essence)?`<p class="muted">Niveau ${f('profile.assetRows.'+i+'.level',r.level,'Niveau de '+r.name)} · Essence ${f('profile.assetRows.'+i+'.essence',r.essence,'Coût en essence de '+r.name)}</p>`:''}</article>`).join('');
+ const deck=p.deck,deckHtml=deck&&Object.values(deck).some(filled)?`<dl class="npc-quick-facts">${[['attack','Attaque'],['firewall','Firewall'],['light','Seuil léger'],['serious','Seuil grave'],['incap','Seuil incapacitant'],['minRisk','Risque minimum'],['penalty','Malus au seuil']].filter(([k])=>filled(deck[k])).map(([k,label])=>`<div><dt>${label}</dt><dd>${f('profile.deck.'+k,deck[k],label+' du cyberdeck')}</dd></div>`).join('')}</dl>${deck.notes?`<p>${f('profile.deck.notes',deck.notes,'Notes du cyberdeck')}</p>`:''}`:'';
+ const fleet=vehicles.map((r,i)=>folds(escape(r.name),`<dl class="npc-quick-facts">${[['auto','Autopilote'],['structure','Structure'],['handling','Maniabilité'],['speed','Vitesse'],['armor','Blindage'],['light','Seuil léger'],['serious','Seuil grave'],['incap','Seuil incapacitant']].filter(([k])=>filled(r[k])).map(([k,label])=>`<div><dt>${label}</dt><dd>${f('profile.vehicleRows.'+i+'.'+k,r[k],label+' de '+r.name)}</dd></div>`).join('')}</dl><p>${f('profile.vehicleRows.'+i+'.notes',r.notes,'Notes de '+r.name)}</p>`)).join('');
+ const calculations=skills.map((r,i)=>`<article class="npc-quick-calculation"><strong>${escape(title(i))}</strong><div>Indice ${f('profile.skillRows.'+i+'.rating',r.rating,'Indice de '+title(i))} · Attribut ${f('profile.skillRows.'+i+'.attribute',r.attribute,'Attribut de '+title(i),{display:attributeFields.find(([k])=>k===r.attribute)?.[1]})}${r.specialization?` · Spécialisation ${f('profile.skillRows.'+i+'.specialized',r.specialized,'Spécialisation appliquée de '+title(i),{display:r.specialized?'appliquée':'non appliquée'})}`:''}</div>${r.source?`<p class="muted">${escape(r.source)}</p>`:''}</article>`).join('');
+ const narrative=[['publicInfo','Informations publiques'],['knownInfo','Connu des PJ'],['rumors','Rumeurs'],['revealedInfo','Informations révélées']].filter(([k])=>record[k]&&record[k]!=='À définir'&&record[k]!==entry.description).map(([k,label])=>`<p><strong>${label}</strong> ${rf(k,record[k],label)}</p>`).join('');
+ const privateFacts=worldFields.character.filter(([, ,secret])=>secret==='secret').filter(([k])=>record.fields[k]&&record.fields[k]!=='À définir').map(([k,label])=>`<p><strong>${label}</strong> ${rf('fields.'+k,record.fields[k],label)}</p>`).join('');
+ const privateNotes=secretSection('Notes du MJ',`<p>${f('notes',entry.notes,'Notes de jeu du PNJ',{empty:'Ajouter une note de jeu'})}</p>${[['gmNotes','Notes du dossier'],['secrets','Secrets'],['history','Historique'],['consequences','Conséquences']].filter(([k])=>record[k]&&record[k]!=='À définir').map(([k,label])=>`<p><strong>${label}</strong> ${rf(k,record[k],label)}</p>`).join('')}${privateFacts}`);
+ return `<div class="npc-quick-identity"><span class="tag">PNJ · ${escape(scenarioName)}</span><h2 id="quick-npc-title" aria-label="${escape(entry.name)}">${f('name',entry.name,'Nom du PNJ')}</h2><p>${escape(p.npc?.templateName??entry.category)} · ${f('profile.metatype',p.metatype,'Métatype')}</p>${entry.description?`<p class="npc-quick-description">${f('description',entry.description,'Description du PNJ')}</p>`:''}</div><dl class="npc-quick-attributes">${attributeFields.map(([k,label])=>attribute(k,label)).join('')}${filled(p.anarchy)?attribute('anarchy','Anarchy'):''}</dl><p class="npc-quick-combativeness">Combativité : ${p.npc?f('profile.npc.combativeness',p.npc.combativeness,'Combativité'):'À définir'}${p.npc?.rank==='premier'?' · Premier rôle':''}</p><div class="npc-quick-grid"><div>${skills.length?block('Compétences',skillTable):''}${attacks?block('Armes et sorts',attacks):''}</div><div>${wounds.length?block('Blessures',woundTable):''}${assets.length?folds('Atouts · '+assets.length,assetList):''}${deckHtml?folds('Cyberdeck',deckHtml):''}${vehicles.length?folds('Véhicules et drones · '+vehicles.length,fleet):''}${p.equipment?folds('Équipement',f('profile.equipment',p.equipment,'Équipement du PNJ')):''}${p.npc?.notes?block('En jeu',f('profile.npc.notes',p.npc.notes,'Précisions en jeu')):''}${narrative?folds('Informations conservées',narrative):''}${privateNotes}</div></div>${skills.length?folds('Détail des jets et références',`<p class="muted">Les indices imprimés incluent les spécialisations possédées. Les moyennes restent modifiables séparément.</p>${calculations}`):''}<footer class="npc-quick-source">${escape(p.npc?.source??record.source)} · Cliquez sur une valeur pour la modifier.</footer>`;
+}
+export function openScenarioNpcWindow({getState,onSave,scenarioId,npcId,onClose}){
+ scenarioNpc(getState(),scenarioId,npcId);
+ const panel=document.createElement('section');panel.className='npc-quick-window';panel.setAttribute('role','dialog');panel.setAttribute('aria-labelledby','quick-npc-title');panel.setAttribute('aria-modal','false');panel.tabIndex=-1;
+ panel.innerHTML='<header class="npc-quick-header"><button type="button" class="npc-quick-grip" aria-label="Déplacer les informations du PNJ">⠿ <span>PNJ · Infos de jeu</span></button><button type="button" class="npc-quick-close" aria-label="Fermer les informations du PNJ">×</button></header><div class="npc-quick-content"></div>';
+ document.body.append(panel);const body=panel.querySelector('.npc-quick-content');let disposeInline=()=>{},drag=null,disposed=false;
+ const close=()=>{dispose();onClose?.();};
+ function render(){
+  const scroll=body.scrollTop;disposeInline();const state=getState(),pair=scenarioNpc(state,scenarioId,npcId);
+  panel.querySelector('.npc-quick-grip span').textContent=pair.entry.name+' · PNJ';
+  body.innerHTML=npcQuickContent(pair,state.world.records.find(r=>r.id===scenarioId).name);
+  disposeInline=mountInlineEditing(body,{scope:'quick-npc-'+npcId,resolve:(path,label)=>{
+   const projected=scenarioNpcEditorState(getState(),scenarioId,npcId);
+   return path.startsWith('record.')?worldInlineSpec(projected,npcId,path.slice(7),label):characterInlineSpec(projected,{entryId:pair.entry.id,worldId:npcId},path.slice(6),label);
+  },save:(path,value)=>{
+   const current=getState(),projected=scenarioNpcEditorState(current,scenarioId,npcId),edited=path.startsWith('record.')?updateWorldInline(projected,npcId,path.slice(7),value):updateCharacterInline(projected,{entryId:pair.entry.id,worldId:npcId},path.slice(6),value).state;
+   onSave(saveScenarioNpcEdits(current,scenarioId,npcId,edited));
+   const latest=scenarioNpc(getState(),scenarioId,npcId).entry,p=latest.profile??{};panel.querySelector('.npc-quick-grip span').textContent=latest.name+' · PNJ';body.querySelector('#quick-npc-title').setAttribute('aria-label',latest.name);for(const output of body.querySelectorAll('[data-quick-reserve]')){const row=p.skillRows?.[Number(output.dataset.quickReserve)];if(row)output.textContent=skillReserve(row,p);}
+  },refresh:render});body.scrollTop=scroll;drag?.clamp();
+ }
+ function dispose(){if(disposed)return;disposed=true;disposeInline();drag?.dispose();panel.remove();}
+ panel.querySelector('.npc-quick-close').onclick=close;
+ panel.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();event.stopPropagation();close();}});
+ render();drag=draggableWindow(panel,panel.querySelector('.npc-quick-grip'));panel.focus({preventScroll:true});return dispose;
 }
