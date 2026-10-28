@@ -1,9 +1,9 @@
-import {npcTemplates} from './npc-templates.js?v=0.22.0';
-import {npcPreferences,drawMetatype,npcMetatypes} from './npc-preferences.js?v=0.22.0';
-import {makeWorldRecord} from './world-schema.js?v=0.22.0';
-import {attachChapterCharacter,addChapterVehicle} from './scenario-chapters.js?v=0.22.0';
-import {validateCampaign} from './campaign.js?v=0.22.0';
-import {baseSkills} from './catalog.js?v=0.22.0';
+import {npcTemplates} from './npc-templates.js?v=0.23.0';
+import {npcPreferences,drawMetatype,npcMetatypes} from './npc-preferences.js?v=0.23.0';
+import {makeWorldRecord} from './world-schema.js?v=0.23.0';
+import {attachChapterCharacter,addChapterVehicle} from './scenario-chapters.js?v=0.23.0';
+import {validateCampaign} from './campaign.js?v=0.23.0';
+import {baseSkills} from './catalog.js?v=0.23.0';
 export const npcTypes=npcTemplates.flatMap(t=>t.id==='go-ganger-rigger'?[{...t,id:'go-ganger',name:'Go-ganger',variant:'go-ganger'},{...t,id:'rigger-gang',name:'Rigger de gang',variant:'rigger'}]:[t]);
 const norm=s=>String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[’']/g,' ').replace(/\s+/g,' ').trim();
 const pick=(a,rng)=>a[Math.floor(rng()*a.length)];

@@ -1,5 +1,5 @@
-import {validateBuilding} from './building-schema.js?v=0.22.0';
-import {validateScenarioChapters} from './chapter-schema.js?v=0.22.0';
+import {validateBuilding} from './building-schema.js?v=0.23.0';
+import {validateScenarioChapters} from './chapter-schema.js?v=0.23.0';
 export const UNKNOWN='À définir';
 export const worldKinds={character:'Personnage',corporation:'Corporation',faction:'Faction',zone:'Quartier / zone',place:'Lieu',scenario:'Scénario',clue:'Indice',secret:'Secret',event:'Événement'};
 export const discoveryStates=['Non découvert','Partiellement découvert','Découvert'];

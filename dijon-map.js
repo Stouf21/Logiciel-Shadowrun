@@ -1,17 +1,18 @@
-import {characterCategories} from './character-options.js?v=0.22.0';
-import {scaleMapLabels} from './map-labels.js?v=0.22.0';
-import {mountMapShapes} from './map-shapes-ui.js?v=0.22.0';
-import {mapPlaceTypes,createMapPlace,positionMapPlace,removeMapPlacePosition} from './map-places.js?v=0.22.0';
-import {secretSection} from './secrets-ui.js?v=0.22.0';
-import {escape,searchDisclosure} from './ui.js?v=0.22.0';
-import {dijonPlaces} from './dijon-places.js?v=0.22.0';
-import {worldSearch} from './world.js?v=0.22.0';
-import {authorities} from './world-schema.js?v=0.22.0';
-import {copyMapState,dijonMapCenter,imageSize,imagePointFromPercent,imagePointToPercent,validMapPoint,routeDistance,routeAfterEdit,formatDistance,maxWaypoints,requestStreetRoute} from './map-model.js?v=0.22.0';
+import {mountMapZoom} from './map-zoom.js?v=0.23.0';
+import {characterCategories} from './character-options.js?v=0.23.0';
+import {scaleMapLabels} from './map-labels.js?v=0.23.0';
+import {mountMapShapes} from './map-shapes-ui.js?v=0.23.0';
+import {mapPlaceTypes,createMapPlace,positionMapPlace,removeMapPlacePosition} from './map-places.js?v=0.23.0';
+import {secretSection} from './secrets-ui.js?v=0.23.0';
+import {escape,searchDisclosure} from './ui.js?v=0.23.0';
+import {dijonPlaces} from './dijon-places.js?v=0.23.0';
+import {worldSearch} from './world.js?v=0.23.0';
+import {authorities} from './world-schema.js?v=0.23.0';
+import {copyMapState,dijonMapCenter,imageSize,imagePointFromPercent,imagePointToPercent,validMapPoint,routeDistance,routeAfterEdit,formatDistance,maxWaypoints,requestStreetRoute} from './map-model.js?v=0.23.0';
 export {dijonPlaces};
 
 export function renderDijonMap(container,snapshot,onChange,{onOpenRecord}={}){
- let state=snapshot,mode=copyMapState(state.mapState).dijon.mode,map=null,observer=null,destroyed=false,routeRequest=null,placeDialog=null,geometry=null;
+ let state=snapshot,mode=copyMapState(state.mapState).dijon.mode,map=null,observer=null,destroyed=false,routeRequest=null,placeDialog=null,geometry=null,wheelZoom=null;
  let records=state.world?.records??[];const L=globalThis.L;
  const options=items=>'<option value="">Tous / toutes</option>'+items.map(item=>{const [id,label]=Array.isArray(item)?item:[item,item];return `<option value="${escape(id)}">${escape(label)}</option>`;}).join('');
  container.innerHTML=`<div class="dijon-header"><span class="tag">DIJON / ${state.world?.settings.year??2082}</span><h3>Les ombres de la cité des Ducs.</h3></div>
@@ -21,8 +22,8 @@ export function renderDijonMap(container,snapshot,onChange,{onOpenRecord}={}){
  <div id="map-place-controls" class="map-placement-controls" hidden><label>Lieu à positionner<select id="map-place" aria-label="Lieu à positionner"></select></label><p class="muted">Choisissez un dossier puis cliquez à son emplacement. Les positions du plan de rues sont indépendantes de l’illustration.</p></div>
  ${searchDisclosure('map-search-panel',`<div class="world-filters map-world-filters"><label>Autorité<select id="map-authority" aria-label="Autorité sur la carte">${options(authorities)}</select></label><label>Corporation<select id="map-corporation" aria-label="Corporation sur la carte"></select></label><label>Faction<select id="map-faction" aria-label="Faction sur la carte"></select></label><label>Sécurité<select id="map-security" aria-label="Sécurité sur la carte"></select></label><label>Type de lieu<select id="map-type" aria-label="Type de lieu sur la carte"></select></label><label class="check-label"><input id="map-labels" type="checkbox" checked>Afficher les noms des repères</label><label class="check-label"><input id="map-secrets" type="checkbox">Afficher les secrets du MJ</label></div>`,{label:'Filtrer la carte'})}
  <div class="map-route-controls"><button class="primary" id="map-add-place" aria-pressed="false">+ Ajouter un lieu</button><button id="map-route-toggle" aria-pressed="false">Tracer un itinéraire</button><button id="map-route-road">Calculer par les rues</button><button id="map-route-undo">Retirer la dernière étape</button><button id="map-route-clear">Effacer l’itinéraire</button><output id="map-route-summary" aria-live="polite"></output></div>
- <div id="map-shape-tools"></div><p id="map-help" class="map-legend">Glissez pour déplacer la vue. Utilisez la molette, le pincement ou les boutons pour zoomer.</p>
- <p id="map-state-status" class="muted" role="status"></p><div id="map-draw-dock"></div><div id="map" class="interactive-map" role="region" aria-label="Carte interactive de Dijon"></div>
+ <div id="map-shape-tools"></div><p id="map-help" class="map-legend">Glissez pour déplacer la vue. Zoomez avec ⌘ + molette sur Mac, Alt + molette sur Windows, le pincement ou les boutons + / −.</p>
+ <p id="map-state-status" class="muted" role="status"></p><div id="map-draw-dock"></div><div id="map" class="interactive-map" role="region" aria-label="Carte interactive de Dijon" aria-describedby="map-help"></div>
  <div class="map-inspector" id="map-inspector" role="status">Choisissez un repère pour ouvrir son dossier.</div><p id="map-world-count" class="muted" role="status"></p>
  <details><summary>Zones et lieux à positionner sur cette vue</summary><p class="muted">Les repères de l’illustration ne sont pas convertis automatiquement en coordonnées géographiques.</p><div class="place-list" id="unplaced-world-records"></div></details>`;
  const $=selector=>container.querySelector(selector);
@@ -140,22 +141,22 @@ export function renderDijonMap(container,snapshot,onChange,{onOpenRecord}={}){
   $('#map').classList.toggle('map-draw-mode',action!=='explore');
   if(action==='route'||action.startsWith('draw-'))map.doubleClickZoom.disable();else map.doubleClickZoom.enable();
   geometry?.syncAction();
-  $('#map-help').textContent=action.startsWith('draw-')?'Cliquez pour ajouter les sommets, puis fermez le contour avec le bouton ou le premier point.':action==='edit-shape'?'Choisissez un contour puis « Modifier les sommets ». Glissez un sommet ; les points + ajoutent un sommet.':action==='create-place'?'Cliquez sur l’emplacement du nouveau lieu, puis renseignez son nom et son type.':action==='route'?'Cliquez pour ajouter des étapes. Glissez une étape pour la déplacer ; glissez le fond pour déplacer la vue.':action==='character'?'Choisissez un personnage puis cliquez pour placer son pion. Ses pions peuvent être déplacés par glisser-déposer.':action==='place'?'Choisissez un lieu puis cliquez sur son emplacement. Les repères ajoutés peuvent ensuite être déplacés par glisser-déposer.':'Glissez pour déplacer la vue. Utilisez la molette, le pincement ou les boutons pour zoomer.';
+  $('#map-help').textContent=action.startsWith('draw-')?'Cliquez pour ajouter les sommets, puis fermez le contour avec le bouton ou le premier point.':action==='edit-shape'?'Choisissez un contour puis « Modifier les sommets ». Glissez un sommet ; les points + ajoutent un sommet.':action==='create-place'?'Cliquez sur l’emplacement du nouveau lieu, puis renseignez son nom et son type.':action==='route'?'Cliquez pour ajouter des étapes. Glissez une étape pour la déplacer ; glissez le fond pour déplacer la vue.':action==='character'?'Choisissez un personnage puis cliquez pour placer son pion. Ses pions peuvent être déplacés par glisser-déposer.':action==='place'?'Choisissez un lieu puis cliquez sur son emplacement. Les repères ajoutés peuvent ensuite être déplacés par glisser-déposer.':'Glissez pour déplacer la vue. Zoomez avec ⌘ + molette sur Mac, Alt + molette sur Windows, le pincement ou les boutons + / −.';
   updateMarkers();
  }
  function updateZoom(){
   if(destroyed||!map?.getPane('mapPane'))return;
   scaleMapLabels($('#map'),mode,map.getZoom());
-  $('#map-zoom-value').textContent=mode==='streets'?'Zoom '+map.getZoom():Math.round(2**map.getZoom()*100)+' %';
+  $('#map-zoom-value').textContent=mode==='streets'?'Zoom '+map.getZoom().toLocaleString('fr-FR',{maximumFractionDigits:2}):Math.round(2**map.getZoom()*100)+' %';
   $('#map-minus').disabled=map.getZoom()<=map.getMinZoom();$('#map-plus').disabled=map.getZoom()>=map.getMaxZoom();
  }
- function resetView(){if(mode==='streets')map.setView(dijonMapCenter,14);else map.fitBounds([[0,0],[imageSize.height,imageSize.width]],{padding:[12,12]});}
+ function resetView(){wheelZoom?.stop();if(mode==='streets')map.setView(dijonMapCenter,14);else map.fitBounds([[0,0],[imageSize.height,imageSize.width]],{padding:[12,12]});}
  function createMap(){
-  stopRequest();observer?.disconnect();if(map)map.remove();
+  stopRequest();observer?.disconnect();wheelZoom?.dispose();wheelZoom=null;if(map)map.remove();
   const element=$('#map');element.classList.toggle('map-streets',mode==='streets');element.classList.toggle('map-cyberpunk',mode==='cyberpunk');
-  map=L.map(element,{crs:mode==='streets'?L.CRS.EPSG3857:L.CRS.Simple,zoomControl:false,minZoom:mode==='streets'?3:-4,maxZoom:mode==='streets'?19:3,zoomSnap:mode==='streets'?1:.25,zoomDelta:mode==='streets'?1:.5,scrollWheelZoom:true,zoomAnimation:false,fadeAnimation:false,markerZoomAnimation:false,attributionControl:true});
+  map=L.map(element,{crs:mode==='streets'?L.CRS.EPSG3857:L.CRS.Simple,zoomControl:false,minZoom:mode==='streets'?3:-4,maxZoom:mode==='streets'?19:3,zoomSnap:0,zoomDelta:mode==='streets'?1:.5,scrollWheelZoom:false,zoomAnimation:false,fadeAnimation:false,markerZoomAnimation:false,attributionControl:true});
   const activeMap=map,activeMode=mode;
-  const Zoom=L.Control.extend({options:{position:'topright'},onAdd(){const box=L.DomUtil.create('div','map-floating-zoom leaflet-control leaflet-bar');box.innerHTML='<button id="map-plus" type="button" aria-label="Augmenter le zoom">+</button><button id="map-minus" type="button" aria-label="Réduire le zoom">−</button>';L.DomEvent.disableClickPropagation(box);L.DomEvent.disableScrollPropagation(box);box.querySelector('#map-plus').onclick=()=>activeMap.zoomIn();box.querySelector('#map-minus').onclick=()=>activeMap.zoomOut();return box;}});new Zoom().addTo(map);
+  const Zoom=L.Control.extend({options:{position:'topright'},onAdd(){const box=L.DomUtil.create('div','map-floating-zoom leaflet-control leaflet-bar');box.innerHTML='<button id="map-plus" type="button" aria-label="Augmenter le zoom">+</button><button id="map-minus" type="button" aria-label="Réduire le zoom">−</button>';L.DomEvent.disableClickPropagation(box);L.DomEvent.disableScrollPropagation(box);box.querySelector('#map-plus').onclick=()=>wheelZoom.zoomBy(activeMap.options.zoomDelta);box.querySelector('#map-minus').onclick=()=>wheelZoom.zoomBy(-activeMap.options.zoomDelta);return box;}});new Zoom().addTo(map);
   if(mode==='streets'){
    let failed=0;const streetMap=map;
    const tiles=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'});
@@ -168,7 +169,8 @@ export function renderDijonMap(container,snapshot,onChange,{onOpenRecord}={}){
   }
   const saved=model().views[mode];if(saved)map.setView(saved.center,saved.zoom);else resetView();
   geometry?.attach();markerLayer=L.layerGroup().addTo(map);routeLayer=L.layerGroup().addTo(map);drawRoute();setAction($('#map-action').value);updateZoom();
-  map.on('zoomend',updateZoom);
+  wheelZoom=mountMapZoom(activeMap);
+  map.on('zoom',updateZoom);
   map.on('moveend',()=>{if(destroyed||map!==activeMap||!activeMap.getPane('mapPane'))return;const center=activeMap.getCenter(),point=[center.lat,center.lng];if(activeMode==='streets'&&!validMapPoint(point,activeMode))return;saveMap(m=>{m.views[activeMode]={center:point,zoom:activeMap.getZoom()};});});
   map.on('click',event=>{
    const point=[event.latlng.lat,event.latlng.lng],action=$('#map-action').value;
@@ -216,5 +218,5 @@ export function renderDijonMap(container,snapshot,onChange,{onOpenRecord}={}){
  };
  geometry=mountMapShapes({container,L,getMap:()=>map,getState:()=>state,getMode:()=>mode,getAction:()=>$('#map-action').value,setAction,visibleRecords,onSave:next=>{apply(next);return state;},onRefresh:()=>{refreshChoices();updateMarkers();},onInspect:inspect,onOpenRecord,getRecordPoint:recordPoint,scaleLabels:()=>scaleMapLabels($('#map'),mode,map.getZoom()),status});
  refreshChoices();createMap();
- return ()=>{destroyed=true;geometry?.dispose();placeDialog?.close();placeDialog?.remove();placeDialog=null;observer?.disconnect();routeRequest?.abort();routeRequest=null;map?.remove();};
+ return ()=>{wheelZoom?.dispose();wheelZoom=null;destroyed=true;geometry?.dispose();placeDialog?.close();placeDialog?.remove();placeDialog=null;observer?.disconnect();routeRequest?.abort();routeRequest=null;map?.remove();};
 }

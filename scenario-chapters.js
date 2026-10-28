@@ -1,6 +1,6 @@
-import {makeWorldRecord,validateWorld,UNKNOWN} from './world-schema.js?v=0.22.0';
-import {scenarioMembers} from './scenarios.js?v=0.22.0';
-import {chapterVehicleFields} from './chapter-schema.js?v=0.22.0';
+import {makeWorldRecord,validateWorld,UNKNOWN} from './world-schema.js?v=0.23.0';
+import {scenarioMembers} from './scenarios.js?v=0.23.0';
+import {chapterVehicleFields} from './chapter-schema.js?v=0.23.0';
 
 const scenario=(state,id)=>{const r=state.world.records.find(r=>r.id===id&&r.kind==='scenario');if(!r)throw Error('Scénario introuvable.');return r;};
 const secretLink=(world,link)=>link.visibility==='secret'||world.records.some(r=>(r.id===link.from||r.id===link.to)&&r.isSecret);

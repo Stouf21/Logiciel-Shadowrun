@@ -1,10 +1,10 @@
-import {mountScenarioDrag} from './scenario-drag.js?v=0.22.0';
-import {escape} from './ui.js?v=0.22.0';
-import {inlineField,mountInlineEditing} from './inline-edit.js?v=0.22.0';
-import {scenarioMembers} from './scenarios.js?v=0.22.0';
-import {scenarioChapters,addChapter,editChapter,removeChapter,chapterCharacters,detachChapterCharacter,editChapterVehicle,removeChapterVehicle,moveChapter,placeChapter} from './scenario-chapters.js?v=0.22.0';
-import {chapterVehicleFields} from './chapter-schema.js?v=0.22.0';
-import {openChapterCharacters,openChapterNpcs,openChapterVehicles} from './scenario-dialogs.js?v=0.22.0';
+import {mountScenarioDrag} from './scenario-drag.js?v=0.23.0';
+import {escape} from './ui.js?v=0.23.0';
+import {inlineField,mountInlineEditing} from './inline-edit.js?v=0.23.0';
+import {scenarioMembers} from './scenarios.js?v=0.23.0';
+import {scenarioChapters,addChapter,editChapter,removeChapter,chapterCharacters,detachChapterCharacter,editChapterVehicle,removeChapterVehicle,moveChapter,placeChapter} from './scenario-chapters.js?v=0.23.0';
+import {chapterVehicleFields} from './chapter-schema.js?v=0.23.0';
+import {openChapterCharacters,openChapterNpcs,openChapterVehicles} from './scenario-dialogs.js?v=0.23.0';
 const labels={name:'Nom',type:'Type',auto:'Autopilote',structure:'Structure',handling:'Maniabilité',speed:'Vitesse',armor:'Blindage',light:'Seuil léger',serious:'Seuil grave',incap:'Seuil incapacitant',notes:'Notes',source:'Source'};
 export function renderScenarioWorkspace(container,initialState,scenarioId,{onSave,getState}){
  let state=initialState,showSecrets=!!initialState.world.records.find(r=>r.id===scenarioId)?.isSecret,disposeDrag=()=>{},disposeInline=()=>{},status='';
