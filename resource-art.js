@@ -1,6 +1,6 @@
-import {escape} from './ui.js?v=0.23.0';
-import {resourceIllustrations} from './resource-art-data.js?v=0.23.0';
-import {bookArtworkById,bookArtworkPath,bookArtworkSource,findBookArtwork} from './book-art.js?v=0.23.0';
+import {escape} from './ui.js?v=0.24.0';
+import {resourceIllustrations} from './resource-art-data.js?v=0.24.0';
+import {bookArtworkById,bookArtworkPath,bookArtworkSource,findBookArtwork} from './book-art.js?v=0.24.0';
 
 export const maxResourceImageLength=300000;
 const normalize=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
@@ -48,7 +48,7 @@ export function resourceArtPreview(art,name){
  if(art.bookImage)return `<span class="resource-art-book-stage" data-book-art-reference="${escape(art.id)}"><img class="resource-art-book" src="${bookArtworkPath(art)}" alt="${escape(art.name+' · illustration du livre, page '+art.page)}" loading="lazy" decoding="async"></span>`;
  if(art.image)return `<img class="resource-art-image" src="${escape(art.image)}" alt="${escape(name)}" loading="lazy" decoding="async">`;
  const [x,y,w,h]=art.crop,size=Math.max(w,h);
- return `<span class="resource-art-sprite" data-art-reference="${escape(art.id)}" style="--art-frame-width:${w/size*100}%;--art-frame-height:${h/size*100}%;--art-size-x:${100/w}%;--art-size-y:${100/h}%;--art-x:${-x/w*100}%;--art-y:${-y/h*100}%"><span class="resource-art-crop"><img class="resource-art-atlas" src="./assets/items/${escape(art.board)}.png?v=0.23.0" alt="${escape('Illustration originale de '+art.name)}" loading="lazy" decoding="async"></span></span>`;
+ return `<span class="resource-art-sprite" data-art-reference="${escape(art.id)}" style="--art-frame-width:${w/size*100}%;--art-frame-height:${h/size*100}%;--art-size-x:${100/w}%;--art-size-y:${100/h}%;--art-x:${-x/w*100}%;--art-y:${-y/h*100}%"><span class="resource-art-crop"><img class="resource-art-atlas" src="./assets/items/${escape(art.board)}.png?v=0.24.0" alt="${escape('Illustration originale de '+art.name)}" loading="lazy" decoding="async"></span></span>`;
 }
 export function defaultResourceArt(item,scope='asset',bookSelection){
  const book=bookArtworkById(bookSelection)??findBookArtwork(item,scope);if(book)return book;

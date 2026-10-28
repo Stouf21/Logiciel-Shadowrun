@@ -1,3 +1,4 @@
+import {scenarioNpc,scenarioNpcs,scenarioNpcEditorState,saveScenarioNpcEdits} from '../scenario-npcs.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {npcTemplates} from '../npc-templates.js';
@@ -47,6 +48,6 @@ test('Les tirages combinent population locale et profession, restent configurabl
 test('Un groupe est ajouté en une sauvegarde avec noms uniques, fiches liées et véhicules ; export/import et modifications conservent les profils',()=>{
  let {state,id}=createScenario(fresh(),'Run');const added=addChapter(state,id);state=added.state;const before=structuredClone(state),batch=generateNpcBatch(state,{typeId:'rigger-gang',count:3,isSecret:true},()=>.01);assert.deepEqual(state,before);assert.equal(new Set(batch.map(b=>b.record.name)).size,3);
  state=attachNpcBatch(state,id,added.id,batch);const chapter=scenarioChapters(state,id)[0];assert.equal(chapter.characterIds.length,3);assert.equal(chapter.vehicles.length,6);assert.ok(batch.every(b=>b.record.isSecret));assert.throws(()=>attachNpcBatch(state,id,added.id,batch));
- const first=batch[0];state=updateCharacterInline(state,{entryId:first.entry.id,worldId:first.record.id},'profile.force',6).state;assert.equal(state.entries.find(e=>e.id===first.entry.id).profile.npc.templateId,'rigger-gang');
+ const first=batch[0],edited=updateCharacterInline(scenarioNpcEditorState(state,id,first.record.id),{entryId:first.entry.id,worldId:first.record.id},'profile.force',6).state;state=saveScenarioNpcEdits(state,id,first.record.id,edited);assert.equal(scenarioNpc(state,id,first.record.id).entry.profile.npc.templateId,'rigger-gang');assert.equal(state.entries.length,before.entries.length);assert.equal(state.world.records.filter(r=>r.kind==='character').length,before.world.records.filter(r=>r.kind==='character').length);assert.equal(scenarioNpcs(state,id).length,3);
  const restored=mergeWorld(validateCampaign(JSON.parse(JSON.stringify(state))));assert.deepEqual(restored.entries,state.entries);assert.deepEqual(scenarioChapters(restored,id),scenarioChapters(state,id));assert.throws(()=>generateNpcBatch(state,{typeId:'ganger',count:0}));assert.throws(()=>attachNpcBatch(before,id,'absent',batch));assert.deepEqual(before,added.state);
 });

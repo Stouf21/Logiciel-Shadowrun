@@ -1,9 +1,10 @@
-import {characterCategories,unclassifiedCharacter} from './character-options.js?v=0.23.0';
-import {chapterSearchText,chapterHasCharacter} from './chapter-schema.js?v=0.23.0';
-import {seedRecords,seedRelations,seedSettings} from './world-data.js?v=0.23.0';
-import {makeWorldRecord,worldFields,UNKNOWN,validateWorld} from './world-schema.js?v=0.23.0';
-import {getCorporations} from './corporations.js?v=0.23.0';
-import {buildingSearchText} from './building-schema.js?v=0.23.0';
+import {migrateScenarioNpcs} from './scenario-npcs.js?v=0.24.0';
+import {characterCategories,unclassifiedCharacter} from './character-options.js?v=0.24.0';
+import {chapterSearchText,chapterHasCharacter} from './chapter-schema.js?v=0.24.0';
+import {seedRecords,seedRelations,seedSettings} from './world-data.js?v=0.24.0';
+import {makeWorldRecord,worldFields,UNKNOWN,validateWorld} from './world-schema.js?v=0.24.0';
+import {getCorporations} from './corporations.js?v=0.24.0';
+import {buildingSearchText} from './building-schema.js?v=0.24.0';
 export const normalize=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('fr').trim().replace(/[’‘]/g,"'");
 export const isCorporationRecord=r=>r.kind==='corporation'||r.kind==='faction'&&(!!r.corporationId||/\b(corporation|corporatiste|filiale corporatiste)\b/.test(normalize(r.fields?.type)));
 const cloneRecord=r=>({...r,aliases:[...r.aliases],fields:{...r.fields},kind:isCorporationRecord(r)?'corporation':r.kind});
@@ -42,7 +43,7 @@ export function mergeWorld(state){
  const relations=(original?.relations??[]).map(r=>({...r}));
  const recordIds=new Set(records.map(r=>r.id));
  for(const seed of seedRelations){const from=remap.get(seed.from)??seed.from,to=remap.get(seed.to)??seed.to;if(!deletedRelations.has(seed.id)&&recordIds.has(from)&&recordIds.has(to)&&!relations.some(r=>r.id===seed.id))relations.push({...seed,from,to});}
- const world={...original,version:1,settings:{...seedSettings,...original?.settings},records,relations};validateWorld(world);return {...state,world};
+ const world={...original,version:1,settings:{...seedSettings,...original?.settings},records,relations};const next=migrateScenarioNpcs({...state,world});validateWorld(next.world);return next;
 }
 export function recordSecretText(r){const secretFields=worldFields[r.kind].filter(([, ,scope])=>scope==='secret').map(([key])=>r.fields[key]??'');return [r.secrets,r.gmNotes,r.consequences,r.history,...secretFields,buildingSearchText(r,true),chapterSearchText(r,true)].join(' ');}
 export function recordPublicText(r){const publicFields=worldFields[r.kind].filter(([, ,scope])=>scope!=='secret').map(([key])=>r.fields[key]??'');return [r.name,...r.aliases,r.publicInfo,r.knownInfo,r.rumors,r.revealedInfo,r.state,r.discovery,...publicFields,buildingSearchText(r),chapterSearchText(r)].join(' ');}

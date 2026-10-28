@@ -6,11 +6,11 @@ export function validateScenarioChapters(world){
  for(const r of world.records){
   if(r.chapters===undefined)continue;
   if(r.kind!=='scenario'||!Array.isArray(r.chapters)||r.chapters.length>300)throw Error('Chapitres de scénario invalides.');
-  const ids=new Set();
+  const allowedCharacters=new Set([...characters,...(r.localNpcs??[]).map(n=>n.record.id)]),ids=new Set();
   for(const c of r.chapters){
    if(!c||!idOk(c.id)||ids.has(c.id)||!textOk(c.title,200)||!c.title.trim()||!textOk(c.notes)||!textOk(c.date,200)||typeof c.isSecret!=='boolean')throw Error('Chapitre invalide.');ids.add(c.id);
    if(c.legacyEventId!==undefined&&!events.has(c.legacyEventId))throw Error('Événement d’origine du chapitre introuvable.');
-   if(!Array.isArray(c.characterIds)||c.characterIds.length>300||new Set(c.characterIds).size!==c.characterIds.length||c.characterIds.some(id=>!characters.has(id)))throw Error('Personnages du chapitre invalides.');
+   if(!Array.isArray(c.characterIds)||c.characterIds.length>300||new Set(c.characterIds).size!==c.characterIds.length||c.characterIds.some(id=>!allowedCharacters.has(id)))throw Error('Personnages du chapitre invalides.');
    if(!Array.isArray(c.secretCharacterIds)||new Set(c.secretCharacterIds).size!==c.secretCharacterIds.length||c.secretCharacterIds.some(id=>!c.characterIds.includes(id)))throw Error('Visibilité des personnages du chapitre invalide.');
    if(!Array.isArray(c.vehicles)||c.vehicles.length>300)throw Error('Véhicules du chapitre invalides.');
    const vehicleIds=new Set();

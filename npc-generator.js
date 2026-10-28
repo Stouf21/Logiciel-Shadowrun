@@ -1,9 +1,10 @@
-import {npcTemplates} from './npc-templates.js?v=0.23.0';
-import {npcPreferences,drawMetatype,npcMetatypes} from './npc-preferences.js?v=0.23.0';
-import {makeWorldRecord} from './world-schema.js?v=0.23.0';
-import {attachChapterCharacter,addChapterVehicle} from './scenario-chapters.js?v=0.23.0';
-import {validateCampaign} from './campaign.js?v=0.23.0';
-import {baseSkills} from './catalog.js?v=0.23.0';
+import {scenarioNpcs} from './scenario-npcs.js?v=0.24.0';
+import {npcTemplates} from './npc-templates.js?v=0.24.0';
+import {npcPreferences,drawMetatype,npcMetatypes} from './npc-preferences.js?v=0.24.0';
+import {makeWorldRecord} from './world-schema.js?v=0.24.0';
+import {attachChapterCharacter,addChapterVehicle} from './scenario-chapters.js?v=0.24.0';
+import {validateCampaign} from './campaign.js?v=0.24.0';
+import {baseSkills} from './catalog.js?v=0.24.0';
 export const npcTypes=npcTemplates.flatMap(t=>t.id==='go-ganger-rigger'?[{...t,id:'go-ganger',name:'Go-ganger',variant:'go-ganger'},{...t,id:'rigger-gang',name:'Rigger de gang',variant:'rigger'}]:[t]);
 const norm=s=>String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[’']/g,' ').replace(/\s+/g,' ').trim();
 const pick=(a,rng)=>a[Math.floor(rng()*a.length)];
@@ -116,7 +117,8 @@ const firstNames=['Alex','Camille','Lou','Sacha','Noa','Charlie','Morgan','Robin
 const lastNames=['Morel','Martin','Roux','Laurent','Petit','Bertrand','Mercier','Perrin','Garnier','Dubois','Robert','Besson','Faure','Leroy','Girard','Lemoine','Caron','Giraud','Arnaud','Chevalier'];
 export function generateNpcBatch(state,{typeId,count=1,region='Dijon',rank='second',senior=false,isSecret=false},rng=Math.random){
  const t=npcTypes.find(t=>t.id===typeId);if(!t||!Number.isInteger(count)||count<1||count>50)throw Error('Choisissez un profil et un nombre entier de PNJ entre 1 et 50.');
- const preferences=npcPreferences(state),used=new Set([...state.entries,...state.world.records].flatMap(r=>[r.name,...(r.aliases??[])]).map(norm)),batch=[];
+ const allLocal=state.world.records.flatMap(r=>r.localNpcs??[]).flatMap(n=>[n.entry,n.record]);
+ const preferences=npcPreferences(state),used=new Set([...state.entries,...state.world.records,...allLocal].flatMap(r=>[r.name,...(r.aliases??[])]).map(norm)),batch=[];
  for(let i=0;i<count;i++){
   const metatype=drawMetatype(preferences,region,t.occupation,rng),base=pick(firstNames,rng)+' '+pick(lastNames,rng);let name=base,suffix=2;while(used.has(norm(name)))name=base+' '+suffix++;used.add(norm(name));
   const profile=buildNpcProfile(typeId,metatype,{rng,rank,region,senior,provenance:preferences.provenance});
@@ -127,9 +129,11 @@ export function generateNpcBatch(state,{typeId,count=1,region='Dijon',rank='seco
 }
 export function attachNpcBatch(state,scenarioId,chapterId,batch,{withVehicles=true}={}){
  if(!Array.isArray(batch)||!batch.length||batch.length>50)throw Error('Groupe de PNJ invalide.');
- const ids=new Set([...state.entries,...state.world.records].map(e=>e.id)),names=new Set([...state.entries,...state.world.records].flatMap(r=>[r.name,...(r.aliases??[])]).map(norm));
+ const allLocal=state.world.records.flatMap(r=>r.localNpcs??[]).flatMap(n=>[n.entry,n.record]);
+ const ids=new Set([...state.entries,...state.world.records,...allLocal].map(e=>e.id)),names=new Set([...state.entries,...state.world.records].flatMap(r=>[r.name,...(r.aliases??[])]).map(norm));
  for(const {entry,record} of batch){if(ids.has(entry.id)||ids.has(record.id)||names.has(norm(record.name)))throw Error('Ce groupe existe déjà ou un nom a été utilisé. Relancez la génération.');ids.add(entry.id);ids.add(record.id);names.add(norm(record.name));}
- let next={...state,entries:[...state.entries,...batch.map(b=>b.entry)],world:{...state.world,records:[...state.world.records,...batch.map(b=>b.record)]}};
+ if(!state.world.records.some(r=>r.id===scenarioId&&r.kind==='scenario'))throw Error('Scénario introuvable.');
+ let next={...state,world:{...state.world,records:state.world.records.map(r=>r.id===scenarioId?{...r,localNpcs:[...scenarioNpcs(state,scenarioId),...structuredClone(batch)]}:r)}};
  for(const {entry,record} of batch){next=attachChapterCharacter(next,scenarioId,chapterId,record.id);if(withVehicles)for(const row of entry.profile.vehicleRows)next=addChapterVehicle(next,scenarioId,chapterId,{...row,source:entry.profile.npc.source,ownerId:record.id,isSecret:record.isSecret});}
  validateCampaign(next);return next;
 }

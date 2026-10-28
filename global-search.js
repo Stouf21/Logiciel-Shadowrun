@@ -1,14 +1,14 @@
-import {spellMatches} from './spells.js?v=0.23.0';
-import {bookArtworks} from './book-art-data.js?v=0.23.0';
-import {bookArtworkMatches} from './book-art.js?v=0.23.0';
-import {getCatalogs} from './catalog.js?v=0.23.0';
-import {getCorporations} from './corporations.js?v=0.23.0';
-import {groups} from './campaign.js?v=0.23.0';
-import {normalize,worldSearch} from './world.js?v=0.23.0';
-import {profileSearchText} from './sheet.js?v=0.23.0';
-import {describeSkill} from './skill-details.js?v=0.23.0';
-import {rules,ruleMatches} from './rules-data.js?v=0.23.0';
-import {references} from './references.js?v=0.23.0';
+import {spellMatches} from './spells.js?v=0.24.0';
+import {bookArtworks} from './book-art-data.js?v=0.24.0';
+import {bookArtworkMatches} from './book-art.js?v=0.24.0';
+import {getCatalogs} from './catalog.js?v=0.24.0';
+import {getCorporations} from './corporations.js?v=0.24.0';
+import {groups} from './campaign.js?v=0.24.0';
+import {normalize,worldSearch} from './world.js?v=0.24.0';
+import {profileSearchText} from './sheet.js?v=0.24.0';
+import {describeSkill} from './skill-details.js?v=0.24.0';
+import {rules,ruleMatches} from './rules-data.js?v=0.24.0';
+import {references} from './references.js?v=0.24.0';
 export const searchTabs=[['all','Tout'],['skills','Compétences'],['assets','Atouts'],['spells','Sorts'],['weapons','Armes'],['vehicles','Véhicules'],['drones','Drones'],['spirits','Esprits'],['drugs','Drogues'],['armor','Armures'],['equipment','Équipement'],['cyberware','Cyberware'],['bioware','Bioware'],['programs','Programmes'],['decks','Cyberdecks'],['focus','Focus'],['adept','Pouvoirs d’adepte'],['contacts','Contacts'],['traits','Traits'],['world','Dossiers de campagne'],['rules','Règles'],['sources','Sources']];
 export function resourceTabs(item){
  const category=normalize(item.category),name=normalize(item.name),tags=[];

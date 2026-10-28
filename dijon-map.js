@@ -1,14 +1,14 @@
-import {mountMapZoom} from './map-zoom.js?v=0.23.0';
-import {characterCategories} from './character-options.js?v=0.23.0';
-import {scaleMapLabels} from './map-labels.js?v=0.23.0';
-import {mountMapShapes} from './map-shapes-ui.js?v=0.23.0';
-import {mapPlaceTypes,createMapPlace,positionMapPlace,removeMapPlacePosition} from './map-places.js?v=0.23.0';
-import {secretSection} from './secrets-ui.js?v=0.23.0';
-import {escape,searchDisclosure} from './ui.js?v=0.23.0';
-import {dijonPlaces} from './dijon-places.js?v=0.23.0';
-import {worldSearch} from './world.js?v=0.23.0';
-import {authorities} from './world-schema.js?v=0.23.0';
-import {copyMapState,dijonMapCenter,imageSize,imagePointFromPercent,imagePointToPercent,validMapPoint,routeDistance,routeAfterEdit,formatDistance,maxWaypoints,requestStreetRoute} from './map-model.js?v=0.23.0';
+import {mountMapZoom} from './map-zoom.js?v=0.24.0';
+import {characterCategories} from './character-options.js?v=0.24.0';
+import {scaleMapLabels} from './map-labels.js?v=0.24.0';
+import {mountMapShapes} from './map-shapes-ui.js?v=0.24.0';
+import {mapPlaceTypes,createMapPlace,positionMapPlace,removeMapPlacePosition} from './map-places.js?v=0.24.0';
+import {secretSection} from './secrets-ui.js?v=0.24.0';
+import {escape,searchDisclosure} from './ui.js?v=0.24.0';
+import {dijonPlaces} from './dijon-places.js?v=0.24.0';
+import {worldSearch} from './world.js?v=0.24.0';
+import {authorities} from './world-schema.js?v=0.24.0';
+import {copyMapState,dijonMapCenter,imageSize,imagePointFromPercent,imagePointToPercent,validMapPoint,routeDistance,routeAfterEdit,formatDistance,maxWaypoints,requestStreetRoute} from './map-model.js?v=0.24.0';
 export {dijonPlaces};
 
 export function renderDijonMap(container,snapshot,onChange,{onOpenRecord}={}){

@@ -1,4 +1,4 @@
-# Scénarios par chapitres et génération de PNJ — V0.22
+# Scénarios par chapitres et génération de PNJ — V0.24
 
 ## Références utilisées
 
@@ -27,10 +27,20 @@ La probabilité d’un métatype est `population_locale × coefficient_professio
 
 ## Conservation des données
 
-Le format de campagne reste compatible : `chapters` est un tableau optionnel des dossiers `scenario` ; `npcPreferences` est optionnel à la racine ; `profile.npc` et les métadonnées de compétences sont optionnels. Les anciennes campagnes n’ont pas à être converties au chargement.
+Le format de campagne reste compatible : `chapters` est un tableau optionnel des dossiers `scenario` ; `npcPreferences` est optionnel à la racine ; `profile.npc`, les métadonnées de compétences et `localNpcs` sur un scénario sont optionnels. `localNpcs` contient les paires dossier / fiche des PNJ propres au scénario, sans entrée dans `entries` ni personnage global dans `world.records`. Les références des chapitres ne peuvent viser que les personnages importants ou les PNJ du même scénario. Les anciennes campagnes n’ont pas à être converties au chargement.
 
 Une ancienne frise expose des chapitres virtuels suivant son ordre existant. Au premier changement, ces chapitres deviennent une copie locale au scénario avec `legacyEventId` ; les événements, leurs dates, dossiers et liens d’origine restent conservés. Les personnages liés à un événement sont repris dans son chapitre, avec les restrictions MJ. Les personnages liés seulement au scénario restent listés séparément, disponibles pour l’ajout aux chapitres.
 
 Chaque véhicule de chapitre est une copie indépendante avec sa référence de catalogue, d’entrée ou de propriétaire lorsque disponible. Modifier cette copie ne modifie ni un autre chapitre ni la fiche du PNJ. Retirer un personnage ne supprime que son appartenance au chapitre. La visibilité des chapitres, liens et véhicules est respectée dans la frise, les filtres et la recherche.
 
 Le générateur prépare un groupe complet en mémoire, puis effectue une sauvegarde atomique. Une erreur de quota ne change pas l’état enregistré et conserve le même tirage pour une nouvelle tentative. Les limites sont de 300 chapitres par scénario, 300 personnages / véhicules par chapitre et 50 PNJ par génération. Les secrets MJ sont inclus dans les exports comme dans les versions précédentes.
+
+## Portée des PNJ et reprise V0.22–0.23
+
+Les PNJ créés par « Ajouter PNJ » restent dans le scénario et n’augmentent ni la liste Personnages, ni la liste des personnages à placer sur la carte, ni les résultats de personnages globaux. Les personnages importants ajoutés depuis le menu Personnages gardent leur fonctionnement et peuvent participer à plusieurs scénarios. Le compteur du tableau de bord compte les mêmes personnages visibles que le menu, sans inclure les fiches entièrement réservées au MJ.
+
+Dans la préparation d’un scénario, les PNJ locaux sont affichés dans leur chapitre, même lorsque leur dossier porte l’indication MJ. Les notes privées restent derrière « Révéler ». Le répertoire « PNJ du scénario » permet aussi de retrouver les fiches retirées d’un chapitre ; « Ajouter perso. » propose les personnages importants et les PNJ de ce scénario. Une fiche locale s’ouvre sur le recto-verso, avec édition au clic, éditeur complet, informations narratives et retour au scénario. L’éditeur utilise une projection temporaire du PNJ ; seule la fiche intégrée au scénario est sauvegardée.
+
+Au chargement ou à l’import, les anciens couples dossier / fiche identifiables comme générés sont replacés dans les scénarios qui les référencent. Attributs, notes, atouts, visibilité et références de véhicules sont conservés. Leurs anciens liens sont conservés dans `legacyRelations`. Si un même PNJ était partagé entre plusieurs scénarios, chaque scénario reçoit une copie indépendante avec des identifiants distincts. Les personnages déjà placés sur une carte ou liés à des dossiers extérieurs sont conservés comme personnages de campagne pour préserver ces usages ; les personnages saisis manuellement ne sont pas déplacés. Les anciens PNJ sans scénario identifiable restent conservés dans la campagne.
+
+La conversion ne réécrit pas la sauvegarde pendant une simple consultation ; elle est incluse dans le prochain enregistrement ou export. Une erreur de quota conserve la sauvegarde précédente. Supprimer un chapitre garde les PNJ locaux dans le scénario ; supprimer le scénario retire ses PNJ locaux, tandis que les personnages importants restent dans la campagne.

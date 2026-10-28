@@ -1,6 +1,7 @@
-import {makeWorldRecord,validateWorld,UNKNOWN} from './world-schema.js?v=0.23.0';
-import {scenarioMembers} from './scenarios.js?v=0.23.0';
-import {chapterVehicleFields} from './chapter-schema.js?v=0.23.0';
+import {scenarioCharacterRecord,scenarioNpcs} from './scenario-npcs.js?v=0.24.0';
+import {makeWorldRecord,validateWorld,UNKNOWN} from './world-schema.js?v=0.24.0';
+import {scenarioMembers} from './scenarios.js?v=0.24.0';
+import {chapterVehicleFields} from './chapter-schema.js?v=0.24.0';
 
 const scenario=(state,id)=>{const r=state.world.records.find(r=>r.id===id&&r.kind==='scenario');if(!r)throw Error('Scénario introuvable.');return r;};
 const secretLink=(world,link)=>link.visibility==='secret'||world.records.some(r=>(r.id===link.from||r.id===link.to)&&r.isSecret);
@@ -42,12 +43,13 @@ export function removeChapter(state,id,chapterId){
  return replaceChapters(state,id,chapters.filter(c=>c.id!==chapterId));
 }
 export function attachChapterCharacter(state,id,chapterId,characterId){
- const record=state.world.records.find(r=>r.id===characterId&&r.kind==='character');if(!record)throw Error('Personnage introuvable.');
+ const record=scenarioCharacterRecord(state,id,characterId);if(!record)throw Error('Personnage introuvable.');
  return updateChapter(state,id,chapterId,c=>c.characterIds.includes(characterId)?c:{...c,characterIds:[...c.characterIds,characterId],secretCharacterIds:record.isSecret?[...c.secretCharacterIds,characterId]:c.secretCharacterIds});
 }
 export function detachChapterCharacter(state,id,chapterId,characterId){return updateChapter(state,id,chapterId,c=>({...c,characterIds:c.characterIds.filter(x=>x!==characterId),secretCharacterIds:c.secretCharacterIds.filter(x=>x!==characterId)}));}
-export function chapterCharacters(state,chapter,{includeSecrets=false}={}){
- return chapter.characterIds.map(id=>state.world.records.find(r=>r.id===id)).filter(r=>r&&(includeSecrets||!r.isSecret&&!chapter.secretCharacterIds.includes(r.id)));
+export function chapterCharacters(state,chapter,{includeSecrets=false,scenarioId}={}){
+ const locals=new Map(scenarioNpcs(state,scenarioId).map(n=>[n.record.id,n.record]));
+ return chapter.characterIds.map(id=>locals.get(id)??state.world.records.find(r=>r.id===id)).filter(r=>r&&(locals.has(r.id)||includeSecrets||!r.isSecret&&!chapter.secretCharacterIds.includes(r.id)));
 }
 export function addChapterVehicle(state,id,chapterId,row){
  const vehicle={...row,...Object.fromEntries(chapterVehicleFields.map(k=>[k,String(row[k]??'')])),id:'chapter-vehicle-'+crypto.randomUUID(),isSecret:row.isSecret??false};

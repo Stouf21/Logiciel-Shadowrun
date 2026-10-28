@@ -1,5 +1,7 @@
-import {validateBuilding} from './building-schema.js?v=0.23.0';
-import {validateScenarioChapters} from './chapter-schema.js?v=0.23.0';
+import {validateProfile} from './sheet.js?v=0.24.0';
+import {characterCategories} from './character-options.js?v=0.24.0';
+import {validateBuilding} from './building-schema.js?v=0.24.0';
+import {validateScenarioChapters} from './chapter-schema.js?v=0.24.0';
 export const UNKNOWN='À définir';
 export const worldKinds={character:'Personnage',corporation:'Corporation',faction:'Faction',zone:'Quartier / zone',place:'Lieu',scenario:'Scénario',clue:'Indice',secret:'Secret',event:'Événement'};
 export const discoveryStates=['Non découvert','Partiellement découvert','Découvert'];
@@ -34,6 +36,16 @@ export function validateWorld(world){
   if(r.coordinates!==undefined&&r.coordinates!==null&&(!Number.isFinite(r.coordinates.x)||!Number.isFinite(r.coordinates.y)||r.coordinates.x<0||r.coordinates.x>100||r.coordinates.y<0||r.coordinates.y>100))throw Error('Coordonnées cartographiques invalides.');
   if(r.portraitUrl&&!/^https?:\/\/[^\s]+$/i.test(r.portraitUrl))throw Error('Portrait : utilisez une adresse HTTP ou HTTPS.');
   for(const key of ['gameEntryId','corporationId','mapPlaceId'])if(r[key]!==null&&typeof r[key]!=='string')throw Error('Lien externe de fiche invalide.');
+ }
+ const scopedIds=new Set(ids),sheetIds=new Set();
+ for(const r of world.records)if(r.localNpcs!==undefined){
+  if(r.kind!=='scenario'||!Array.isArray(r.localNpcs)||r.localNpcs.length>1000)throw Error('PNJ locaux du scénario invalides.');
+  for(const pair of r.localNpcs){
+   const e=pair?.entry,n=pair?.record;
+   if(!n||n.kind!=='character'||n.localNpcs!==undefined||n.chapters!==undefined||scopedIds.has(n.id)||!e||!technicalId(e.id)||sheetIds.has(e.id)||!characterCategories.includes(e.category)||!['name','description','notes'].every(k=>typeof e[k]==='string')||!e.name.trim()||n.gameEntryId!==e.id)throw Error('Fiche de PNJ local invalide ou identifiant dupliqué.');
+   scopedIds.add(n.id);sheetIds.add(e.id);validateProfile(e.profile);
+  }
+  validateWorld({version:world.version,settings:world.settings,records:r.localNpcs.map(n=>n.record),relations:[]});
  }
  for(const r of world.records)if(r.building?.ownerId&&!world.records.some(owner=>owner.id===r.building.ownerId&&(owner.kind==='corporation'||owner.kind==='faction'&&(owner.corporationId||/corporation|corporatiste/i.test(owner.fields.type)))))throw Error('Corporation propriétaire du bâtiment introuvable.');
  const relationIds=new Set();for(const r of world.relations){
