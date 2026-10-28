@@ -1,4 +1,4 @@
-import {validateWorld} from './world-schema.js?v=0.25.0';
+import {validateWorld} from './world-schema.js?v=0.26.0';
 export function scenarioNpcs(state,scenarioId){return state.world.records.find(r=>r.id===scenarioId&&r.kind==='scenario')?.localNpcs??[];}
 export function scenarioNpc(state,scenarioId,npcId){const pair=scenarioNpcs(state,scenarioId).find(n=>n.record.id===npcId);if(!pair)throw Error('PNJ introuvable dans ce scénario.');return pair;}
 export function scenarioCharacterRecord(state,scenarioId,id){return scenarioNpcs(state,scenarioId).find(n=>n.record.id===id)?.record??state.world.records.find(r=>r.id===id&&r.kind==='character');}
@@ -13,6 +13,13 @@ export function saveScenarioNpcEdits(state,scenarioId,npcId,edited){
  if(!entry||!record||record.kind!=='character'||record.gameEntryId!==entry.id)throw Error('Fiche du PNJ de scénario invalide.');
  const pair={...previous,entry,record:{...record,name:entry.name,fields:{...record.fields,metatype:entry.profile?.metatype??record.fields.metatype}}};
  const next={...state,world:{...state.world,records:state.world.records.map(r=>r.id===scenarioId?{...r,localNpcs:r.localNpcs.map(n=>n.record.id===npcId?pair:n)}:r)}};validateWorld(next.world);return next;
+}
+export function deleteScenarioNpc(state,scenarioId,npcId){return deleteScenarioNpcs(state,scenarioId,[npcId]);}
+export function deleteScenarioNpcs(state,scenarioId,npcIds){
+ const scenario=state.world.records.find(r=>r.id===scenarioId&&r.kind==='scenario');if(!scenario)throw Error('Scénario introuvable.');
+ const selected=npcIds??scenarioNpcs(state,scenarioId).map(n=>n.record.id);if(!Array.isArray(selected)||new Set(selected).size!==selected.length)throw Error('Sélection de PNJ invalide.');selected.forEach(id=>scenarioNpc(state,scenarioId,id));if(!selected.length)return state;
+ const ids=new Set(selected),next={...state,world:{...state.world,records:state.world.records.map(r=>r.id!==scenarioId?r:{...r,localNpcs:r.localNpcs.filter(n=>!ids.has(n.record.id)),...(r.chapters?{chapters:r.chapters.map(c=>({...c,characterIds:c.characterIds.filter(id=>!ids.has(id)),secretCharacterIds:c.secretCharacterIds.filter(id=>!ids.has(id)),vehicles:c.vehicles.map(v=>{if(!ids.has(v.ownerId))return v;const {ownerId,...vehicle}=v;return vehicle;})}))}:{})})}};
+ validateWorld(next.world);return next;
 }
 // V0.22–0.23 put generated NPCs in the shared directory. Move only identifiable
 // generated pairs with a known scenario; preserve any character already used elsewhere.

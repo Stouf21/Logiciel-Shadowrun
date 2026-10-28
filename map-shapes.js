@@ -1,8 +1,8 @@
-import {copyMapState,mapModes,validMapPoint,validateMapState} from './map-model.js?v=0.25.0';
-import {makeWorldRecord,UNKNOWN,validateWorld} from './world-schema.js?v=0.25.0';
-import {emptyBuilding} from './building-schema.js?v=0.25.0';
-import {validPolygon} from './map-shape-schema.js?v=0.25.0';
-import {dijonIllustrationShapes} from './dijon-shapes.js?v=0.25.0';
+import {copyMapState,mapModes,validMapPoint,validateMapState} from './map-model.js?v=0.26.0';
+import {makeWorldRecord,UNKNOWN,validateWorld} from './world-schema.js?v=0.26.0';
+import {emptyBuilding} from './building-schema.js?v=0.26.0';
+import {validPolygon} from './map-shape-schema.js?v=0.26.0';
+import {dijonIllustrationShapes} from './dijon-shapes.js?v=0.26.0';
 export function getMapShapes(state,mode){
  if(!mapModes.includes(mode))throw Error('Fond de carte invalide.');
  const saved=state.mapState?.dijon.shapes?.[mode];

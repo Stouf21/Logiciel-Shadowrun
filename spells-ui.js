@@ -1,6 +1,6 @@
-import {escape,searchDisclosure} from './ui.js?v=0.25.0';
-import {baseSpells,spellFamilies,spellGeneralRules} from './spells-data.js?v=0.25.0';
-import {spellMatches} from './spells.js?v=0.25.0';
+import {escape,searchDisclosure} from './ui.js?v=0.26.0';
+import {baseSpells,spellFamilies,spellGeneralRules} from './spells-data.js?v=0.26.0';
+import {spellMatches} from './spells.js?v=0.26.0';
 const duration=s=>s.duration==='I'?'Instantané (I)':s.duration==='M'?'Maintenu (M)':'À définir';
 export function spellCard(s){return `<article class="card spell-card" data-spell-id="${escape(s.id)}"><span class="tag">Sort · ${escape(s.family)}${s.subtype?' · '+escape(s.subtype):''}${s.origin==='personal'?' · Personnel':''}</span><h3>${escape(s.name)}</h3><dl class="spell-facts">${s.castingTest?`<div><dt>Test</dt><dd>${escape(s.castingTest)}</dd></div>`:''}<div><dt>Durée</dt><dd>${duration(s)}</dd></div><div><dt>Seuil / opposition</dt><dd>${escape(s.threshold)}</dd></div><div><dt>Cible / portée</dt><dd>${escape(s.range)}</dd></div>${s.learningCost!==undefined?`<div><dt>Apprentissage</dt><dd>${s.learningCost.toLocaleString('fr-FR')} ¥</dd></div>`:''}</dl><p class="spell-effect">${escape(s.description)||'Effets à définir.'}</p>${s.damage?`<p><b>Dommages</b><br>${escape(s.damage)}</p>`:''}${s.anarchy?`<p class="spell-anarchy"><b>Effet spécial · 1 Anarchy</b><br>${escape(s.anarchy)}</p>`:''}${s.conditions?`<details class="spell-conditions"><summary>Conditions et précisions</summary><p>${escape(s.conditions)}</p></details>`:''}<small>${escape(s.source)}</small></article>`;}
 export function renderSpellLibrary(container){

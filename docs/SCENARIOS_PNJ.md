@@ -1,4 +1,4 @@
-# Scénarios par chapitres et génération de PNJ — V0.25
+# Scénarios par chapitres et génération de PNJ — V0.26
 
 ## Références utilisées
 
@@ -17,7 +17,7 @@ Les véhicules et drones sont séparés des atouts du personnage. Les quantités
 
 Les premiers rôles reçoivent 4 points d’Anarchy humains ou 3 pour les autres, plus les conversions d’initiative de la page 243. Les conditions d’utilisation (RV, notamment) restent dans les notes des atouts. Les effets spéciaux nécessitant un point d’Anarchy sont rappelés dans les notes. Les profils secondaires n’inventent pas de budget d’Anarchy, essence, nuyens, niveau ou coût d’atout absent du tableau.
 
-Les noms sont des créations aléatoires sans biographie ni affiliation imposée ; ils restent uniques dans la campagne (y compris face aux alias). Les personnages importants conservent leur fiche officielle recto-verso. Les PNJ générés utilisent une fenêtre d’informations de jeu, qui expose notamment leurs succès moyens et leur combativité.
+Les nouveaux noms reprennent le type numéroté (« Cadre corpo 1 », « Cadre corpo 2 », etc.). Le compteur est propre au scénario et au type ; une suppression ou un renommage ne fait pas revenir un ancien numéro. Les variantes de métatype et choix optionnels restent tirés au hasard. Les PNJ à la volée sont toujours des seconds rôles, sans sélecteur de rôle ou de population ; la ville de campagne détermine la population utilisée. Les anciens noms et profils sont conservés. Les personnages importants conservent leur fiche officielle recto-verso. Les PNJ générés utilisent une fenêtre d’informations de jeu, qui expose notamment leurs succès moyens et leur combativité.
 
 ## Répartition des métatypes
 
@@ -44,3 +44,9 @@ Dans la préparation d’un scénario, les PNJ locaux sont affichés dans leur c
 Au chargement ou à l’import, les anciens couples dossier / fiche identifiables comme générés sont replacés dans les scénarios qui les référencent. Attributs, notes, atouts, visibilité et références de véhicules sont conservés. Leurs anciens liens sont conservés dans `legacyRelations`. Si un même PNJ était partagé entre plusieurs scénarios, chaque scénario reçoit une copie indépendante avec des identifiants distincts. Les personnages déjà placés sur une carte ou liés à des dossiers extérieurs sont conservés comme personnages de campagne pour préserver ces usages ; les personnages saisis manuellement ne sont pas déplacés. Les anciens PNJ sans scénario identifiable restent conservés dans la campagne.
 
 La conversion ne réécrit pas la sauvegarde pendant une simple consultation ; elle est incluse dans le prochain enregistrement ou export. Une erreur de quota conserve la sauvegarde précédente. Supprimer un chapitre garde les PNJ locaux dans le scénario ; supprimer le scénario retire ses PNJ locaux, tandis que les personnages importants restent dans la campagne.
+
+## Suppression et compteurs — V0.26
+
+La suppression d’un PNJ local enlève sa paire dossier / données et toutes ses références dans les chapitres du scénario. Les véhicules sont conservés avec leur propriétaire détaché ; les personnages importants ne peuvent pas être supprimés par cette commande. La suppression de tous les PNJ utilise une seule sauvegarde atomique et garde les compteurs. Une erreur de stockage conserve l’ancienne campagne.
+
+Le champ facultatif `npcCounters` d’un scénario mémorise le dernier numéro par type ; chaque nouveau profil conserve aussi son `sequence` facultatif. Les noms saisis à la main ne sont pas réécrits. Les imports valident les compteurs et les numéros. Aucun changement de version du format général n’est requis.

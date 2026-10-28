@@ -1,11 +1,11 @@
-import {worldFields} from './world-schema.js?v=0.25.0';
-import {inlineField,mountInlineEditing} from './inline-edit.js?v=0.25.0';
-import {characterInlineSpec,updateCharacterInline,worldInlineSpec,updateWorldInline} from './inline-model.js?v=0.25.0';
-import {scenarioNpc,scenarioNpcEditorState,saveScenarioNpcEdits} from './scenario-npcs.js?v=0.25.0';
-import {attributeFields,skillReserve} from './sheet.js?v=0.25.0';
-import {draggableWindow} from './floating-window.js?v=0.25.0';
-import {escape} from './ui.js?v=0.25.0';
-import {secretSection} from './secrets-ui.js?v=0.25.0';
+import {worldFields} from './world-schema.js?v=0.26.0';
+import {inlineField,mountInlineEditing} from './inline-edit.js?v=0.26.0';
+import {characterInlineSpec,updateCharacterInline,worldInlineSpec,updateWorldInline} from './inline-model.js?v=0.26.0';
+import {scenarioNpc,scenarioNpcEditorState,saveScenarioNpcEdits} from './scenario-npcs.js?v=0.26.0';
+import {attributeFields,skillReserve} from './sheet.js?v=0.26.0';
+import {draggableWindow,raiseGameWindow} from './floating-window.js?v=0.26.0';
+import {escape} from './ui.js?v=0.26.0';
+import {secretSection} from './secrets-ui.js?v=0.26.0';
 const filled=value=>value!==undefined&&value!=='';
 export function npcQuickContent(pair,scenarioName){
  const {entry,record}=pair,p=entry.profile??{},scope='quick-npc-'+record.id;
@@ -33,8 +33,8 @@ export function openScenarioNpcWindow({getState,onSave,scenarioId,npcId,onClose}
  scenarioNpc(getState(),scenarioId,npcId);
  const panel=document.createElement('section');panel.className='npc-quick-window';panel.setAttribute('role','dialog');panel.setAttribute('aria-labelledby','quick-npc-title');panel.setAttribute('aria-modal','false');panel.tabIndex=-1;
  panel.innerHTML='<header class="npc-quick-header"><button type="button" class="npc-quick-grip" aria-label="Déplacer les informations du PNJ">⠿ <span>PNJ · Infos de jeu</span></button><button type="button" class="npc-quick-close" aria-label="Fermer les informations du PNJ">×</button></header><div class="npc-quick-content"></div>';
- document.body.append(panel);const body=panel.querySelector('.npc-quick-content');let disposeInline=()=>{},drag=null,disposed=false;
- const close=()=>{dispose();onClose?.();};
+ document.body.append(panel);panel.addEventListener('pointerdown',()=>raiseGameWindow(panel));panel.addEventListener('focusin',()=>raiseGameWindow(panel));const body=panel.querySelector('.npc-quick-content');let disposeInline=()=>{},drag=null,disposed=false,changed=false;
+ const close=()=>{dispose();onClose?.({changed});};
  function render(){
   const scroll=body.scrollTop;disposeInline();const state=getState(),pair=scenarioNpc(state,scenarioId,npcId);
   panel.querySelector('.npc-quick-grip span').textContent=pair.entry.name+' · PNJ';
@@ -44,7 +44,7 @@ export function openScenarioNpcWindow({getState,onSave,scenarioId,npcId,onClose}
    return path.startsWith('record.')?worldInlineSpec(projected,npcId,path.slice(7),label):characterInlineSpec(projected,{entryId:pair.entry.id,worldId:npcId},path.slice(6),label);
   },save:(path,value)=>{
    const current=getState(),projected=scenarioNpcEditorState(current,scenarioId,npcId),edited=path.startsWith('record.')?updateWorldInline(projected,npcId,path.slice(7),value):updateCharacterInline(projected,{entryId:pair.entry.id,worldId:npcId},path.slice(6),value).state;
-   onSave(saveScenarioNpcEdits(current,scenarioId,npcId,edited));
+   onSave(saveScenarioNpcEdits(current,scenarioId,npcId,edited));changed=true;
    const latest=scenarioNpc(getState(),scenarioId,npcId).entry,p=latest.profile??{};panel.querySelector('.npc-quick-grip span').textContent=latest.name+' · PNJ';body.querySelector('#quick-npc-title').setAttribute('aria-label',latest.name);for(const output of body.querySelectorAll('[data-quick-reserve]')){const row=p.skillRows?.[Number(output.dataset.quickReserve)];if(row)output.textContent=skillReserve(row,p);}
   },refresh:render});body.scrollTop=scroll;drag?.clamp();
  }

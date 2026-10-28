@@ -1,8 +1,8 @@
-import {dice3D} from './dice-3d.js?v=0.25.0';
-import {diceTextColor} from './dice-colors.js?v=0.25.0';
-import {readDicePrefs,writeDicePrefs} from './dice-preferences.js?v=0.25.0';
-import {rollAnarchy,rerollAnarchy,describeOutcome} from './anarchy-dice.js?v=0.25.0';
-import {draggableWindow} from './floating-window.js?v=0.25.0';
+import {dice3D} from './dice-3d.js?v=0.26.0';
+import {diceTextColor} from './dice-colors.js?v=0.26.0';
+import {readDicePrefs,writeDicePrefs} from './dice-preferences.js?v=0.26.0';
+import {rollAnarchy,rerollAnarchy,describeOutcome} from './anarchy-dice.js?v=0.26.0';
+import {draggableWindow} from './floating-window.js?v=0.26.0';
 const random=()=>crypto.getRandomValues(new Uint32Array(1))[0]/4294967296;
 const applyColors=(element,colors)=>{for(const kind of ['normal','risk']){element.style.setProperty('--'+kind+'-die-color',colors[kind]);element.style.setProperty('--'+kind+'-die-text',diceTextColor(colors[kind]));}};
 export function mountQuickDice(container){

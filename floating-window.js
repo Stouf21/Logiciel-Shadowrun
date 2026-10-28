@@ -9,3 +9,5 @@ export function draggableWindow(panel,handle){
  handle.addEventListener('keydown',e=>{const delta={ArrowLeft:[-10,0],ArrowRight:[10,0],ArrowUp:[0,-10],ArrowDown:[0,10]}[e.key];if(delta){e.preventDefault();place(position.x+delta[0]*(e.shiftKey?3:1),position.y+delta[1]*(e.shiftKey?3:1));}if(e.key==='Home'){e.preventDefault();center();}},options);
  window.addEventListener('resize',()=>place(position.x,position.y),options);center();return {center,clamp:()=>place(position.x,position.y),dispose:()=>controller.abort()};
 }
+
+export function raiseGameWindow(panel){for(const other of document.querySelectorAll('.npc-quick-window,.chapter-test-window'))other.style.zIndex=other===panel?'8902':'8901';}

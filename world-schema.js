@@ -1,7 +1,7 @@
-import {validateProfile} from './sheet.js?v=0.25.0';
-import {characterCategories} from './character-options.js?v=0.25.0';
-import {validateBuilding} from './building-schema.js?v=0.25.0';
-import {validateScenarioChapters} from './chapter-schema.js?v=0.25.0';
+import {validateProfile} from './sheet.js?v=0.26.0';
+import {characterCategories} from './character-options.js?v=0.26.0';
+import {validateBuilding} from './building-schema.js?v=0.26.0';
+import {validateScenarioChapters} from './chapter-schema.js?v=0.26.0';
 export const UNKNOWN='À définir';
 export const worldKinds={character:'Personnage',corporation:'Corporation',faction:'Faction',zone:'Quartier / zone',place:'Lieu',scenario:'Scénario',clue:'Indice',secret:'Secret',event:'Événement'};
 export const discoveryStates=['Non découvert','Partiellement découvert','Découvert'];
@@ -37,6 +37,7 @@ export function validateWorld(world){
   if(r.portraitUrl&&!/^https?:\/\/[^\s]+$/i.test(r.portraitUrl))throw Error('Portrait : utilisez une adresse HTTP ou HTTPS.');
   for(const key of ['gameEntryId','corporationId','mapPlaceId'])if(r[key]!==null&&typeof r[key]!=='string')throw Error('Lien externe de fiche invalide.');
  }
+ for(const r of world.records)if(r.npcCounters!==undefined){if(r.kind!=='scenario'||!r.npcCounters||typeof r.npcCounters!=='object'||Array.isArray(r.npcCounters)||Object.entries(r.npcCounters).some(([key,n])=>!technicalId(key)||!Number.isSafeInteger(n)||n<0||n>1000000))throw Error('Numérotation des PNJ invalide.');}
  const scopedIds=new Set(ids),sheetIds=new Set();
  for(const r of world.records)if(r.localNpcs!==undefined){
   if(r.kind!=='scenario'||!Array.isArray(r.localNpcs)||r.localNpcs.length>1000)throw Error('PNJ locaux du scénario invalides.');

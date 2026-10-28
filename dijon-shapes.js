@@ -1,6 +1,6 @@
 // Propositions schématiques sur l’illustration uniquement. Aucun point GPS déduit.
 // Les repères historiques restent dans dijon-places.js, sans déplacement.
-import {imagePointFromPercent} from './map-model.js?v=0.25.0';
+import {imagePointFromPercent} from './map-model.js?v=0.26.0';
 const shape=(recordId,kind,color,points)=>({id:'shape-proposal-'+kind+'-'+recordId,recordId,kind,color,points:points.map(([x,y])=>imagePointFromPercent({x,y})),source:'Proposition sur l’illustration · limites de campagne à ajuster'});
 export const dijonIllustrationShapes=[
  shape('zone-centre','zone','#65d0e6',[[45,47],[59,43],[65,52],[63,70],[48,67],[44,59]]),

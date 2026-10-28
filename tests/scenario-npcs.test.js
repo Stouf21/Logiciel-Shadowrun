@@ -2,7 +2,7 @@ import test from 'node:test';import assert from 'node:assert/strict';
 import {mergeWorld,worldSearch} from '../world.js';import {validateCampaign} from '../campaign.js';
 import {generateNpcBatch,attachNpcBatch} from '../npc-generator.js';
 import {createScenario,addChapter,scenarioChapters,chapterCharacters,detachChapterCharacter,attachChapterCharacter,removeChapter} from '../scenario-chapters.js';
-import {scenarioNpc,scenarioNpcs,scenarioNpcEditorState,saveScenarioNpcEdits} from '../scenario-npcs.js';
+import {scenarioNpc,scenarioNpcs,scenarioNpcEditorState,saveScenarioNpcEdits,deleteScenarioNpc,deleteScenarioNpcs} from '../scenario-npcs.js';
 import {updateCharacterInline,changeCharacterRows} from '../inline-model.js';import {deleteScenario} from '../scenarios.js';
 const fresh=()=>validateCampaign(mergeWorld({entries:[],tokens:[]}));
 function setup(){const created=createScenario(fresh(),'Les PNJ de Dijon'),chapter=addChapter(created.state,created.id);return {state:chapter.state,id:created.id,chapterId:chapter.id};}
@@ -38,4 +38,16 @@ test('La migration préserve les personnages déjà utilisés ailleurs et isole 
  const old=legacy(),a=old.batch[0],second=createScenario(old.state,'Deuxième scénario'),chapter=addChapter(second.state,second.id);let state=attachChapterCharacter(chapter.state,second.id,chapter.id,a.record.id);
  const converted=restore(state),one=scenarioNpcs(converted,old.id).find(n=>n.entry.name===a.entry.name),two=scenarioNpcs(converted,second.id)[0];assert.notEqual(one.record.id,two.record.id);assert.notEqual(one.entry.id,two.entry.id);assert.deepEqual(two.entry.profile,one.entry.profile);
  state={...old.state,tokens:[{id:a.entry.id,x:25,y:40}]};const preserved=restore(state);assert.ok(preserved.entries.some(e=>e.id===a.entry.id));assert.ok(preserved.world.records.some(r=>r.id===a.record.id));assert.equal(scenarioNpcs(preserved,old.id).length,4);assert.deepEqual(preserved.tokens,state.tokens);
+});
+test('Les noms sont numérotés par type dans le scénario ; renommage et suppression ne réutilisent pas un ancien numéro',()=>{
+ const s=setup();let state=s.state,batch=generateNpcBatch(state,{scenarioId:s.id,typeId:'cadre',count:2,rank:'premier',region:'France'});assert.deepEqual(batch.map(n=>n.entry.name),['Cadre corpo 1','Cadre corpo 2']);assert.ok(batch.every(n=>n.entry.profile.npc.rank==='second'&&n.entry.profile.npc.region==='Dijon'));
+ state=attachNpcBatch(state,s.id,s.chapterId,batch);let projected=scenarioNpcEditorState(state,s.id,batch[0].record.id),edited=updateCharacterInline(projected,{entryId:batch[0].entry.id,worldId:batch[0].record.id},'name','Madame Dupont').state;state=saveScenarioNpcEdits(state,s.id,batch[0].record.id,edited);state=deleteScenarioNpc(state,s.id,batch[1].record.id);
+ const next=generateNpcBatch(restore(state),{scenarioId:s.id,typeId:'cadre',count:1});assert.equal(next[0].entry.name,'Cadre corpo 3');assert.equal(next[0].entry.profile.npc.sequence,3);
+});
+test('Supprimer un PNJ retire toutes ses apparitions et son dossier, en conservant les véhicules indépendants et les personnages importants',()=>{
+ const s=setup(),batch=generateNpcBatch(s.state,{scenarioId:s.id,typeId:'rigger-gang',count:1});let state=attachNpcBatch(s.state,s.id,s.chapterId,batch),c=addChapter(state,s.id,s.chapterId);state=attachChapterCharacter(c.state,s.id,c.id,batch[0].record.id);const before=structuredClone(state),next=deleteScenarioNpc(state,s.id,batch[0].record.id);assert.deepEqual(state,before);assert.equal(scenarioNpcs(next,s.id).length,0);assert.ok(next.world.records.find(r=>r.id===s.id).chapters.every(c=>!c.characterIds.length&&!c.secretCharacterIds.length));assert.equal(scenarioChapters(next,s.id)[0].vehicles.length,2);assert.ok(scenarioChapters(next,s.id)[0].vehicles.every(v=>!v.ownerId));assert.equal(worldSearch(next.world,'',{kind:'character'}).length,16);assert.deepEqual(restore(next),next);assert.throws(()=>deleteScenarioNpc(next,s.id,next.world.records.find(r=>r.kind==='character').id));
+});
+
+test('La suppression de tous les PNJ reste atomique et conserve les compteurs et les personnages importants',()=>{
+ const s=setup(),batch=generateNpcBatch(s.state,{scenarioId:s.id,typeId:'cadre',count:5}),state=attachNpcBatch(s.state,s.id,s.chapterId,batch),before=structuredClone(state);assert.throws(()=>deleteScenarioNpcs(state,s.id,[batch[0].record.id,'inconnu']));assert.deepEqual(state,before);const next=deleteScenarioNpcs(state,s.id);assert.equal(scenarioNpcs(next,s.id).length,0);assert.equal(worldSearch(next.world,'',{kind:'character'}).length,16);assert.equal(generateNpcBatch(next,{scenarioId:s.id,typeId:'cadre',count:1})[0].entry.name,'Cadre corpo 6');assert.deepEqual(restore(next),next);
 });

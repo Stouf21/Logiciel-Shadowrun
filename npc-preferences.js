@@ -24,5 +24,6 @@ export function drawMetatype(preferences,region,occupation,rng=Math.random){
 }
 export function validateNpcProfile(npc){
  if(npc===undefined)return;
+ if(npc?.sequence!==undefined&&(!Number.isInteger(npc.sequence)||npc.sequence<1||npc.sequence>1000000))throw Error('Numéro du PNJ invalide.');
  if(!npc||!['templateId','templateName','source','rank','region','provenance','combativeness','notes'].every(k=>typeof npc[k]==='string'&&npc[k].length<30000)||!['second','premier'].includes(npc.rank)||!['Dijon','France'].includes(npc.region)||!Number.isInteger(npc.page)||npc.page<244||npc.page>255)throw Error('Origine du profil PNJ invalide.');
 }
