@@ -1,6 +1,6 @@
 # Shadowrun Anarchy · Campagne
 
-Application indépendante en français pour préparer et mener une campagne d’Anarchy V2. Version 0.28.0, en JavaScript natif avec Leaflet 1.9.4 hébergé localement pour la cartographie.
+Application indépendante en français pour préparer et mener une campagne d’Anarchy V2. Version 0.28.1, en JavaScript natif avec Leaflet 1.9.4 hébergé localement pour la cartographie.
 
 ## Démarrer
 
@@ -219,3 +219,5 @@ Parcours Chromium V0.26.2 : bouton d’ajout de spécialisation visible, nom / +
 Parcours Chromium V0.27 : spécialisations multiples et attributs distincts, ajout depuis les suggestions, suppression uniquement dans la fenêtre d’édition, confirmation / annulation, explications après une seconde et nettoyage. Mentors nommés explicitement et domaines choisis, effets sous les atouts, RR générales / spécialisées, conditions / activation / retrait. Éditeur complet, valeurs / texte / armes / véhicules / cyberdeck / portrait effaçables, quota et reprise, données personnelles conservées, export/import, texte échappé, affichage mobile et impression standard sur deux pages.
 
 Parcours Chromium V0.28 : domaines choisis seuls sous les atouts, texte complet conservé, nom / effets alignés sur la grille d’origine et retours à la ligne mesurés. Essence −1 et coûts fractionnaires, supplément d’un coût, coût déjà payé, perte conservée au retrait, prévision de l’éditeur complet et annulation avant enregistrement. Reprise après quota sans double déduction, rechargement, export/import, mobile et impression standard sur deux pages. Menu au clic droit : lieu / boutique, personnage, lieu existant et point exact du clic, secrets filtrés, quota / nouvelle tentative, itinéraire / calcul par les rues, confirmation de remplacement, contour de zone / bâtiment et sommets, zoom, clavier, changement de fond et nettoyage hors carte. [Fonctionnement détaillé et référence d’Essence](docs/FICHES_CARTE_V28.md).
+
+Parcours Chromium V0.28.1 : choix des atouts regroupés par famille avec titres, filtre de famille et recherche sans accents. Tri alphabétique français, créations personnelles visibles et sélection conservée pendant une recherche compatible. Aucun ajout possible sans référence choisie, états vides explicites, aperçu / domaines RR préservés et même organisation dans la création / l’éditeur complet. Ajout d’un atout personnel depuis l’éditeur, effets et déduction d’Essence vérifiés.

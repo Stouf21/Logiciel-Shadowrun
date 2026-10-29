@@ -1,4 +1,4 @@
-import {validateWorld} from './world-schema.js?v=0.28.0';
+import {validateWorld} from './world-schema.js?v=0.28.1';
 export function scenarioNpcs(state,scenarioId){return state.world.records.find(r=>r.id===scenarioId&&r.kind==='scenario')?.localNpcs??[];}
 export function scenarioNpc(state,scenarioId,npcId){const pair=scenarioNpcs(state,scenarioId).find(n=>n.record.id===npcId);if(!pair)throw Error('PNJ introuvable dans ce scénario.');return pair;}
 export function scenarioCharacterRecord(state,scenarioId,id){return scenarioNpcs(state,scenarioId).find(n=>n.record.id===id)?.record??state.world.records.find(r=>r.id===id&&r.kind==='character');}

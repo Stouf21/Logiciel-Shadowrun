@@ -1,10 +1,10 @@
-import {chapterTestTypes,chapterTestParticipants,testSkillChoices,defaultTestSkill,chapterTestVehicles,testWeapons,testProtections,resolveChapterTest} from './chapter-tests.js?v=0.28.0';
-import {scenarioChapters} from './scenario-chapters.js?v=0.28.0';
-import {escape} from './ui.js?v=0.28.0';
-import {dice3D} from './dice-3d.js?v=0.28.0';
-import {readDicePrefs} from './dice-preferences.js?v=0.28.0';
-import {diceTextColor} from './dice-colors.js?v=0.28.0';
-import {draggableWindow,raiseGameWindow} from './floating-window.js?v=0.28.0';
+import {chapterTestTypes,chapterTestParticipants,testSkillChoices,defaultTestSkill,chapterTestVehicles,testWeapons,testProtections,resolveChapterTest} from './chapter-tests.js?v=0.28.1';
+import {scenarioChapters} from './scenario-chapters.js?v=0.28.1';
+import {escape} from './ui.js?v=0.28.1';
+import {dice3D} from './dice-3d.js?v=0.28.1';
+import {readDicePrefs} from './dice-preferences.js?v=0.28.1';
+import {diceTextColor} from './dice-colors.js?v=0.28.1';
+import {draggableWindow,raiseGameWindow} from './floating-window.js?v=0.28.1';
 const random=()=>crypto.getRandomValues(new Uint32Array(1))[0]/4294967296;
 const numeric=input=>input.value.trim()===''?null:Number(input.value);
 const option=(id,name)=>`<option value="${escape(id)}">${escape(name)}</option>`;

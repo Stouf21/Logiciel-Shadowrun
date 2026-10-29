@@ -1,5 +1,5 @@
-import {getSpellCatalog} from './spells.js?v=0.28.0';
-import {baseSkills,baseAssets} from './catalog-data.js?v=0.28.0';
+import {getSpellCatalog} from './spells.js?v=0.28.1';
+import {baseSkills,baseAssets} from './catalog-data.js?v=0.28.1';
 export {baseSkills,baseAssets};
 export function getCatalogs(state){return {spells:getSpellCatalog(state),skills:[...baseSkills,...(state.customSkills??[])],assets:[...baseAssets,...(state.customAssets??[])]};}
 export function assetReferenceText(asset){return [asset.description,asset.conditions,asset.price?'Prix : '+asset.price:''].filter(Boolean).join('\n');}
@@ -26,3 +26,23 @@ export function isCharacterAsset(asset){
  return asset.target===undefined||asset.target==='character';
 }
 export function getCharacterCatalogs(state){const all=getCatalogs(state);return {...all,assets:all.assets.filter(isCharacterAsset)};}
+
+const assetFamilies=[
+ ['Trait','Traits'],['Équipement','Équipement et accessoires'],['Arme','Armes'],['Armure','Armures'],
+ ['Cyberware','Cyberware'],['Bioware','Bioware'],['Cyberdeck','Cyberdecks'],['Programme de cyberdeck','Programmes de cyberdeck'],
+ ['Pouvoir d’adepte','Pouvoirs d’adepte'],['Esprit mentor','Esprits mentors'],['Focus','Focus'],['Contact','Contacts'],['Drogue','Drogues'],
+ ['Modèle à personnaliser','Modèles à personnaliser'],['Trait (PNJ corrompu)','Traits — PNJ corrompus'],['Pouvoir d’adepte (PNJ corrompu)','Pouvoirs d’adepte — PNJ corrompus'],['Personnalisé','Créations personnelles']
+];
+const choiceText=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’']/g,' ').toLocaleLowerCase('fr').replace(/\s+/g,' ').trim();
+const assetCollator=new Intl.Collator('fr',{sensitivity:'base',numeric:true});
+function choiceFamily(item){const category=String(item.category??'').trim(),key=choiceText(category);return assetFamilies.find(([id,label])=>choiceText(id)===key||choiceText(label)===key)??(['personnel','personnels','personnalises','creation personnelle'].includes(key)?assetFamilies.at(-1):[category||'Personnalisé',category||'Créations personnelles']);}
+export function groupCharacterAssets(items,{query='',family='',nameFor=item=>item.name}={}){
+ const words=choiceText(query).split(' ').filter(Boolean),groups=new Map();
+ for(const item of items){
+  if(!isCharacterAsset(item))continue;const [id,label]=choiceFamily(item);if(family&&id!==family)continue;
+  const text=choiceText([nameFor(item),item.name,item.category,label,item.id.startsWith('custom-')?'création personnelle':''].join(' '));if(!words.every(word=>text.includes(word)))continue;
+  if(!groups.has(id))groups.set(id,{id,label,items:[]});groups.get(id).items.push(item);
+ }
+ const rank=id=>{const index=assetFamilies.findIndex(([key])=>key===id);return index<0?assetFamilies.length:index;};
+ return [...groups.values()].sort((a,b)=>rank(a.id)-rank(b.id)||assetCollator.compare(a.label,b.label)).map(group=>({...group,items:group.items.sort((a,b)=>assetCollator.compare(nameFor(a),nameFor(b))||assetCollator.compare(a.id,b.id))}));
+}

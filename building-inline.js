@@ -1,6 +1,6 @@
-import {readPath} from './inline-model.js?v=0.28.0';
-import {saveBuilding,saveBuildingPlan} from './buildings.js?v=0.28.0';
-import {buildingTypes} from './building-schema.js?v=0.28.0';
+import {readPath} from './inline-model.js?v=0.28.1';
+import {saveBuilding,saveBuildingPlan} from './buildings.js?v=0.28.1';
+import {buildingTypes} from './building-schema.js?v=0.28.1';
 export function buildingInlineSpec(state,id,path,label,{includeSecrets=false}={}){
  const r=state.world.records.find(r=>r.id===id),parts=path.split('.');let value,type='text',options;
  if(parts[0]==='plans'){const p=r.building.plans.find(p=>p.id===parts[1]);if(!p)throw Error('Plan introuvable.');value=p[parts[2]];type=['description','gmNotes'].includes(parts[2])?'textarea':parts[2]==='isSecret'?'boolean':'text';}

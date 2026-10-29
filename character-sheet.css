@@ -36,3 +36,7 @@
 .official-rr.is-checked:not(.is-conditional){background:radial-gradient(ellipse at center,#873824 0 52%,transparent 56%)}
 
 .official-asset-effects>.inline-field{line-height:2.830209cqi;white-space:pre;overflow-wrap:normal;align-items:flex-start;justify-content:flex-start}.official-asset-name>.inline-field{white-space:nowrap}
+
+.asset-choice-preview{white-space:pre-wrap;max-height:180px;overflow:auto;font-size:14px}.picker-controls [data-asset-family]{min-width:0}.sheet-add-row select[name=item] optgroup,.selection-editor [data-pick] optgroup{font-weight:600}
+
+.sheet-add-row select[name=item] option,.selection-editor [data-pick] option{font-weight:400}

@@ -1,11 +1,11 @@
-import {worldFields} from './world-schema.js?v=0.28.0';
-import {inlineField,mountInlineEditing} from './inline-edit.js?v=0.28.0';
-import {characterInlineSpec,updateCharacterInline,changeCharacterRows,worldInlineSpec,updateWorldInline} from './inline-model.js?v=0.28.0';
-import {scenarioNpc,scenarioNpcEditorState,saveScenarioNpcEdits} from './scenario-npcs.js?v=0.28.0';
-import {attributeFields,skillReserve,skillReserves} from './sheet.js?v=0.28.0';
-import {draggableWindow,raiseGameWindow} from './floating-window.js?v=0.28.0';
-import {escape} from './ui.js?v=0.28.0';
-import {secretSection} from './secrets-ui.js?v=0.28.0';
+import {worldFields} from './world-schema.js?v=0.28.1';
+import {inlineField,mountInlineEditing} from './inline-edit.js?v=0.28.1';
+import {characterInlineSpec,updateCharacterInline,changeCharacterRows,worldInlineSpec,updateWorldInline} from './inline-model.js?v=0.28.1';
+import {scenarioNpc,scenarioNpcEditorState,saveScenarioNpcEdits} from './scenario-npcs.js?v=0.28.1';
+import {attributeFields,skillReserve,skillReserves} from './sheet.js?v=0.28.1';
+import {draggableWindow,raiseGameWindow} from './floating-window.js?v=0.28.1';
+import {escape} from './ui.js?v=0.28.1';
+import {secretSection} from './secrets-ui.js?v=0.28.1';
 const filled=value=>value!==undefined&&value!=='';
 export function npcQuickContent(pair,scenarioName){
  const {entry,record}=pair,p=entry.profile??{},scope='quick-npc-'+record.id;
