@@ -1,4 +1,4 @@
-# Fiches et carte — version 0.28
+# Fiches et carte — versions 0.28 à 0.29
 
 ## Effets d’atouts et lignes de la fiche
 
@@ -8,13 +8,19 @@ Le papier affiche les effets retenus, pas les instructions de construction de l�
 
 ## Essence
 
-Le livre fourni indique que l’Essence démarre à **6** et baisse avec les implants **sans pouvoir remonter** (p. 60). L’ajout d’un atout coûtant −1 fait donc passer un total de 6 à 5 ; un coût de 0,5 est traité de la même façon. Les coûts sont stockés comme des nombres positifs et imprimés avec le signe moins.
+Depuis la version 0.29, à la demande du meneur, supprimer un atout de la fiche est une correction de préparation : son coût est restitué au total d’Essence. L’ajout d’un coût de 1 fait passer 6 à 5 ; sa suppression rend 6. Une variation de coût ajuste aussi le total, y compris pour les demi-points. Cette gestion de fiche se distingue de la règle de perte irréversible après une implantation dans la fiction (livre p. 60).
 
-Le calcul utilise le total actuel du personnage. Si ce total est vide, l’acquisition du premier implant utilise la référence de 6. Les anciennes sauvegardes et leurs totaux saisis ne sont pas recalculés à l’ouverture ou à l’importation.
+Le calcul conserve le total saisi par le meneur comme point de départ. Un total vide utilise la référence de 6 lors du premier implant. Les sauvegardes importées ne sont pas modifiées à l’ouverture. Le montant effectivement déduit est mémorisé sur la ligne (`essenceSpent`) : si l’Essence est limitée à zéro, le retrait ne peut pas restituer davantage que le montant déduit. Les anciens coûts sans ce marqueur utilisent leur valeur de fiche.
 
-Le coût déjà déduit est mémorisé sur la ligne (`essenceSpent`). Une augmentation au-delà de ce coût déduit seulement le supplément. Une baisse du coût, une désactivation de RR ou le retrait de l’atout ne restitue pas d’Essence. Revenir à un coût déjà compté ne le déduit pas à nouveau. Le total reste modifiable pour une correction du meneur.
+L’éditeur complet montre la même prévision lors de l’ajout, du retrait ou d’un changement de coût. Annuler laisse la fiche intacte ; enregistrer n’applique pas une seconde déduction. Une erreur de stockage conserve la fiche précédente, et une nouvelle tentative ne fait pas de double restitution. Les champs de magie, soins et social restent modifiables par le meneur.
 
-L’éditeur complet montre le total provisoire pendant l’ajout ou l’édition d’atouts. Retirer un ajout non enregistré ou annuler l’éditeur annule aussi cette prévision ; l’enregistrement ne la déduit pas une seconde fois. Une erreur de stockage conserve la fiche précédente et une nouvelle tentative ne crée pas de perte supplémentaire. Les champs annexes de magie, soins et social restent sous le contrôle du meneur.
+## Lignes vides et matériel
+
+Chaque ligne disponible des compétences, atouts, armes et sorts ouvre le choix correspondant. Les éléments déjà présents restent en place. Pour une arme ou un sort, l’emplacement cliqué reçoit le modèle choisi ; les caractéristiques complètes et la source sont conservées dans les notes. Les textes qui dépassent le papier restent accessibles dans les compléments.
+
+Cliquer sur les titres **Cyberdeck** et **Véhicule / drone**, ou sur leur emplacement de nom vide, ouvre le catalogue correspondant, filtrable par nom. Les modèles du livre, les créations personnelles et les entrées de matériel du catalogue de campagne sont proposés. L’éditeur complet contient les mêmes listes. Le choix préremplit les champs, qui peuvent être adaptés avant validation ; annuler ne change rien.
+
+Les cyberdecks renseignent Attaque, Firewall, notes et seuils de dommages : Firewall, Firewall +3, Firewall +6 (p. 68–69 et 210). Les suivis du DIEU démarrent à zéro (p. 218). Les véhicules / drones renseignent Autopilote, Structure, Maniabilité, Vitesse, Blindage et les seuils Structure + Blindage, 2×Structure + Blindage, 3×Structure + Blindage (p. 68–69, 238, 241). Les zéros et variantes de vitesse de vol sont conservés. Une caractéristique non définie par le modèle personnel reste vide ; elle peut être saisie par le meneur.
 
 ## Menu au clic droit sur la carte
 

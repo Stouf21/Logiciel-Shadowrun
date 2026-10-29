@@ -1,9 +1,9 @@
-import {inlineField,mountInlineEditing} from './inline-edit.js?v=0.28.1';
-import {worldSearch} from './world.js?v=0.28.1';
-import {worldCard} from './world-ui.js?v=0.28.1';
-import {secretSection} from './secrets-ui.js?v=0.28.1';
-import {escape,valueOrDash as val,searchDisclosure} from './ui.js?v=0.28.1';
-import {getCorporations,validateCorporations,corporationTiers,corporationRelations,corporationMatches} from './corporations.js?v=0.28.1';
+import {inlineField,mountInlineEditing} from './inline-edit.js?v=0.29.0';
+import {worldSearch} from './world.js?v=0.29.0';
+import {worldCard} from './world-ui.js?v=0.29.0';
+import {secretSection} from './secrets-ui.js?v=0.29.0';
+import {escape,valueOrDash as val,searchDisclosure} from './ui.js?v=0.29.0';
+import {getCorporations,validateCorporations,corporationTiers,corporationRelations,corporationMatches} from './corporations.js?v=0.29.0';
 const detailsFields=[['contacts','Contacts / filiales / présence locale'],['objectives','Objectifs dans la campagne'],['secrets','Secrets du meneur'],['notes','Notes de campagne']];
 function badge(corp){return `<span class="corp-monogram" aria-hidden="true">${escape(corp.name.split(/[\s-]+/).slice(0,2).map(w=>w[0]).join(''))}</span>`;}
 export function corporationCard(corp){return `<article class="card corp-card"><div class="corp-card-top">${badge(corp)}<span class="tag">${escape(corp.tier)}</span></div><h3><button class="character-name" data-open-corporation="${escape(corp.id)}">${escape(corp.name)}</button></h3><p class="corp-sector">${escape(corp.sectors)||'Secteurs à préciser'}</p><p>${escape(corp.summary)}</p><span class="corp-relation">${escape(corp.relationship)}</span><div class="actions"><button data-open-corporation="${escape(corp.id)}">Consulter la corporation</button></div></article>`;}

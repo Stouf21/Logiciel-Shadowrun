@@ -1,12 +1,13 @@
-import {mountSpellPicker} from './spells-ui.js?v=0.28.1';
-import {mountInlineEditing} from './inline-edit.js?v=0.28.1';
-import {characterInlineSpec,updateCharacterInline,characterForInline,changeCharacterRows,deleteCharacterElement,worldInlineSpec,updateWorldInline} from './inline-model.js?v=0.28.1';
-import {getCharacterCatalogs,assetReferenceText,groupCharacterAssets} from './catalog.js?v=0.28.1';
-import {describeSkill} from './skill-details.js?v=0.28.1';
-import {skillReserves,skillVariants,variantReserve,attributeFields} from './sheet.js?v=0.28.1';
-import {mountCharacterHelp} from './character-help.js?v=0.28.1';
-import {assetRiskRules,riskRuleLabel,characterAssetName,characterRisk} from './character-rules.js?v=0.28.1';
-import {escape} from './ui.js?v=0.28.1';
+import {equipmentFields,equipmentTitles,mountEquipmentPicker} from './character-equipment.js?v=0.29.0';
+import {mountSpellPicker} from './spells-ui.js?v=0.29.0';
+import {mountInlineEditing} from './inline-edit.js?v=0.29.0';
+import {setCharacterEquipment,characterInlineSpec,updateCharacterInline,characterForInline,changeCharacterRows,deleteCharacterElement,worldInlineSpec,updateWorldInline} from './inline-model.js?v=0.29.0';
+import {getCatalogs,getCharacterCatalogs,assetReferenceText,groupCharacterAssets} from './catalog.js?v=0.29.0';
+import {describeSkill} from './skill-details.js?v=0.29.0';
+import {skillReserves,skillVariants,variantReserve,attributeFields} from './sheet.js?v=0.29.0';
+import {mountCharacterHelp} from './character-help.js?v=0.29.0';
+import {assetRiskRules,riskRuleLabel,characterAssetName,characterRisk} from './character-rules.js?v=0.29.0';
+import {escape} from './ui.js?v=0.29.0';
 export function mountCharacterInline(container,{getState,target,onSave,onEntry,onRefresh}){
  let dialog=null;
  const profile=()=>characterForInline(getState(),target).entry.profile??{};
@@ -55,9 +56,19 @@ export function mountCharacterInline(container,{getState,target,onSave,onEntry,o
   const updateAttribute=()=>{const knownSpec=known.find(v=>v.name.toLocaleLowerCase('fr')===form.elements.specialization.value.trim().toLocaleLowerCase('fr')),a=attributeFields.find(([,label])=>label===knownSpec?.attribute);if(a)form.elements.attribute.value=a[0];};form.elements.specialization.oninput=updateAttribute;updateAttribute();
   form.onsubmit=e=>{e.preventDefault();try{apply(changeCharacterRows(getState(),target,{kind:'specializations',index,name:form.elements.specialization.value,attribute:form.elements.attribute.value,trained:form.elements.trained.checked}));close();onRefresh();}catch(err){form.querySelector('[role=alert]').textContent=err.message;}};dialog.querySelector('[data-cancel]').onclick=()=>{close();onRefresh();};dialog.oncancel=e=>{e.preventDefault();close();onRefresh();};dialog.showModal();
  }
+ function pickEquipment(kind,index){
+  const p=profile(),current=kind==='decks'?p.deck:kind==='vehicles'?p.vehicleRows?.[index]:p.weaponRows?.[index];let selected={...current};
+  dialog=document.createElement('dialog');dialog.className='sheet-add-row sheet-equipment-picker';dialog.innerHTML=`<form><h2>${equipmentTitles[kind]}</h2><div data-equipment-picker></div><p class="muted">Les caractéristiques du modèle remplissent les champs ci-dessous. Vous pouvez les adapter ou saisir un élément personnel.</p><div class="equipment-values">${equipmentFields[kind].map(([key,label])=>`<label>${label}${key==='notes'?`<textarea name="${key}" rows="4"></textarea>`:`<input name="${key}" ${key==='name'?'required':''}>`}</label>`).join('')}</div><p class="inline-edit-error" role="alert"></p><div class="actions"><button type="button" data-cancel>Annuler</button><button type="submit" class="primary">Utiliser sur la fiche</button></div></form>`;document.body.append(dialog);const form=dialog.querySelector('form');
+  const fill=row=>{for(const [key] of equipmentFields[kind])form.elements.namedItem(key).value=row?.[key]??'';};fill(current);
+  mountEquipmentPicker(form.querySelector('[data-equipment-picker]'),getCatalogs(getState()),kind,row=>{selected=row;fill(row);});
+  form.onsubmit=e=>{e.preventDefault();try{const row={...selected,...Object.fromEntries(equipmentFields[kind].map(([key])=>[key,form.elements.namedItem(key).value]))};apply(setCharacterEquipment(getState(),target,{kind,index,row}));close();onRefresh();}catch(err){form.querySelector('[role=alert]').textContent=err.message;}};
+  form.querySelector('[data-cancel]').onclick=()=>{close();onRefresh();};dialog.oncancel=e=>{e.preventDefault();close();onRefresh();};dialog.showModal();
+ }
  const click=e=>{
+  const equipment=e.target.closest('[data-sheet-equipment]');if(equipment){e.preventDefault();e.stopPropagation();dispose();pickEquipment(equipment.dataset.sheetEquipment,equipment.dataset.sheetIndex!==undefined?Number(equipment.dataset.sheetIndex):undefined);return;}
+
   const addSpec=e.target.closest('[data-sheet-add-specialization]');if(addSpec){e.preventDefault();e.stopPropagation();dispose();addSpecialization(addSpec);return;}
-  const add=e.target.closest('[data-sheet-add]');if(!add)return;e.preventDefault();e.stopPropagation();dispose();const kind=add.dataset.sheetAdd;
+  const add=e.target.closest('[data-sheet-add]');if(!add)return;e.preventDefault();e.stopPropagation();dispose();const kind=add.dataset.sheetAdd;if(['weapons','vehicles','decks'].includes(kind)){pickEquipment(kind,add.dataset.sheetIndex!==undefined?Number(add.dataset.sheetIndex):undefined);return;}
   if(kind==='spells'){
    dialog=document.createElement('dialog');dialog.className='sheet-spell-picker';dialog.innerHTML='<form><h2>Ajouter un sort</h2><div data-spell-picker></div><p class="inline-edit-error" role="alert"></p><div class="actions"><button type="button" data-spell-cancel>Annuler</button></div></form>';document.body.append(dialog);
    const pick=s=>{try{if(!s)throw Error('Choisissez un sort.');apply(changeCharacterRows(getState(),target,{kind:'spells',itemId:s.id}));close();onRefresh();}catch(err){dialog.querySelector('.inline-edit-error').textContent=err.message;}};

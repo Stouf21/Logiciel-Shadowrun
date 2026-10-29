@@ -1,6 +1,6 @@
 # Shadowrun Anarchy · Campagne
 
-Application indépendante en français pour préparer et mener une campagne d’Anarchy V2. Version 0.28.1, en JavaScript natif avec Leaflet 1.9.4 hébergé localement pour la cartographie.
+Application indépendante en français pour préparer et mener une campagne d’Anarchy V2. Version 0.29.0, en JavaScript natif avec Leaflet 1.9.4 hébergé localement pour la cartographie.
 
 ## Démarrer
 
@@ -221,3 +221,6 @@ Parcours Chromium V0.27 : spécialisations multiples et attributs distincts, ajo
 Parcours Chromium V0.28 : domaines choisis seuls sous les atouts, texte complet conservé, nom / effets alignés sur la grille d’origine et retours à la ligne mesurés. Essence −1 et coûts fractionnaires, supplément d’un coût, coût déjà payé, perte conservée au retrait, prévision de l’éditeur complet et annulation avant enregistrement. Reprise après quota sans double déduction, rechargement, export/import, mobile et impression standard sur deux pages. Menu au clic droit : lieu / boutique, personnage, lieu existant et point exact du clic, secrets filtrés, quota / nouvelle tentative, itinéraire / calcul par les rues, confirmation de remplacement, contour de zone / bâtiment et sommets, zoom, clavier, changement de fond et nettoyage hors carte. [Fonctionnement détaillé et référence d’Essence](docs/FICHES_CARTE_V28.md).
 
 Parcours Chromium V0.28.1 : choix des atouts regroupés par famille avec titres, filtre de famille et recherche sans accents. Tri alphabétique français, créations personnelles visibles et sélection conservée pendant une recherche compatible. Aucun ajout possible sans référence choisie, états vides explicites, aperçu / domaines RR préservés et même organisation dans la création / l’éditeur complet. Ajout d’un atout personnel depuis l’éditeur, effets et déduction d’Essence vérifiés.
+
+
+Parcours Chromium V0.29 : ajout par les lignes vides des compétences, atouts, armes et sorts, y compris après des éléments existants. Suppression d’atout et variation des coûts : Essence ajustée, coûts fractionnaires, annulation de l’éditeur complet, enregistrement / rechargement et reprise après quota sans double restitution. Choix de cyberdecks et véhicules / drones sur les titres du verso et dans l’éditeur complet : catalogue et créations personnelles, champs et notes préremplis, seuils calculés, emplacement ciblé préservé, annulation et valeurs modifiables. Vérification mobile et impression recto-verso. Le retrait d’un atout est désormais traité comme une correction de préparation et annule son coût d’Essence.

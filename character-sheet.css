@@ -40,3 +40,9 @@
 .asset-choice-preview{white-space:pre-wrap;max-height:180px;overflow:auto;font-size:14px}.picker-controls [data-asset-family]{min-width:0}.sheet-add-row select[name=item] optgroup,.selection-editor [data-pick] optgroup{font-weight:600}
 
 .sheet-add-row select[name=item] option,.selection-editor [data-pick] option{font-weight:400}
+
+.official-equipment-choice{display:block;width:100%;height:100%;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;cursor:pointer}
+.official-equipment-choice:hover,.official-equipment-choice:focus-visible,.official-add-field:hover,.official-add-field:focus-visible{background:#ffc60025;outline:1px dashed #a15a00;outline-offset:-1px}
+.equipment-values{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.equipment-values label:has(textarea){grid-column:1/-1}.sheet-equipment-picker{width:min(720px,calc(100vw - 24px))}
+@media(max-width:480px){.equipment-values{grid-template-columns:1fr}}
+@media print{.official-equipment-choice,.official-add-field{display:none!important}}

@@ -1,12 +1,13 @@
-import {assetEssenceCost,paidEssenceCost,deductEssence} from './character-rules.js?v=0.28.1';
-import {spellRow} from './spells.js?v=0.28.1';
-import {sheetSlots} from './sheet-layout.js?v=0.28.1';
-import {unclassifiedCharacter,metatypeOptions} from './character-options.js?v=0.28.1';
-import {numberFields,textFields,structuredTextFields,woundLabels,attributeFields,skillReserves,updateSkillRow,skillVariants} from './sheet.js?v=0.28.1';
-import {getCharacterCatalogs,assetReferenceText} from './catalog.js?v=0.28.1';
-import {characterEntryForRecord,upsertWorldRecord} from './world.js?v=0.28.1';
-import {worldFields,discoveryStates,authorities} from './world-schema.js?v=0.28.1';
-import {groups,validateCampaign} from './campaign.js?v=0.28.1';
+import {equipmentFields} from './character-equipment.js?v=0.29.0';
+import {reconcileAssetEssence} from './character-rules.js?v=0.29.0';
+import {spellRow} from './spells.js?v=0.29.0';
+import {sheetSlots} from './sheet-layout.js?v=0.29.0';
+import {unclassifiedCharacter,metatypeOptions} from './character-options.js?v=0.29.0';
+import {numberFields,textFields,structuredTextFields,woundLabels,attributeFields,skillReserves,updateSkillRow,skillVariants} from './sheet.js?v=0.29.0';
+import {getCharacterCatalogs,assetReferenceText} from './catalog.js?v=0.29.0';
+import {characterEntryForRecord,upsertWorldRecord} from './world.js?v=0.29.0';
+import {worldFields,discoveryStates,authorities} from './world-schema.js?v=0.29.0';
+import {groups,validateCampaign} from './campaign.js?v=0.29.0';
 const rowKeys={skillRows:['catalogId','rating','attribute','rr','specialization','specialized','mean','specializationAttribute','specializationTrained','specializationRR'],assetRows:['catalogId','name','category','notes','source','level','essence','rrActive','rrChoices'],weaponRows:['name','type','notes','source','spellId'],woundRows:['label','light','serious','incap','rr','status'],vehicleRows:['name','type','auto','structure','handling','speed','armor','light','serious','incap','notes']};
 export const deckKeys=['name','attack','firewall','light','serious','incap','minRisk','penalty','notes'];
 export const readPath=(record,path)=>path.split('.').reduce((value,key)=>value?.[key],record);
@@ -30,7 +31,7 @@ export function updateCharacterInline(state,target,path,value,category){
  if(path==='category'&&!groups.characters.includes(value))throw Error('Choisissez une catégorie PJ ou PNJ.');
  assertCharacterPath(path);const {entry,record,unbound}=characterForInline(state,target),next=structuredClone(entry);
  if(unbound){next.id='runner-'+crypto.randomUUID();next.category=path==='category'?value:category??unclassifiedCharacter;if(!groups.characters.includes(next.category))throw Error('Catégorie de personnage invalide.');}
- next.profile??={};const parts=path.split('.'),previousEssenceCost=parts[1]==='assetRows'?paidEssenceCost(entry.profile?.assetRows?.[Number(parts[2])]):0;
+ next.profile??={};const parts=path.split('.');
  if(parts[1]==='deck')next.profile.deck??=Object.fromEntries(deckKeys.map(k=>[k,'']));
  if(rowKeys[parts[1]]){const key=parts[1],i=Number(parts[2]);if(!next.profile[key]){if(['skillRows','assetRows'].includes(key))throw Error('Ajoutez d’abord cette ligne à la fiche.');next.profile[key]=blankRows(key);}if(!next.profile[key][i]&&['weaponRows','vehicleRows','woundRows'].includes(key)&&i<({weaponRows:sheetSlots.weapons,vehicleRows:sheetSlots.vehicles,woundRows:sheetSlots.wounds}[key])){const empty=blankRows(key);while(next.profile[key].length<=i)next.profile[key].push(empty[next.profile[key].length]);}if(!next.profile[key][i])throw Error('Ligne de fiche introuvable.');}
  let parent=next;for(const key of parts.slice(0,-1))parent=parent[key];
@@ -41,7 +42,7 @@ export function updateCharacterInline(state,target,path,value,category){
   const kind=parts[1]==='skillRows'?'skills':'assets',item=getCharacterCatalogs(state)[kind].find(x=>x.id===value);if(!item)throw Error('Référence applicable au personnage introuvable.');parent.name=item.name;
   if(kind==='assets')Object.assign(parent,{category:item.category,source:item.source,level:item.level,essence:item.essence,notes:assetReferenceText(item),target:'character'});
  }
- if(parts[1]==='assetRows'){const row=next.profile.assetRows[Number(parts[2])],cost=assetEssenceCost(row),loss=cost-previousEssenceCost;if(loss>0)next.profile.essence=deductEssence(next.profile.essence,loss);if(Math.max(previousEssenceCost,cost)>0)row.essenceSpent=Math.max(previousEssenceCost,cost);}
+ if(parts[1]==='assetRows')reconcileAssetEssence(next.profile,entry.profile?.assetRows);
  const entries=unbound?[...state.entries,next]:state.entries.map(e=>e.id===entry.id?next:e);
  const updated={...state,entries,world:unbound?{...state.world,records:state.world.records.map(r=>r.id===record.id?{...r,gameEntryId:next.id}:r)}:state.world};validateCampaign(updated);return {state:updated,entryId:next.id};
 }
@@ -71,9 +72,9 @@ export function changeCharacterRows(state,target,{kind,itemId,index,remove=false
   let row;if(kind==='spells'){const spell=getCharacterCatalogs(nextState).spells.find(s=>s.id===itemId);if(!spell)throw Error('Choisissez un sort de la liste.');row=spellRow(spell);}
   else if(['skills','assets'].includes(kind)){const item=getCharacterCatalogs(nextState)[kind].find(x=>x.id===itemId);if(!item)throw Error('Choisissez une référence applicable au personnage.');row=kind==='skills'?{catalogId:item.id,name:item.name,rating:0,attribute:item.attribute,rr:0,specialization:'',specialized:false}:{catalogId:item.id,name:item.name,category:item.category,level:item.level,essence:item.essence,source:item.source,notes:assetReferenceText(item),target:'character'};}
   else row=Object.fromEntries(rowKeys[key].map(k=>[k,'']));
-  if(kind==='assets'&&assetEssenceCost(row)>0){row.essenceSpent=assetEssenceCost(row);entry.profile.essence=deductEssence(entry.profile.essence,row.essenceSpent);}
   const blank=kind==='spells'?rows.findIndex(r=>!r.name.trim()&&!r.type.trim()&&!r.spellId&&!r.notes?.trim()&&!r.source?.trim()):-1;entry.profile[key]=blank>=0?rows.map((r,i)=>i===blank?row:r):[...rows,row];
  }
+ if(kind==='assets')reconcileAssetEssence(entry.profile,current.entry.profile?.assetRows);
  const updated={...nextState,entries:nextState.entries.map(e=>e.id===entryId?entry:e)};validateCampaign(updated);return {state:updated,entryId};
 }
 export function updateWorldInline(state,id,path,value){
@@ -126,4 +127,19 @@ export function deleteCharacterElement(state,target,path){
  if(path==='name')return updateCharacterInline(state,target,path,'Sans nom');
  if(path==='category')return updateCharacterInline(state,target,path,unclassifiedCharacter);
  return updateCharacterInline(state,target,path,'');
+}
+
+export function setCharacterEquipment(state,target,{kind,index,row}){
+ if(!Object.hasOwn(equipmentFields,kind))throw Error('Type de matériel invalide.');
+ const fields=equipmentFields[kind].map(([key])=>key);
+ if(!row||fields.some(key=>typeof row[key]!=='string'||row[key].length>30000)||!row.name.trim())throw Error('Choisissez un modèle ou renseignez son nom.');
+ if(index!==undefined&&(!Number.isInteger(index)||index<0||index>=300))throw Error('Emplacement invalide.');
+ const current=characterForInline(state,target);let nextState=state,entryId=current.entry.id;
+ if(current.unbound){const created=updateCharacterInline(state,target,'category',unclassifiedCharacter);nextState=created.state;entryId=created.entryId;}
+ const entry=structuredClone(nextState.entries.find(e=>e.id===entryId));entry.profile??={};
+ const value=Object.fromEntries(fields.map(key=>[key,row[key]]));
+ if(kind==='weapons')for(const key of ['source','spellId'])if(typeof row[key]==='string')value[key]=row[key];
+ if(kind==='decks')entry.profile.deck=value;
+ else {const key=kind==='weapons'?'weaponRows':'vehicleRows',rows=entry.profile[key]??blankRows(key);let slot=index??rows.findIndex(r=>Object.values(r).every(v=>v===undefined||v===''));if(slot<0)slot=rows.length;while(rows.length<slot)rows.push(Object.fromEntries(rowKeys[key].map(k=>[k,''])));rows[slot]=value;entry.profile[key]=rows;}
+ const updated={...nextState,entries:nextState.entries.map(e=>e.id===entryId?entry:e)};validateCampaign(updated);return {state:updated,entryId};
 }

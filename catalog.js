@@ -1,7 +1,7 @@
-import {getSpellCatalog} from './spells.js?v=0.28.1';
-import {baseSkills,baseAssets} from './catalog-data.js?v=0.28.1';
+import {getSpellCatalog} from './spells.js?v=0.29.0';
+import {baseSkills,baseAssets} from './catalog-data.js?v=0.29.0';
 export {baseSkills,baseAssets};
-export function getCatalogs(state){return {spells:getSpellCatalog(state),skills:[...baseSkills,...(state.customSkills??[])],assets:[...baseAssets,...(state.customAssets??[])]};}
+export function getCatalogs(state){return {spells:getSpellCatalog(state),skills:[...baseSkills,...(state.customSkills??[])],assets:[...baseAssets,...(state.customAssets??[])],equipment:(state.entries??[]).filter(item=>['Arme','Véhicule','Drone','Cyberdeck'].includes(item.category))};}
 export function assetReferenceText(asset){return [asset.description,asset.conditions,asset.price?'Prix : '+asset.price:''].filter(Boolean).join('\n');}
 export function assetReferenceForRow(row){return baseAssets.find(a=>a.id===row.catalogId);}
 export function validateCustomCatalog(items,kind){

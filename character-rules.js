@@ -1,5 +1,5 @@
-import {baseAssets,baseSkills} from './catalog-data.js?v=0.28.1';
-import {describeSkill} from './skill-details.js?v=0.28.1';
+import {baseAssets,baseSkills} from './catalog-data.js?v=0.29.0';
+import {describeSkill} from './skill-details.js?v=0.29.0';
 export const normalizeRule=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’']/g,' ').replace(/[−–-]/g,' ').toLowerCase().replace(/\s+/g,' ').trim();
 const attributes=[['force','Force'],['agilite','Agilité'],['volonte','Volonté'],['logique','Logique'],['charisme','Charisme']];
 export function characterAssetName(asset){const kind=normalizeRule(asset.category||baseAssets.find(a=>a.id===asset.catalogId)?.category),name=asset.name??'';return kind.includes('esprit mentor')&&!normalizeRule(name).includes('esprit mentor')?'Esprit mentor '+name:kind==='esprit'&&!normalizeRule(name).startsWith('esprit ')?'Esprit '+name:name;}
@@ -69,9 +69,20 @@ export function assetEssenceCost(row){
  if(!row||row.target&&row.target!=='character'||/\b(drones?|vehicules?)\b/.test(normalizeRule(row.category)))return 0;
  return typeof row.essence==='number'&&Number.isFinite(row.essence)&&row.essence>0?row.essence:0;
 }
-export function paidEssenceCost(row){return Math.max(assetEssenceCost(row),typeof row?.essenceSpent==='number'&&Number.isFinite(row.essenceSpent)?row.essenceSpent:0);}
+export function paidEssenceCost(row){return assetEssenceCost(row)>0?(typeof row?.essenceSpent==='number'&&Number.isFinite(row.essenceSpent)?row.essenceSpent:assetEssenceCost(row)):0;}
 export function deductEssence(current,loss){
  if(!(loss>0))return current;
  const base=typeof current==='number'&&Number.isFinite(current)?current:6;
  return Math.max(0,Math.round((base-loss)*10000)/10000);
+}
+
+// Recalcul de préparation de fiche : les coûts suivent les atouts présents.
+export function reconcileAssetEssence(profile,previousRows=[]){
+ const paid=previousRows.reduce((sum,row)=>sum+paidEssenceCost(row),0),cost=(profile.assetRows??[]).reduce((sum,row)=>sum+assetEssenceCost(row),0);
+ if(!paid&&!cost)return profile;
+ const budget=typeof profile.essence==='number'&&Number.isFinite(profile.essence)?profile.essence+paid:6;
+ profile.essence=Math.max(0,Math.round((budget-cost)*10000)/10000);
+ let remaining=budget;
+ for(const row of profile.assetRows??[]){const spent=Math.min(assetEssenceCost(row),remaining);row.essenceSpent=Math.round(spent*10000)/10000;remaining=Math.max(0,remaining-spent);}
+ return profile;
 }
