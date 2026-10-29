@@ -1,18 +1,20 @@
-import {mountSpellPicker} from './spells-ui.js?v=0.27.0';
-import {mountInlineEditing} from './inline-edit.js?v=0.27.0';
-import {characterInlineSpec,updateCharacterInline,characterForInline,changeCharacterRows,deleteCharacterElement,worldInlineSpec,updateWorldInline} from './inline-model.js?v=0.27.0';
-import {getCharacterCatalogs,assetReferenceText} from './catalog.js?v=0.27.0';
-import {describeSkill} from './skill-details.js?v=0.27.0';
-import {skillReserves,skillVariants,variantReserve,attributeFields} from './sheet.js?v=0.27.0';
-import {mountCharacterHelp} from './character-help.js?v=0.27.0';
-import {assetRiskRules,riskRuleLabel,characterAssetName,characterRisk} from './character-rules.js?v=0.27.0';
-import {escape} from './ui.js?v=0.27.0';
+import {mountSpellPicker} from './spells-ui.js?v=0.28.0';
+import {mountInlineEditing} from './inline-edit.js?v=0.28.0';
+import {characterInlineSpec,updateCharacterInline,characterForInline,changeCharacterRows,deleteCharacterElement,worldInlineSpec,updateWorldInline} from './inline-model.js?v=0.28.0';
+import {getCharacterCatalogs,assetReferenceText} from './catalog.js?v=0.28.0';
+import {describeSkill} from './skill-details.js?v=0.28.0';
+import {skillReserves,skillVariants,variantReserve,attributeFields} from './sheet.js?v=0.28.0';
+import {mountCharacterHelp} from './character-help.js?v=0.28.0';
+import {assetRiskRules,riskRuleLabel,characterAssetName,characterRisk} from './character-rules.js?v=0.28.0';
+import {escape} from './ui.js?v=0.28.0';
 export function mountCharacterInline(container,{getState,target,onSave,onEntry,onRefresh}){
  let dialog=null;
  const profile=()=>characterForInline(getState(),target).entry.profile??{};
  const variant=(row,key,p)=>skillVariants(row,p).find(v=>v.key===(key==='specialization'?'primary':key));
  const sync=()=>{
   const p=profile();
+  const essence=container.querySelector('.official-sheet [data-inline-key="profile.essence"]');if(essence)essence.textContent=p.essence??'';
+  for(const [i,row] of (p.assetRows??[]).entries()){const cost=container.querySelector('.official-sheet [data-inline-key="profile.assetRows.'+i+'.essence"]');if(cost)cost.textContent=row.essence?'−'+row.essence:'';}
   for(const el of container.querySelectorAll('[data-skill-reserve]')){const row=p.skillRows?.[Number(el.dataset.skillReserve)];if(!row)continue;const v=variant(row,el.dataset.skillVariant,p);el.textContent=el.dataset.skillVariant==='base'?skillReserves(row,p).base:v?variantReserve(row,p,v):'';}
   for(const el of container.querySelectorAll('[data-risk-dot]')){const row=p.skillRows?.[Number(el.dataset.riskSkill)];if(!row)continue;const v=variant(row,el.dataset.riskVariant,p),rr=characterRisk(p,row,v??{}),n=Number(el.dataset.riskDot),conditional=n>rr.permanent&&n<=rr.potential;el.classList.toggle('is-checked',n<=rr.potential);el.classList.toggle('is-conditional',conditional);el.classList.toggle('is-potential',conditional&&n>rr.active);el.setAttribute('aria-pressed',String(n<=rr.active));}
   for(const [i,row] of (p.skillRows??[]).entries()){

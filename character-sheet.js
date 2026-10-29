@@ -1,11 +1,11 @@
-import {characterSkillLines,characterAssetLines} from './character-layout.js?v=0.27.0';
-import {characterAssetName,characterAssetEffects,characterRisk} from './character-rules.js?v=0.27.0';
-import {secretSection} from './secrets-ui.js?v=0.27.0';
-import {isCharacterAsset} from './catalog.js?v=0.27.0';
-import {attributeFields,woundLabels,skillReserve,skillReserves,skillVariants,variantReserve} from './sheet.js?v=0.27.0';
-import {sheetSlots,weaponLine,vehicleTop,sheetBox} from './sheet-layout.js?v=0.27.0';
-import {escape} from './ui.js?v=0.27.0';
-import {inlineField} from './inline-edit.js?v=0.27.0';
+import {characterSkillLines,characterAssetLines} from './character-layout.js?v=0.28.0';
+import {characterAssetName,characterAssetSummary,characterRisk} from './character-rules.js?v=0.28.0';
+import {secretSection} from './secrets-ui.js?v=0.28.0';
+import {isCharacterAsset} from './catalog.js?v=0.28.0';
+import {attributeFields,woundLabels,skillReserve,skillReserves,skillVariants,variantReserve} from './sheet.js?v=0.28.0';
+import {sheetSlots,weaponLine,vehicleTop,sheetBox} from './sheet-layout.js?v=0.28.0';
+import {escape} from './ui.js?v=0.28.0';
+import {inlineField} from './inline-edit.js?v=0.28.0';
 const block=(title,body)=>`<section class="sheet-extra-block"><h3>${title}</h3>${body}</section>`;
 export function characterSheet(entry,{worldId=null,unbound=false,portraitUrl=''}={}){
  const p=entry.profile??{},f=(path,value,label,extra={})=>inlineField('character',path,value,label,{empty:'',...extra});
@@ -72,21 +72,21 @@ export function characterSheet(entry,{worldId=null,unbound=false,portraitUrl=''}
  }
  for(const line of assetLayout.lines){
   const r=line.row,path='profile.assetRows.'+line.index;
-  verso.push(field(255.1,line.y,238,8.5,path+'.name',r.name,'Nom de l’atout '+(line.index+1),'official-asset-name',{display:characterAssetName(r)}));
-  verso.push(field(498,line.y,36,8.5,path+'.essence',r.essence,'Coût en essence de '+r.name,'official-centered',{display:r.essence?'−'+r.essence:''}));
-  verso.push(field(543,line.y,30,8.5,path+'.level',r.level,'Niveau de '+r.name,'official-centered'));
-  verso.push(field(258,line.y+9,315,line.height-9,path+'.notes',r.notes,'Effets de '+r.name,'official-asset-effects',{display:line.display}));
+  verso.push(field(255.1,line.y,238,16.3,path+'.name',r.name,'Nom de l’atout '+(line.index+1),'official-asset-name',{display:characterAssetName(r)}));
+  verso.push(field(498,line.y,36,16.3,path+'.essence',r.essence,'Coût en essence de '+r.name,'official-centered',{display:r.essence?'−'+r.essence:''}));
+  verso.push(field(543,line.y,30,16.3,path+'.level',r.level,'Niveau de '+r.name,'official-centered'));
+  if(line.effectLines.length)verso.push(field(258,line.y+17.008,315,line.height-17.008,path+'.notes',r.notes,'Effets de '+r.name,'official-asset-effects',{display:line.display}));
  }
  if(!assetLayout.lines.length)verso.push(cell(255.1,39.1,238,16.4,placeholder('assets')));
  verso.push(field(253,671,325,79,'profile.equipment',p.equipment,'Équipement','official-note'));
- const page=(face,body)=>`<article class="sheet-page official-sheet official-sheet-${face}" data-sheet-face="${face}" aria-label="Fiche de personnage ${face}"><img class="official-paper" src="./assets/sheets/anarchy-v2-${face}.webp?v=0.27.0" width="2404" height="3119" alt="" aria-hidden="true" draggable="false"><h3 class="sheet-sr-only">Fiche Anarchy V2 · ${face}</h3>${body.join('')}${face==='recto'?'<div class="sheet-sr-only">Niveau de risque : RR 0 : 1, 2, 4, 6+ dés ; RR 1 : 3, 5, 7, 10+ dés ; RR 2 : 5, 8, 11, 13+ dés ; RR 3 : 8, 12, 15 dés, extrême non applicable.</div>':''}</article>`;
+ const page=(face,body)=>`<article class="sheet-page official-sheet official-sheet-${face}" data-sheet-face="${face}" aria-label="Fiche de personnage ${face}"><img class="official-paper" src="./assets/sheets/anarchy-v2-${face}.webp?v=0.28.0" width="2404" height="3119" alt="" aria-hidden="true" draggable="false"><h3 class="sheet-sr-only">Fiche Anarchy V2 · ${face}</h3>${body.join('')}${face==='recto'?'<div class="sheet-sr-only">Niveau de risque : RR 0 : 1, 2, 4, 6+ dés ; RR 1 : 3, 5, 7, 10+ dés ; RR 2 : 5, 8, 11, 13+ dés ; RR 3 : 8, 12, 15 dés, extrême non applicable.</div>':''}</article>`;
  const detailField=(path,value,label,extra={})=>f(path,value,label,{empty:'À définir',...extra});
  const details=(label,body,print=false)=>`<details data-sheet-detail="${escape(label)}" class="sheet-detail ${print?'sheet-print-appendix':''}"><summary>${label}</summary>${body}</details>`;
  const skillDetails=skills.map((r,i)=>{
   const path='profile.skillRows.'+i;
   return `<article class="sheet-row-detail"><h4>${detailField(path+'.catalogId',r.catalogId,'Compétence '+(i+1),{display:r.name})}</h4><dl><div><dt>Indice</dt><dd>${detailField(path+'.rating',r.rating,'Indice de '+r.name,{display:skillReserves(r,p).baseRating})}</dd></div><div><dt>Attribut</dt><dd>${detailField(path+'.attribute',r.attribute,'Attribut de '+r.name,{display:attributeFields.find(([k])=>k===r.attribute)?.[1]})}</dd></div><div><dt>RR</dt><dd>${detailField(path+'.rr',r.rr,'RR de '+r.name)}</dd></div></dl>${skillVariants(r,p).map(v=>`<div class="sheet-specialization-detail">${v.derived?escape(v.name)+' (RR d’un atout)':detailField(variantPath(i,v,'name'),v.name,'Spécialisation '+v.name)} · ${v.specialized?'+2 dés':'Sans bonus de spécialisation'} · RD ${variantReserve(r,p,v)} · RR ${characterRisk(p,r,v).active}${v.derived?'':` · Bonus +2 : ${detailField(variantPath(i,v,'specialized'),v.specialized,'Spécialisation possédée '+v.name,{display:v.specialized?'Oui':'Non'})}`}</div>`).join('')}<button type="button" data-sheet-add-specialization="${i}">+ Spécialisation</button></article>`;
  }).join('');
- const assetDetails=assets.map((r,i)=>{const path='profile.assetRows.'+i;return `<article class="sheet-row-detail"><span class="tag">${isCharacterAsset(r)?'Atout du personnage':'Ancienne association de véhicule / drone'}</span><h4>${detailField(path+'.name',r.name,'Nom de l’atout '+(i+1))}</h4><p>Famille : ${detailField(path+'.category',r.category,'Famille de '+r.name)} · Essence : ${detailField(path+'.essence',r.essence,'Coût en essence de '+r.name)} · Niveau : ${detailField(path+'.level',r.level,'Niveau de '+r.name)}</p><div>${detailField(path+'.notes',r.notes,'Effets et notes de '+r.name,{display:characterAssetEffects(r)||'Effets à définir'})}</div><small>${detailField(path+'.source',r.source,'Source de '+r.name)}</small></article>`;}).join('');
+ const assetDetails=assets.map((r,i)=>{const path='profile.assetRows.'+i;return `<article class="sheet-row-detail"><span class="tag">${isCharacterAsset(r)?'Atout du personnage':'Ancienne association de véhicule / drone'}</span><h4>${detailField(path+'.name',r.name,'Nom de l’atout '+(i+1))}</h4><p>Famille : ${detailField(path+'.category',r.category,'Famille de '+r.name)} · Essence : ${detailField(path+'.essence',r.essence,'Coût en essence de '+r.name)} · Niveau : ${detailField(path+'.level',r.level,'Niveau de '+r.name)}</p><div>${detailField(path+'.notes',r.notes,'Effets et notes de '+r.name,{display:characterAssetSummary(r)||'Effets à définir'})}</div><small>${detailField(path+'.source',r.source,'Source de '+r.name)}</small></article>`;}).join('');
  const weaponDetails=weapons.map((r,i)=>`<article class="sheet-weapon-detail"><div class="sheet-extra-line">${detailField('profile.weaponRows.'+i+'.name',r.name,'Arme ou sort '+(i+1))}${detailField('profile.weaponRows.'+i+'.type',r.type,'Type de l’arme ou du sort '+(i+1))}</div>${r.spellId||r.notes||r.source?`<div class="sheet-spell-notes">${detailField('profile.weaponRows.'+i+'.notes',r.notes,'Caractéristiques et notes de '+r.name)}<small>${detailField('profile.weaponRows.'+i+'.source',r.source,'Source de '+r.name)}</small></div>`:''}</article>`).join('');
  const vehicleDetails=vehicles.map((r,i)=>`<article class="sheet-row-detail"><h4>Véhicule / drone ${i+1}</h4>${Object.keys(r).filter(k=>['name','type','auto','structure','handling','speed','armor','light','serious','incap','notes'].includes(k)).map(k=>`<p>${escape({name:'Nom',type:'Type',auto:'Autopilote',structure:'Structure',handling:'Maniabilité',speed:'Vitesse',armor:'Blindage',light:'Seuil léger',serious:'Seuil grave',incap:'Seuil incapacitant',notes:'Notes'}[k])} : ${detailField('profile.vehicleRows.'+i+'.'+k,r[k],'Véhicule '+(i+1)+' · '+k)}</p>`).join('')}</article>`).join('');
  const woundDetails=wounds.map((r,i)=>`<article class="sheet-row-detail"><h4>${escape(r.label||woundLabels[i]||'Protection')}</h4>${['label','light','serious','incap','rr','status'].map(k=>`<p>${escape({label:'Nom',light:'Légère',serious:'Grave',incap:'Incapacité',rr:'RR',status:'État'}[k])} : ${detailField('profile.woundRows.'+i+'.'+k,r[k],(r.label||'Protection')+' · '+k)}</p>`).join('')}</article>`).join('');

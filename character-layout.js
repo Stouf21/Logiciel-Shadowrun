@@ -1,6 +1,6 @@
-import {skillVariants} from './sheet.js?v=0.27.0';
-import {isCharacterAsset} from './catalog.js?v=0.27.0';
-import {characterAssetEffects} from './character-rules.js?v=0.27.0';
+import {skillVariants} from './sheet.js?v=0.28.0';
+import {isCharacterAsset} from './catalog.js?v=0.28.0';
+import {characterAssetSummary} from './character-rules.js?v=0.28.0';
 export function characterSkillLines(profile){
  const lines=[];let count=0;
  for(const [index,row] of (profile.skillRows??[]).entries()){
@@ -9,14 +9,30 @@ export function characterSkillLines(profile){
  }
  return {lines,overflow:count>38};
 }
-export function characterAssetLines(profile){
+export const assetRowStep=17.008;
+let effectContext;
+export function wrapAssetEffects(text,measure){
+ if(!measure&&typeof document!=='undefined'){effectContext??=document.createElement('canvas').getContext('2d');if(effectContext){effectContext.font='400 6.00945px Arial';measure=value=>effectContext.measureText(value).width;}}
+ measure??=value=>[...value].reduce((n,c)=>n+(/\s/.test(c)?1.7:/[WM@]/.test(c)?5:3.1),0);
+ const lines=[];
+ for(const paragraph of text.split('\n').filter(line=>line.trim())){
+  let line='';for(const word of paragraph.trim().split(/\s+/)){
+   if(measure((line?line+' ':'')+word)<=313){line+=(line?' ':'')+word;continue;}
+   if(line){lines.push(line);line='';}
+   for(const c of word){if(line&&measure(line+c)>313){lines.push(line);line='';}line+=c;}
+  }if(line)lines.push(line);
+ }
+ return lines;
+}
+export function characterAssetLines(profile,{measure}={}){
  const lines=[];let slot=0,overflow=false;
  for(const [index,row] of (profile.assetRows??[]).entries()){
   if(!isCharacterAsset(row))continue;
-  const effects=characterAssetEffects(row),needed=effects?Math.max(1,Math.ceil((10+effects.split('\n').reduce((n,line)=>n+Math.max(1,Math.ceil(line.length/82)),0)*7.5)/17.008)):1;
+  const effects=characterAssetSummary(row),wrapped=wrapAssetEffects(effects,measure),needed=1+wrapped.length;
   if(slot>=35){overflow=true;continue;}
-  const slots=Math.min(needed,35-slot),limit=Math.max(50,Math.floor((slots*17.008-10)/7.5)*82),display=effects.length>limit?effects.slice(0,Math.max(0,limit-40))+'… (suite dans les compléments)':effects;
-  lines.push({index,row,y:39.1+slot*17.008,height:slots*17.008,effects,display});slot+=slots;if(slots<needed||display!==effects)overflow=true;
+  const slots=Math.min(needed,35-slot),shown=wrapped.slice(0,slots-1);
+  if(slots<needed){overflow=true;if(shown.length)shown[shown.length-1]='… suite dans les compléments';}
+  lines.push({index,row,y:39.1+slot*assetRowStep,height:slots*assetRowStep,effects,display:shown.join('\n'),effectLines:shown});slot+=slots;
  }
  return {lines,overflow};
 }

@@ -1,10 +1,10 @@
-import {migrateScenarioNpcs} from './scenario-npcs.js?v=0.27.0';
-import {characterCategories,unclassifiedCharacter} from './character-options.js?v=0.27.0';
-import {chapterSearchText,chapterHasCharacter} from './chapter-schema.js?v=0.27.0';
-import {seedRecords,seedRelations,seedSettings} from './world-data.js?v=0.27.0';
-import {makeWorldRecord,worldFields,UNKNOWN,validateWorld} from './world-schema.js?v=0.27.0';
-import {getCorporations} from './corporations.js?v=0.27.0';
-import {buildingSearchText} from './building-schema.js?v=0.27.0';
+import {migrateScenarioNpcs} from './scenario-npcs.js?v=0.28.0';
+import {characterCategories,unclassifiedCharacter} from './character-options.js?v=0.28.0';
+import {chapterSearchText,chapterHasCharacter} from './chapter-schema.js?v=0.28.0';
+import {seedRecords,seedRelations,seedSettings} from './world-data.js?v=0.28.0';
+import {makeWorldRecord,worldFields,UNKNOWN,validateWorld} from './world-schema.js?v=0.28.0';
+import {getCorporations} from './corporations.js?v=0.28.0';
+import {buildingSearchText} from './building-schema.js?v=0.28.0';
 export const normalize=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('fr').trim().replace(/[’‘]/g,"'");
 export const isCorporationRecord=r=>r.kind==='corporation'||r.kind==='faction'&&(!!r.corporationId||/\b(corporation|corporatiste|filiale corporatiste)\b/.test(normalize(r.fields?.type)));
 const cloneRecord=r=>({...r,aliases:[...r.aliases],fields:{...r.fields},kind:isCorporationRecord(r)?'corporation':r.kind});

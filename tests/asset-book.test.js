@@ -32,7 +32,7 @@ test('Cyberdecks, engins, programmes et atouts sans niveau sont distingués sans
 test('Les fiches anciennes sans notes affichent la référence vérifiée sans modifier les notes personnelles',()=>{
  const asset=byId(16),row={catalogId:asset.id,name:asset.name,category:asset.category,level:asset.level,essence:0,source:asset.source,notes:''};
  const entry={id:'runner',name:'Runner',category:'PJ',description:'',notes:'',profile:{assetRows:[row]}};
- const before=structuredClone(entry);assert.match(characterSheet(entry),/VD 5/);assert.match(characterSheet(entry),/12 500 ¥/);assert.deepEqual(entry,before);
+ const before=structuredClone(entry);assert.match(characterSheet(entry),/VD 5/);assert.doesNotMatch(characterSheet(entry).split('data-sheet-face="verso"')[1].split('</article>')[0],/12 500 ¥|Prix :/);assert.deepEqual(entry,before);
  assert.equal(assetReferenceForRow(row),asset);assert.match(assetReferenceText(asset),/smartgun/);
  row.notes='Mes améliorations conservées';assert.match(characterSheet(entry),/Mes améliorations conservées/);assert.equal(row.notes,'Mes améliorations conservées');
  assert.equal(assetReferenceForRow({...row,catalogId:'custom-inconnu'}),undefined);

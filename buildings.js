@@ -1,7 +1,7 @@
-import {emptyBuilding,validateBuilding} from './building-schema.js?v=0.27.0';
-import {validateWorld,UNKNOWN} from './world-schema.js?v=0.27.0';
-import {getMapShapes} from './map-shapes.js?v=0.27.0';
-import {copyMapState,validateMapState} from './map-model.js?v=0.27.0';
+import {emptyBuilding,validateBuilding} from './building-schema.js?v=0.28.0';
+import {validateWorld,UNKNOWN} from './world-schema.js?v=0.28.0';
+import {getMapShapes} from './map-shapes.js?v=0.28.0';
+import {copyMapState,validateMapState} from './map-model.js?v=0.28.0';
 const recordFor=(state,id)=>{const r=state.world.records.find(r=>r.id===id&&['zone','place'].includes(r.kind));if(!r)throw Error('Bâtiment introuvable.');return r;};
 const save=(state,record)=>{const next={...state,world:{...state.world,records:state.world.records.map(r=>r.id===record.id?record:r)}};validateWorld(next.world);return next;};
 export function saveBuilding(state,id,{building,name,description,security,gmNotes,isSecret}){

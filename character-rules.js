@@ -1,5 +1,5 @@
-import {baseAssets,baseSkills} from './catalog-data.js?v=0.27.0';
-import {describeSkill} from './skill-details.js?v=0.27.0';
+import {baseAssets,baseSkills} from './catalog-data.js?v=0.28.0';
+import {describeSkill} from './skill-details.js?v=0.28.0';
 export const normalizeRule=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’']/g,' ').replace(/[−–-]/g,' ').toLowerCase().replace(/\s+/g,' ').trim();
 const attributes=[['force','Force'],['agilite','Agilité'],['volonte','Volonté'],['logique','Logique'],['charisme','Charisme']];
 export function characterAssetName(asset){const kind=normalizeRule(asset.category||baseAssets.find(a=>a.id===asset.catalogId)?.category),name=asset.name??'';return kind.includes('esprit mentor')&&!normalizeRule(name).includes('esprit mentor')?'Esprit mentor '+name:kind==='esprit'&&!normalizeRule(name).startsWith('esprit ')?'Esprit '+name:name;}
@@ -51,3 +51,27 @@ export function characterRisk(profile,skill,{name='',attribute=skill.attribute,r
  return {manual,permanent:Math.min(3,Math.max(manual,permanent)),active:Math.min(3,Math.max(manual,active)),potential:Math.min(3,Math.max(manual,potential)),sources};
 }
 export function riskSpecializations(profile,skill){const names=[];for(const a of profile.assetRows??[])for(const rule of assetRiskRules(a).selected){if(rule.specialization&&matches({...rule,specialization:undefined},skill,'',skill.attribute)&&!names.some(n=>normalizeRule(n)===normalizeRule(rule.specialization)))names.push(rule.specialization);}return names;}
+
+export function characterAssetSummary(row){
+ if(row.effectsHidden)return '';
+ const ref=baseAssets.find(a=>a.id===row.catalogId),risk=assetRiskRules(row);
+ let text=row.notes?.trim()||ref?.description||'';
+ if(ref?.conditions)text=text.replace(ref.conditions,'');
+ text=text.replace(/^\s*(?:Prix|Source|Référence)\s*:[^\n]*$/gim,'').replace(/Mentors? proches?\s*:[^.\n]*(?:\.|$)/gi,'').replace(/\bChoisir\s+\d+\s+domaines[^:]*:\s*/gi,'');
+ if(risk.choiceCount||risk.manualChoice){
+  const selected=risk.selected.map(rule=>{const name=rule.skill?baseSkills.find(s=>s.id===rule.skill)?.name:attributes.find(([key])=>key===rule.attribute)?.[1];return 'RR '+rule.rr+' aux tests '+(/^[aeiouyéèêàâîô]/i.test(name)?'d’':'de ')+name+(rule.specialization?' ('+rule.specialization+')':'')+'.';}).join('\n');
+  let inserted=false;
+  text=text.replace(/\bRR\s*[1-3]\s+(?:aux?\s+tests?|pour les tests?)\s*[^.;\n]+[.;]?/gi,()=>{if(inserted)return '';inserted=true;return selected?selected+'\n':'';});
+ }
+ return text.split('\n').map(line=>line.trim()).filter(line=>line&&!/^(?:Personnage Éveillé|Réservé aux personnages|Niveau de base|Ajouter le coût|Choix à la création)/i.test(line)).join('\n').replace(/^[\s;]+|[\s;]+$/g,'').replace(/;\s*;/g,';');
+}
+export function assetEssenceCost(row){
+ if(!row||row.target&&row.target!=='character'||/\b(drones?|vehicules?)\b/.test(normalizeRule(row.category)))return 0;
+ return typeof row.essence==='number'&&Number.isFinite(row.essence)&&row.essence>0?row.essence:0;
+}
+export function paidEssenceCost(row){return Math.max(assetEssenceCost(row),typeof row?.essenceSpent==='number'&&Number.isFinite(row.essenceSpent)?row.essenceSpent:0);}
+export function deductEssence(current,loss){
+ if(!(loss>0))return current;
+ const base=typeof current==='number'&&Number.isFinite(current)?current:6;
+ return Math.max(0,Math.round((base-loss)*10000)/10000);
+}

@@ -1,5 +1,5 @@
-import {riskSpecializations} from './character-rules.js?v=0.27.0';
-import {validateNpcProfile} from './npc-preferences.js?v=0.27.0';
+import {riskSpecializations} from './character-rules.js?v=0.28.0';
+import {validateNpcProfile} from './npc-preferences.js?v=0.28.0';
 export const attributeFields=[['force','Force'],['agilite','Agilité'],['volonte','Volonté'],['logique','Logique'],['charisme','Charisme']];
 export const numberFields=[...attributeFields,['anarchy','Anarchy actuel'],['essence','Essence'],['nuyens','Nuyens'],['magicCancelled','Succès annulés (magie)'],['healingCancelled','Succès annulés (soins)']];
 export const textFields=[['keywords','Mots-clés'],['behaviors','Comportements'],['quotes','Répliques'],['skills','Compétences : indice, attribut, RD et RR'],['knowledge','Connaissances'],['weapons','Armes et sorts : type et caractéristiques'],['wounds','Blessures : seuils légère / grave / incapacité, état et RR'],['assets','Atouts : essence et niveau'],['equipment','Équipement'],['cyberdeck','Cyberdeck : attaque, firewall, dommages et seuils'],['vehicles','Véhicules / drones : autopilote, structure, maniabilité, vitesse, blindage'],['essenceEffects','Essence : succès annulés en magie / soins et désavantage social']];
@@ -61,6 +61,7 @@ function validateRows(profile){
  }
  for(const r of profile.skillRows??[]){if(r.mean!==undefined&&(!profile.npc||!Number.isInteger(r.mean)||r.mean<0||r.mean>30))throw Error('Succès moyens de PNJ invalides.');if(r.includesSpecialization!==undefined&&(!profile.npc||typeof r.includesSpecialization!=='boolean'))throw Error('Spécialisation de PNJ invalide.');}
  for(const r of profile.assetRows??[]){
+  if(r.essenceSpent!==undefined&&(typeof r.essenceSpent!=='number'||!Number.isFinite(r.essenceSpent)||r.essenceSpent<0))throw Error('Coût d’Essence déjà déduit invalide.');
   if(r.effectsHidden!==undefined&&typeof r.effectsHidden!=='boolean')throw Error('Affichage d’effet invalide.');
   if(r.rrActive!==undefined&&typeof r.rrActive!=='boolean')throw Error('Activation de RR invalide.');
   if(r.rrChoices!==undefined&&(!Array.isArray(r.rrChoices)||r.rrChoices.length>200||r.rrChoices.some(k=>typeof k!=='string'||k.length>200)||new Set(r.rrChoices).size!==r.rrChoices.length))throw Error('Choix de RR invalides.');

@@ -34,3 +34,5 @@
 .editor-extra-specialization{display:flex;flex-wrap:wrap;align-items:end;gap:8px;margin:10px 0;padding:10px;border-left:3px solid var(--accent);background:#fff8d5}.editor-extra-specialization label{min-width:100px;flex:1}.editor-extra-specialization .check-label{flex-basis:100%}.editor-asset-risk{margin:12px 0}.editor-asset-risk .check-label{font-size:14px}
 
 .official-rr.is-checked:not(.is-conditional){background:radial-gradient(ellipse at center,#873824 0 52%,transparent 56%)}
+
+.official-asset-effects>.inline-field{line-height:2.830209cqi;white-space:pre;overflow-wrap:normal;align-items:flex-start;justify-content:flex-start}.official-asset-name>.inline-field{white-space:nowrap}
