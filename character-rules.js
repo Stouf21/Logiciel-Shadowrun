@@ -1,5 +1,5 @@
-import {baseAssets,baseSkills} from './catalog-data.js?v=0.29.0';
-import {describeSkill} from './skill-details.js?v=0.29.0';
+import {baseAssets,baseSkills} from './catalog-data.js?v=0.30.0';
+import {describeSkill} from './skill-details.js?v=0.30.0';
 export const normalizeRule=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’']/g,' ').replace(/[−–-]/g,' ').toLowerCase().replace(/\s+/g,' ').trim();
 const attributes=[['force','Force'],['agilite','Agilité'],['volonte','Volonté'],['logique','Logique'],['charisme','Charisme']];
 export function characterAssetName(asset){const kind=normalizeRule(asset.category||baseAssets.find(a=>a.id===asset.catalogId)?.category),name=asset.name??'';return kind.includes('esprit mentor')&&!normalizeRule(name).includes('esprit mentor')?'Esprit mentor '+name:kind==='esprit'&&!normalizeRule(name).startsWith('esprit ')?'Esprit '+name:name;}

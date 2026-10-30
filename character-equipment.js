@@ -1,7 +1,7 @@
-import {normalizeRule} from './character-rules.js?v=0.29.0';
-import {assetReferenceText} from './catalog.js?v=0.29.0';
-import {spellRow} from './spells.js?v=0.29.0';
-import {escape} from './ui.js?v=0.29.0';
+import {normalizeRule} from './character-rules.js?v=0.30.0';
+import {assetReferenceText} from './catalog.js?v=0.30.0';
+import {spellRow} from './spells.js?v=0.30.0';
+import {escape} from './ui.js?v=0.30.0';
 export const equipmentFields={
  decks:[['name','Nom du cyberdeck'],['attack','Attaque'],['firewall','Firewall'],['light','Seuil léger'],['serious','Seuil grave'],['incap','Seuil incapacitant'],['minRisk','Dés de risque minimum (Piratage)'],['penalty','Augmentation du seuil (Piratage)'],['notes','Notes']],
  vehicles:[['name','Nom du véhicule / drone'],['type','Type'],['auto','Autopilote'],['structure','Structure'],['handling','Maniabilité'],['speed','Vitesse'],['armor','Blindage'],['light','Seuil léger'],['serious','Seuil grave'],['incap','Seuil incapacitant'],['notes','Notes']],

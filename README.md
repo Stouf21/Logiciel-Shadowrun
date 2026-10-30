@@ -1,6 +1,6 @@
 # Shadowrun Anarchy · Campagne
 
-Application indépendante en français pour préparer et mener une campagne d’Anarchy V2. Version 0.29.0, en JavaScript natif avec Leaflet 1.9.4 hébergé localement pour la cartographie.
+Application indépendante en français pour préparer et mener une campagne d’Anarchy V2. Version 0.30.0, en JavaScript natif avec Leaflet 1.9.4 hébergé localement pour la cartographie.
 
 ## Démarrer
 
@@ -224,3 +224,8 @@ Parcours Chromium V0.28.1 : choix des atouts regroupés par famille avec titres,
 
 
 Parcours Chromium V0.29 : ajout par les lignes vides des compétences, atouts, armes et sorts, y compris après des éléments existants. Suppression d’atout et variation des coûts : Essence ajustée, coûts fractionnaires, annulation de l’éditeur complet, enregistrement / rechargement et reprise après quota sans double restitution. Choix de cyberdecks et véhicules / drones sur les titres du verso et dans l’éditeur complet : catalogue et créations personnelles, champs et notes préremplis, seuils calculés, emplacement ciblé préservé, annulation et valeurs modifiables. Vérification mobile et impression recto-verso. Le retrait d’un atout est désormais traité comme une correction de préparation et annule son coût d’Essence.
+
+
+AnArchive V0.30 : le recueil fourni (47 pages, 2021) est comparé dans [le rapport d’audit](docs/ANARCHIVE_AUDIT.md). 636 références sont classées : 530 supplémentaires, 98 déjà couvertes en V2, 8 correspondances partielles. Un onglet AnArchive dans Compétences & atouts propose une recherche, des filtres de famille / comparaison et un affichage progressif. La recherche globale retrouve les références supplémentaires et les alias V2 sans ajouter les équivalences une deuxième fois aux résultats Tout. Les créations personnelles reconnues sont déduites des nouveautés. Les données d’ancienne édition restent des repères de lecture à adapter ; elles n’entrent pas automatiquement dans les statistiques, les listes de personnages ou les choix du matériel.
+
+Validation V0.30 : 181 tests de modèles passent. Parcours Chromium : filtres / pagination AnArchive, recherche des alias, équivalences V2 et correspondances partielles, résultats Tout sans réajout des équivalences, 205 atouts / 34 sorts actifs, fiche et Essence conservées, export identique, rechargement, affichage mobile et absence d’erreurs JavaScript / fichiers locaux manquants.

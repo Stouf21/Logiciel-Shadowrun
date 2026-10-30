@@ -1,6 +1,6 @@
-import {skillVariants} from './sheet.js?v=0.29.0';
-import {isCharacterAsset} from './catalog.js?v=0.29.0';
-import {characterAssetSummary} from './character-rules.js?v=0.29.0';
+import {skillVariants} from './sheet.js?v=0.30.0';
+import {isCharacterAsset} from './catalog.js?v=0.30.0';
+import {characterAssetSummary} from './character-rules.js?v=0.30.0';
 export function characterSkillLines(profile){
  const lines=[];let count=0;
  for(const [index,row] of (profile.skillRows??[]).entries()){

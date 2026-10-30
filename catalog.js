@@ -1,5 +1,6 @@
-import {getSpellCatalog} from './spells.js?v=0.29.0';
-import {baseSkills,baseAssets} from './catalog-data.js?v=0.29.0';
+import {anarchiveAliasesFor} from './anarchive.js?v=0.30.0';
+import {getSpellCatalog} from './spells.js?v=0.30.0';
+import {baseSkills,baseAssets} from './catalog-data.js?v=0.30.0';
 export {baseSkills,baseAssets};
 export function getCatalogs(state){return {spells:getSpellCatalog(state),skills:[...baseSkills,...(state.customSkills??[])],assets:[...baseAssets,...(state.customAssets??[])],equipment:(state.entries??[]).filter(item=>['Arme','Véhicule','Drone','Cyberdeck'].includes(item.category))};}
 export function assetReferenceText(asset){return [asset.description,asset.conditions,asset.price?'Prix : '+asset.price:''].filter(Boolean).join('\n');}
@@ -40,7 +41,7 @@ export function groupCharacterAssets(items,{query='',family='',nameFor=item=>ite
  const words=choiceText(query).split(' ').filter(Boolean),groups=new Map();
  for(const item of items){
   if(!isCharacterAsset(item))continue;const [id,label]=choiceFamily(item);if(family&&id!==family)continue;
-  const text=choiceText([nameFor(item),item.name,item.category,label,item.id.startsWith('custom-')?'création personnelle':''].join(' '));if(!words.every(word=>text.includes(word)))continue;
+  const text=choiceText([nameFor(item),item.name,item.category,label,...anarchiveAliasesFor(item.id),item.id.startsWith('custom-')?'création personnelle':''].join(' '));if(!words.every(word=>text.includes(word)))continue;
   if(!groups.has(id))groups.set(id,{id,label,items:[]});groups.get(id).items.push(item);
  }
  const rank=id=>{const index=assetFamilies.findIndex(([key])=>key===id);return index<0?assetFamilies.length:index;};

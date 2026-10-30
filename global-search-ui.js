@@ -1,11 +1,12 @@
-import {spellCard} from './spells-ui.js?v=0.29.0';
-import {bookArtworkCard} from './book-art-ui.js?v=0.29.0';
-import {resourceArtwork} from './resource-art.js?v=0.29.0';
-import {globalSearch,searchTabs} from './global-search.js?v=0.29.0';
-import {escape,searchDisclosure} from './ui.js?v=0.29.0';
-import {worldCard,renderWorldList} from './world-ui.js?v=0.29.0';
-import {corporationCard} from './corporations-ui.js?v=0.29.0';
-import {ruleSource} from './rules-data.js?v=0.29.0';
+import {anarchiveCard} from './anarchive-ui.js?v=0.30.0';
+import {spellCard} from './spells-ui.js?v=0.30.0';
+import {bookArtworkCard} from './book-art-ui.js?v=0.30.0';
+import {resourceArtwork} from './resource-art.js?v=0.30.0';
+import {globalSearch,searchTabs} from './global-search.js?v=0.30.0';
+import {escape,searchDisclosure} from './ui.js?v=0.30.0';
+import {worldCard,renderWorldList} from './world-ui.js?v=0.30.0';
+import {corporationCard} from './corporations-ui.js?v=0.30.0';
+import {ruleSource} from './rules-data.js?v=0.30.0';
 export function renderGlobalSearch(container,state,prefs,{entryCard,onResultsChanged,onQuery,getState}={}){
  if(!searchTabs.some(([id])=>id===prefs.tab))prefs.tab='all';prefs.query??='';prefs.includeSecrets??=false;
  const $=selector=>container.querySelector(selector);let worldPanel=false;
@@ -13,6 +14,7 @@ export function renderGlobalSearch(container,state,prefs,{entryCard,onResultsCha
  container.querySelector('[data-toggle-search="global-resources-search"]').addEventListener('click',()=>{prefs.expanded=$('#global-resources-search').hidden;});
  function referenceCard(row){const x=row.item,d=row.detail;return `<article class="card ${row.type==='skills'?'skill-card':'asset-card'}">${row.type==='assets'?resourceArtwork(x,state.resourceImages,'asset',state.resourceArtRefs):''}<span class="tag">${row.type==='skills'?'Compétence':'Atout'} · ${escape(x.category)}${x.id.startsWith('custom-')?' · Personnel':''}</span><h3>${escape(x.name)}</h3>${row.type==='skills'?`<p>${escape(d.summary)}</p><p class="skill-attribute">${escape(d.attributes)}</p><details><summary>Spécialisations · ${d.specializations.length}</summary>${d.specializations.map(s=>`<details><summary>${escape(s.name)}</summary><p>${escape(s.description)}</p><small>${escape(s.attribute)}</small></details>`).join('')||'<p>Aucune spécialisation renseignée.</p>'}</details>`:`<dl class="asset-book-stats"><div><dt>Niveau</dt><dd>${x.level===''?'Non chiffré':escape(x.levelLabel??x.level)}</dd></div><div><dt>Essence</dt><dd>${x.essence?'−'+escape(x.essence):'—'}</dd></div>${x.price?`<div><dt>Prix</dt><dd>${escape(x.price)}</dd></div>`:''}</dl><p>${escape(x.description)}</p>${x.conditions?`<p>${escape(x.conditions)}</p>`:''}`}<small>${escape(x.source)}</small></article>`;}
  function card(row){
+  if(row.type==='anarchive')return anarchiveCard(row.item);
   if(row.type==='world')return worldCard(row.hit);
   if(row.protected)return '<article class="card protected-result"><span class="tag">Réservé au MJ</span><h3>Correspondance dans une information MJ</h3><p>Révélez les informations du meneur pour consulter cette correspondance.</p><button data-search-reveal>Révéler les informations MJ</button></article>';
   if(row.type==='entry')return entryCard(row.item);

@@ -1,15 +1,16 @@
-import {spellMatches} from './spells.js?v=0.29.0';
-import {bookArtworks} from './book-art-data.js?v=0.29.0';
-import {bookArtworkMatches} from './book-art.js?v=0.29.0';
-import {getCatalogs} from './catalog.js?v=0.29.0';
-import {getCorporations} from './corporations.js?v=0.29.0';
-import {groups} from './campaign.js?v=0.29.0';
-import {normalize,worldSearch} from './world.js?v=0.29.0';
-import {profileSearchText} from './sheet.js?v=0.29.0';
-import {describeSkill} from './skill-details.js?v=0.29.0';
-import {rules,ruleMatches} from './rules-data.js?v=0.29.0';
-import {references} from './references.js?v=0.29.0';
-export const searchTabs=[['all','Tout'],['skills','Compétences'],['assets','Atouts'],['spells','Sorts'],['weapons','Armes'],['vehicles','Véhicules'],['drones','Drones'],['spirits','Esprits'],['drugs','Drogues'],['armor','Armures'],['equipment','Équipement'],['cyberware','Cyberware'],['bioware','Bioware'],['programs','Programmes'],['decks','Cyberdecks'],['focus','Focus'],['adept','Pouvoirs d’adepte'],['contacts','Contacts'],['traits','Traits'],['world','Dossiers de campagne'],['rules','Règles'],['sources','Sources']];
+import {getAnarchiveCatalog,anarchiveMatches,anarchiveAliasesFor} from './anarchive.js?v=0.30.0';
+import {spellMatches} from './spells.js?v=0.30.0';
+import {bookArtworks} from './book-art-data.js?v=0.30.0';
+import {bookArtworkMatches} from './book-art.js?v=0.30.0';
+import {getCatalogs} from './catalog.js?v=0.30.0';
+import {getCorporations} from './corporations.js?v=0.30.0';
+import {groups} from './campaign.js?v=0.30.0';
+import {normalize,worldSearch} from './world.js?v=0.30.0';
+import {profileSearchText} from './sheet.js?v=0.30.0';
+import {describeSkill} from './skill-details.js?v=0.30.0';
+import {rules,ruleMatches} from './rules-data.js?v=0.30.0';
+import {references} from './references.js?v=0.30.0';
+export const searchTabs=[['all','Tout'],['skills','Compétences'],['assets','Atouts'],['spells','Sorts'],['weapons','Armes'],['vehicles','Véhicules'],['drones','Drones'],['spirits','Esprits'],['drugs','Drogues'],['armor','Armures'],['equipment','Équipement'],['cyberware','Cyberware'],['bioware','Bioware'],['programs','Programmes'],['decks','Cyberdecks'],['focus','Focus'],['adept','Pouvoirs d’adepte'],['contacts','Contacts'],['traits','Traits'],['anarchive','AnArchive'],['world','Dossiers de campagne'],['rules','Règles'],['sources','Sources']];
 export function resourceTabs(item){
  const category=normalize(item.category),name=normalize(item.name),tags=[];
  for(const [id,pattern] of [['spells',/\bsorts?\b/],['weapons',/\barmes?\b/],['vehicles',/\bvehicules?\b/],['drones',/\bdrones?\b/],['spirits',/\besprits?\b/],['drugs',/\bdrogues?\b/],['armor',/\barmures?\b/],['equipment',/\b(equipements?|accessoires?|objets?)\b/],['cyberware',/\bcyberware\b/],['bioware',/\bbioware\b/],['programs',/\bprogrammes?\b/],['decks',/^cyberdecks?$/],['focus',/\bfocus\b/],['adept',/\badepte\b/],['contacts',/\bcontacts?\b/],['traits',/\btraits?\b/]])if(pattern.test(category))tags.push(id);
@@ -31,7 +32,7 @@ export function globalSearch(state,query='',{includeSecrets=false,tab='all'}={})
  }
  for(const kind of ['skills','assets'])for(const item of catalogs[kind]){
   const detail=kind==='skills'?describeSkill(item):null;
-  if(!matches([item.name,item.category,item.description,item.conditions,item.price,item.source,detail?.summary,...(detail?.specializations??[]).map(s=>s.name+' '+s.description)],q))continue;
+  if(!matches([item.name,item.category,item.description,item.conditions,item.price,item.source,...anarchiveAliasesFor(item.id),detail?.summary,...(detail?.specializations??[]).map(s=>s.name+' '+s.description)],q))continue;
   rows.push({key:kind+':'+item.id,type:kind,item,detail,protected:false,tabs:kind==='skills'?['skills']:['assets',...resourceTabs(item)]});
  }
  for(const item of catalogs.spells.filter(s=>s.origin==='book-v2'))if(spellMatches(item,query))rows.push({key:'spell:'+item.id,type:'spell',item,protected:false,tabs:['spells']});
@@ -48,6 +49,7 @@ export function globalSearch(state,query='',{includeSecrets=false,tab='all'}={})
   const sourceOnly=item.assetIds.some(id=>representedAssets.has(id))||item.assetIds.length>0&&representedCaptions.has(captionKey(item));
   rows.push({key:'book-art:'+item.id,type:'book-art',item,protected:false,sourceOnly,tabs:['sources',...(sourceOnly?[]:resourceTabs(item))]});
  }
+ for(const item of getAnarchiveCatalog(catalogs))if(anarchiveMatches(item,query))rows.push({key:'anarchive:'+item.id,type:'anarchive',item,protected:false,sourceOnly:item.coverage==='covered',tabs:['anarchive']});
  const counts=Object.fromEntries(searchTabs.map(([id])=>[id,id==='all'?rows.filter(r=>!r.sourceOnly).length:rows.filter(r=>r.tabs.includes(id)).length]));
  return {rows:rows.filter(r=>tab==='all'?!r.sourceOnly:r.tabs.includes(tab)),counts};
 }

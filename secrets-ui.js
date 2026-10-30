@@ -1,3 +1,3 @@
-import {escape} from './ui.js?v=0.29.0';
+import {escape} from './ui.js?v=0.30.0';
 export function secretSection(title,html){return `<section class="secret-panel"><div class="secret-panel-heading"><h4>${escape(title)}</h4><button type="button" data-reveal-secret aria-expanded="false" aria-label="Révéler : ${escape(title)}">Révéler</button></div><div class="secret-content" hidden>${html}</div></section>`;}
 export function toggleSecret(event){const button=event.target.closest('[data-reveal-secret]');if(!button)return false;const panel=button.closest('.secret-panel'),content=panel.querySelector('.secret-content');content.hidden=!content.hidden;button.textContent=content.hidden?'Révéler':'Masquer';button.setAttribute('aria-expanded',String(!content.hidden));button.setAttribute('aria-label',(content.hidden?'Révéler : ':'Masquer : ')+panel.querySelector('h4').textContent);return true;}

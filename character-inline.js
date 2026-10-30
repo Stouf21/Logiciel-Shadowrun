@@ -1,13 +1,13 @@
-import {equipmentFields,equipmentTitles,mountEquipmentPicker} from './character-equipment.js?v=0.29.0';
-import {mountSpellPicker} from './spells-ui.js?v=0.29.0';
-import {mountInlineEditing} from './inline-edit.js?v=0.29.0';
-import {setCharacterEquipment,characterInlineSpec,updateCharacterInline,characterForInline,changeCharacterRows,deleteCharacterElement,worldInlineSpec,updateWorldInline} from './inline-model.js?v=0.29.0';
-import {getCatalogs,getCharacterCatalogs,assetReferenceText,groupCharacterAssets} from './catalog.js?v=0.29.0';
-import {describeSkill} from './skill-details.js?v=0.29.0';
-import {skillReserves,skillVariants,variantReserve,attributeFields} from './sheet.js?v=0.29.0';
-import {mountCharacterHelp} from './character-help.js?v=0.29.0';
-import {assetRiskRules,riskRuleLabel,characterAssetName,characterRisk} from './character-rules.js?v=0.29.0';
-import {escape} from './ui.js?v=0.29.0';
+import {equipmentFields,equipmentTitles,mountEquipmentPicker} from './character-equipment.js?v=0.30.0';
+import {mountSpellPicker} from './spells-ui.js?v=0.30.0';
+import {mountInlineEditing} from './inline-edit.js?v=0.30.0';
+import {setCharacterEquipment,characterInlineSpec,updateCharacterInline,characterForInline,changeCharacterRows,deleteCharacterElement,worldInlineSpec,updateWorldInline} from './inline-model.js?v=0.30.0';
+import {getCatalogs,getCharacterCatalogs,assetReferenceText,groupCharacterAssets} from './catalog.js?v=0.30.0';
+import {describeSkill} from './skill-details.js?v=0.30.0';
+import {skillReserves,skillVariants,variantReserve,attributeFields} from './sheet.js?v=0.30.0';
+import {mountCharacterHelp} from './character-help.js?v=0.30.0';
+import {assetRiskRules,riskRuleLabel,characterAssetName,characterRisk} from './character-rules.js?v=0.30.0';
+import {escape} from './ui.js?v=0.30.0';
 export function mountCharacterInline(container,{getState,target,onSave,onEntry,onRefresh}){
  let dialog=null;
  const profile=()=>characterForInline(getState(),target).entry.profile??{};

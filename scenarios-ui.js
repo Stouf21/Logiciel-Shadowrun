@@ -1,12 +1,12 @@
-import {openChapterTests} from './chapter-tests-ui.js?v=0.29.0';
-import {scenarioNpcs,scenarioCharacterRecord,deleteScenarioNpc,deleteScenarioNpcs} from './scenario-npcs.js?v=0.29.0';
-import {mountScenarioDrag} from './scenario-drag.js?v=0.29.0';
-import {escape} from './ui.js?v=0.29.0';
-import {inlineField,mountInlineEditing} from './inline-edit.js?v=0.29.0';
-import {scenarioMembers} from './scenarios.js?v=0.29.0';
-import {scenarioChapters,addChapter,editChapter,removeChapter,chapterCharacters,detachChapterCharacter,editChapterVehicle,removeChapterVehicle,moveChapter,placeChapter} from './scenario-chapters.js?v=0.29.0';
-import {chapterVehicleFields} from './chapter-schema.js?v=0.29.0';
-import {openChapterCharacters,openChapterNpcs,openChapterVehicles} from './scenario-dialogs.js?v=0.29.0';
+import {openChapterTests} from './chapter-tests-ui.js?v=0.30.0';
+import {scenarioNpcs,scenarioCharacterRecord,deleteScenarioNpc,deleteScenarioNpcs} from './scenario-npcs.js?v=0.30.0';
+import {mountScenarioDrag} from './scenario-drag.js?v=0.30.0';
+import {escape} from './ui.js?v=0.30.0';
+import {inlineField,mountInlineEditing} from './inline-edit.js?v=0.30.0';
+import {scenarioMembers} from './scenarios.js?v=0.30.0';
+import {scenarioChapters,addChapter,editChapter,removeChapter,chapterCharacters,detachChapterCharacter,editChapterVehicle,removeChapterVehicle,moveChapter,placeChapter} from './scenario-chapters.js?v=0.30.0';
+import {chapterVehicleFields} from './chapter-schema.js?v=0.30.0';
+import {openChapterCharacters,openChapterNpcs,openChapterVehicles} from './scenario-dialogs.js?v=0.30.0';
 const labels={name:'Nom',type:'Type',auto:'Autopilote',structure:'Structure',handling:'Maniabilité',speed:'Vitesse',armor:'Blindage',light:'Seuil léger',serious:'Seuil grave',incap:'Seuil incapacitant',notes:'Notes',source:'Source'};
 export function renderScenarioWorkspace(container,initialState,scenarioId,{onSave,getState,onRefresh}){
  let state=initialState,showSecrets=!!initialState.world.records.find(r=>r.id===scenarioId)?.isSecret,disposeDrag=()=>{},disposeInline=()=>{},disposeTests=()=>{},status='';
